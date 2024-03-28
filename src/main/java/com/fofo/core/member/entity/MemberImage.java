@@ -5,11 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
 public class MemberImage {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_image_id")
     private Long id;
 
@@ -23,7 +24,7 @@ public class MemberImage {
 
     private char status;
 
-    private Timestamp createdTime;
+    private LocalDateTime createdTime;
 
-    private Timestamp updatedTime;
+    private LocalDateTime updatedTime;
 }

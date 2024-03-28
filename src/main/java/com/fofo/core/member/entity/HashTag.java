@@ -5,11 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
 public class HashTag {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hashtag_id")
     private Long id;
 
@@ -19,7 +20,7 @@ public class HashTag {
 
     private String content;
 
-    private Timestamp createdTime;
+    private LocalDateTime createdTime;
 
-    private Timestamp updatedTime;
+    private LocalDateTime updatedTime;
 }

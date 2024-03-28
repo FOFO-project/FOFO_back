@@ -5,13 +5,14 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter @Setter
 public class Member {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private long id;
 
@@ -63,7 +64,7 @@ public class Member {
 
     private char stauts;
 
-    private Timestamp createDate;
+    private LocalDateTime createDate;
 
-    private Timestamp updateDate;
+    private LocalDateTime updateDate;
 }
