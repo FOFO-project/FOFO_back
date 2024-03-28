@@ -6,11 +6,12 @@ import lombok.Setter;
 import org.locationtech.jts.geom.Point;
 
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter @Setter
 public class Address {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
     private Long id;
 
@@ -34,7 +35,7 @@ public class Address {
 
     private char status;
 
-    private Timestamp createdTime;
+    private LocalDateTime createdTime;
 
-    private Timestamp updatedTime;
+    private LocalDateTime updatedTime;
 }
