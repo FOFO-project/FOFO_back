@@ -16,22 +16,24 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class MemberImage extends BaseEntity{
+public class MemberMatch extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "member_image_id")
+    @Column(name = "match_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Member member;
+    @JoinColumn(name = "male_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Member male;
 
-    @NotNull @Column(columnDefinition = "TEXT")
-    private String type;
-
-    @NotNull
-    private String imageUrl;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "female_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+    private Member female;
 
     @NotNull @Size(max=1)
     private String status;
+
+    @NotNull @Size(max=10)
+    private String matchingStatus;
+
 }
