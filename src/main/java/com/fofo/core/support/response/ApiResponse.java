@@ -13,7 +13,7 @@ public class ApiResponse<S> {
 
     private final CoreErrorMessage error;
 
-    private ApiResponse(ResultType result, S data, CoreErrorMessage error) {
+    private ApiResponse(final ResultType result, final S data, final CoreErrorMessage error) {
         this.result = result;
         this.data = data;
         this.error = error;
@@ -23,15 +23,15 @@ public class ApiResponse<S> {
         return new ApiResponse<>(ResultType.SUCCESS, null, null);
     }
 
-    public static <S> ApiResponse<S> success(S data) {
+    public static <S> ApiResponse<S> success(final S data) {
         return new ApiResponse<>(ResultType.SUCCESS, data, null);
     }
 
-    public static ApiResponse<?> error(CoreErrorType error) {
+    public static ApiResponse<?> error(final CoreErrorType error) {
         return new ApiResponse<>(ResultType.ERROR, null, new CoreErrorMessage(error));
     }
 
-    public static ApiResponse<?> error(CoreErrorType error, Object errorData) {
+    public static ApiResponse<?> error(final CoreErrorType error, final Object errorData) {
         return new ApiResponse<>(ResultType.ERROR, null, new CoreErrorMessage(error, errorData));
     }
 

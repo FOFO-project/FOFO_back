@@ -11,13 +11,13 @@ public class CoreErrorMessage {
 
     private final Object data;
 
-    public CoreErrorMessage(CoreErrorType errorType) {
+    public CoreErrorMessage(final CoreErrorType errorType) {
         this.code = errorType.getCode().name();
         this.message = errorType.getMessage();
         this.data = null;
     }
 
-    public CoreErrorMessage(CoreErrorType errorType, Object data) {
+    public CoreErrorMessage(final CoreErrorType errorType, final Object data) {
         this.code = errorType.getCode().name();
         this.message = errorType.getMessage();
         this.data = data;

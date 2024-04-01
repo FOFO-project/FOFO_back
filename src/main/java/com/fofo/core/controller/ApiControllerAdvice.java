@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ApiControllerAdvice {
 
     @ExceptionHandler(CoreApiException.class)
-    public ResponseEntity<ApiResponse<?>> handleCoreApiException(CoreApiException e) {
+    public ResponseEntity<ApiResponse<?>> handleCoreApiException(final CoreApiException e) {
         switch (e.getErrorType().getLogLevel()) {
             case ERROR -> log.error("CoreApiException : {}", e.getMessage(), e);
             case WARN -> log.warn("CoreApiException : {}", e.getMessage(), e);
@@ -23,7 +23,7 @@ public class ApiControllerAdvice {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<?>> handleException(Exception e) {
+    public ResponseEntity<ApiResponse<?>> handleException(final Exception e) {
         log.error("Exception : {}", e.getMessage(), e);
         return new ResponseEntity<>(ApiResponse.error(CoreErrorType.DEFAULT_ERROR), CoreErrorType.DEFAULT_ERROR.getStatus());
     }

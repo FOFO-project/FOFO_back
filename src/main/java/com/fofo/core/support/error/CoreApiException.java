@@ -9,13 +9,13 @@ public class CoreApiException extends RuntimeException {
 
     private final Object data;
 
-    public CoreApiException(CoreErrorType errorType) {
+    public CoreApiException(final CoreErrorType errorType) {
         super(errorType.getMessage());
         this.errorType = errorType;
         this.data = null;
     }
 
-    public CoreApiException(CoreErrorType errorType, Object data) {
+    public CoreApiException(final CoreErrorType errorType, final Object data) {
         super(errorType.getMessage());
         this.errorType = errorType;
         this.data = data;
