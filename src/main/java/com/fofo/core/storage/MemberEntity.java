@@ -1,4 +1,4 @@
-package com.fofo.core.member.entity;
+package com.fofo.core.storage;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -25,27 +25,27 @@ import java.util.List;
 
 @Entity
 @Getter
-@Table(uniqueConstraints = {@UniqueConstraint(name = "KAKAO_ID_UNIQUE", columnNames = {"KAKAO_ID"})})
-public class Member extends BaseEntity{
+@Table(name = "MEMBER", uniqueConstraints = {@UniqueConstraint(name = "KAKAO_ID_UNIQUE", columnNames = {"KAKAO_ID"})})
+public class MemberEntity extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
     private long id;
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<MemberImage> memberImageList = new ArrayList<>();
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL)
+    private List<MemberImageEntity> memberImageEntityList = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
-    private List<HashTag> hashTags = new ArrayList<>();
+    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL)
+    private List<HashtagEntity> hashTagEntities = new ArrayList<>();
 
     @OneToMany(mappedBy = "male", cascade = CascadeType.ALL)
-    private List<MemberMatch> maleMemberMatchList = new ArrayList<>();
+    private List<MemberMatchEntity> maleMemberMatchEntityList = new ArrayList<>();
 
     @OneToMany(mappedBy = "female", cascade = CascadeType.ALL)
-    private List<MemberMatch> femaleMemberMatchList = new ArrayList<>();
+    private List<MemberMatchEntity> femaleMemberMatchEntityList = new ArrayList<>();
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "address_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Address address;
+    private AddressEntity addressEntity;
 
     @NotNull @Size(max=20)
     private String name;

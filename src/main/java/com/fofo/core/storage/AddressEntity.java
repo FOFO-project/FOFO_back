@@ -1,4 +1,4 @@
-package com.fofo.core.member.entity;
+package com.fofo.core.storage;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -18,7 +19,8 @@ import org.locationtech.jts.geom.Point;
 
 @Entity
 @Getter
-public class Address extends BaseEntity{
+@Table(name = "Address")
+public class AddressEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
@@ -26,7 +28,7 @@ public class Address extends BaseEntity{
 
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Member member;
+    private MemberEntity memberEntity;
 
     @Size(max=5)
     private String zipCode;

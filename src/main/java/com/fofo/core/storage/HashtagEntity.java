@@ -1,4 +1,4 @@
-package com.fofo.core.member.entity;
+package com.fofo.core.storage;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -10,19 +10,21 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Entity
 @Getter
-public class HashTag extends BaseEntity{
+@Table(name = "HASHTAG")
+public class HashtagEntity extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hashtag_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = true, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Member member;
+    private MemberEntity memberEntity;
 
     @Size(max=10)
     private String content;

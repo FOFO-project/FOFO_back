@@ -1,4 +1,4 @@
-package com.fofo.core.member.entity;
+package com.fofo.core.storage;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -10,13 +10,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Entity
 @Getter
-public class MemberImage extends BaseEntity{
+@Table(name = "MEMBER_IMAGE")
+public class MemberImageEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_image_id")
@@ -24,7 +26,7 @@ public class MemberImage extends BaseEntity{
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Member member;
+    private MemberEntity memberEntity;
 
     @NotNull @Column(columnDefinition = "TEXT")
     private String type;
