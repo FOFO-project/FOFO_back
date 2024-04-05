@@ -1,13 +1,17 @@
 package com.fofo.core.storage;
 
+import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.domain.match.MatchingStatus;
+import com.fofo.core.storage.converter.MatchingStatusConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -20,21 +24,25 @@ public class MemberMatchEntity extends BaseEntity {
     @Column(name = "match_id")
     private Long id;
 
+    @Column(nullable = false)
     private Long maleMemberId;
 
+    @Column(nullable = false)
     private Long femaleMemberId;
 
-    @NotNull @Size(max=1)
-    private String status;
+    @Column(nullable = false)
+    @Convert(converter = MatchingStatusConverter.class)
+    private MatchingStatus matchingStatus;
 
-    @NotNull @Size(max=10)
-    private String matchingStatus;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ActiveStatus status;
 
     private MemberMatchEntity(
             final Long maleMemberId,
             final Long femaleMemberId,
-            final String matchingStatus,
-            final String status
+            final MatchingStatus matchingStatus,
+            final ActiveStatus status
     ){
         this.maleMemberId = maleMemberId;
         this.femaleMemberId = femaleMemberId;
@@ -45,9 +53,8 @@ public class MemberMatchEntity extends BaseEntity {
     public static MemberMatchEntity of(
             final Long maleMemberId,
             final Long femaleMemberId,
-            final String matchingStatus,
-            final String status
-    ) {
+            final MatchingStatus matchingStatus,
+            final ActiveStatus status) {
         return new MemberMatchEntity(
                 maleMemberId,
                 femaleMemberId,

@@ -1,5 +1,6 @@
 package com.fofo.core.domain.member;
 
+import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.storage.AddressEntity;
 import org.springframework.data.geo.Point;
 
@@ -14,7 +15,7 @@ public record Address(
         String detail,
         String roadNameCd,
         GeoPoint location,
-        String status,
+        ActiveStatus status,
         LocalDateTime createdTime,
         LocalDateTime modifiedTime
 ) {
@@ -25,7 +26,7 @@ public record Address(
                              final String detail,
                              final String roadNameCd,
                              final GeoPoint location) {
-        return new Address(null, zipcode, sido, sigungu, eupmyundong, detail, roadNameCd, location, "Y", null, null);
+        return new Address(null, zipcode, sido, sigungu, eupmyundong, detail, roadNameCd, location, ActiveStatus.CREATED, null, null);
     }
 
     public AddressEntity toEntity() {

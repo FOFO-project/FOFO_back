@@ -1,5 +1,6 @@
 package com.fofo.core.domain.member;
 
+import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.storage.MemberEntity;
 
 import java.time.LocalDateTime;
@@ -26,8 +27,8 @@ public record Member(
         String note,
         Integer passCount,
         Integer chance,
-        String approvalStatus,
-        String status,
+        ApprovalStatus approvalStatus,
+        ActiveStatus status,
         LocalDateTime createdTime,
         LocalDateTime modifiedTime
 ) {
@@ -53,8 +54,8 @@ public record Member(
             final String note,
             final Integer passCount,
             final Integer chance,
-            final String approvalStatus,
-            final String status
+            final ApprovalStatus approvalStatus,
+            final ActiveStatus status
     ) {
         return new Member(
                 null,
@@ -88,18 +89,18 @@ public record Member(
         return MemberEntity.of(kakaoId,
                 address.id(),
                 name,
-                gender.name(),
+                gender,
                 birthday,
                 age,
-                filteringConditionAgeRelation.name(),
+                filteringConditionAgeRelation,
                 company,
                 job,
                 university,
-                mbti.name(),
+                mbti,
                 smokingYn,
                 filteringConditionSmokingYn,
-                religion.name(),
-                filteringConditionReligion.name(),
+                religion,
+                filteringConditionReligion,
                 charmingPoint,
                 depositDate,
                 note,

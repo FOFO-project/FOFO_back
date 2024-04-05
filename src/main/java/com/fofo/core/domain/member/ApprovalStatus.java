@@ -1,14 +1,15 @@
-package com.fofo.core.domain.match;
+package com.fofo.core.domain.member;
 
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 
 @RequiredArgsConstructor
-public enum MatchingStatus {
-    MATCHING_PENDING("10"),
-    MATCHING_PROGRESSING("20"),
-    MATCHING_COMPLETED("30"),
+public enum ApprovalStatus {
+
+    DEPOSIT_PENDING("10"),
+    DEPOSIT_COMPLETED("20"),
+    APPROVED("30"),
     UNDEFINED("-1")
     ;
 
@@ -18,8 +19,8 @@ public enum MatchingStatus {
         return codeValue;
     }
 
-    public static MatchingStatus enumOfCode(final String codeValue) {
-        return Arrays.stream(MatchingStatus.values())
+    public static ApprovalStatus enumOfCode(final String codeValue) {
+        return Arrays.stream(ApprovalStatus.values())
                 .filter(v -> v.codeValue().equals(codeValue))
                 .findAny()
                 .orElse(UNDEFINED);

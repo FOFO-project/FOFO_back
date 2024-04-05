@@ -1,6 +1,8 @@
 package com.fofo.core.controller.request;
 
+import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.AgeRelationType;
+import com.fofo.core.domain.member.ApprovalStatus;
 import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Member;
@@ -65,8 +67,8 @@ public record MemberRequestDto(
                         note,
                         null,
                         null,
-                        "승인",
-                        "Y"
+                        ApprovalStatus.DEPOSIT_PENDING,
+                        ActiveStatus.CREATED
                 );
         }
 }

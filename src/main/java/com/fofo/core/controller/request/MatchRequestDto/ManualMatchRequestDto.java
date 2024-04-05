@@ -1,5 +1,7 @@
 package com.fofo.core.controller.request.MatchRequestDto;
 
+import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.domain.match.MatchingStatus;
 import com.fofo.core.storage.MemberMatchEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -14,8 +16,8 @@ public record ManualMatchRequestDto(
         return MemberMatchEntity.of(
                 maleMemberId,
                 femaleMemberId,
-                "매칭대기중",
-                "Y"
+                MatchingStatus.MATCHING_PENDING,
+                ActiveStatus.CREATED
         );
     }
 }

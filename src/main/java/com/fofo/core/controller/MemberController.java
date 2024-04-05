@@ -1,6 +1,7 @@
 package com.fofo.core.controller;
 
 import com.fofo.core.controller.request.MemberRequestDto;
+import com.fofo.core.controller.response.MemberResponseDto;
 import com.fofo.core.domain.member.MemberService;
 import com.fofo.core.support.response.ApiResponse;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/member")
-    public ResponseEntity<ApiResponse<Integer>> appendMember(@RequestBody final MemberRequestDto memberRequestDto) {
-        return new ResponseEntity<>(ApiResponse.success(Integer.MAX_VALUE), HttpStatus.OK);
+    public ResponseEntity<ApiResponse<MemberResponseDto>> appendMember(@RequestBody final MemberRequestDto memberRequestDto) {
+        return new ResponseEntity<>(ApiResponse.success(new MemberResponseDto(1L)), HttpStatus.OK);
     }
 }

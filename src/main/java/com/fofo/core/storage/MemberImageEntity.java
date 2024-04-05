@@ -1,13 +1,14 @@
 package com.fofo.core.storage;
 
+import com.fofo.core.domain.ActiveStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -20,14 +21,16 @@ public class MemberImageEntity extends BaseEntity {
     @Column(name = "member_image_id")
     private Long id;
 
+    @Column(nullable = false)
     private Long memberId;
 
-    @NotNull @Column(columnDefinition = "TEXT")
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String type;
 
-    @NotNull
+    @Column(nullable = false)
     private String imageUrl;
 
-    @NotNull @Size(max=1)
-    private String status;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ActiveStatus status;
 }

@@ -1,4 +1,4 @@
 package com.fofo.core.controller.response;
 
-public class MemberResponseDto {
+public record MemberResponseDto(Long id) {
 }
