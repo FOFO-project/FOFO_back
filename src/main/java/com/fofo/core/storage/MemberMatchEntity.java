@@ -30,4 +30,29 @@ public class MemberMatchEntity extends BaseEntity {
     @NotNull @Size(max=10)
     private String matchingStatus;
 
+    private MemberMatchEntity(
+            final Long maleMemberId,
+            final Long femaleMemberId,
+            final String matchingStatus,
+            final String status
+    ){
+        this.maleMemberId = maleMemberId;
+        this.femaleMemberId = femaleMemberId;
+        this.matchingStatus = matchingStatus;
+        this.status = status;
+    }
+
+    public static MemberMatchEntity of(
+            final Long maleMemberId,
+            final Long femaleMemberId,
+            final String matchingStatus,
+            final String status
+    ) {
+        return new MemberMatchEntity(
+                maleMemberId,
+                femaleMemberId,
+                matchingStatus,
+                status
+        );
+    }
 }
