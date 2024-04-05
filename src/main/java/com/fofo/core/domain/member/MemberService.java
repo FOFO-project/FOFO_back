@@ -8,4 +8,6 @@ import org.springframework.stereotype.Service;
 public class MemberService {
 
     private final MemberAppender memberAppender;
+
+
 }

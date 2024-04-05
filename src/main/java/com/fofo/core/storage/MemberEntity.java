@@ -1,104 +1,201 @@
 package com.fofo.core.storage;
 
-import jakarta.persistence.CascadeType;
+import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.domain.member.AgeRelationType;
+import com.fofo.core.domain.member.ApprovalStatus;
+import com.fofo.core.domain.member.Gender;
+import com.fofo.core.domain.member.Mbti;
+import com.fofo.core.domain.member.Religion;
+import com.fofo.core.storage.converter.ApprovalStatusConverter;
 import jakarta.persistence.Column;
-import jakarta.persistence.ConstraintMode;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
-import lombok.Getter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "MEMBER", uniqueConstraints = {@UniqueConstraint(name = "KAKAO_ID_UNIQUE", columnNames = {"KAKAO_ID"})})
 public class MemberEntity extends BaseEntity {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
-    private long id;
+    private Long id;
 
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL)
-    private List<MemberImageEntity> memberImageEntityList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "memberEntity", cascade = CascadeType.ALL)
-    private List<HashtagEntity> hashTagEntities = new ArrayList<>();
-
-    @OneToMany(mappedBy = "male", cascade = CascadeType.ALL)
-    private List<MemberMatchEntity> maleMemberMatchEntityList = new ArrayList<>();
-
-    @OneToMany(mappedBy = "female", cascade = CascadeType.ALL)
-    private List<MemberMatchEntity> femaleMemberMatchEntityList = new ArrayList<>();
-
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private AddressEntity addressEntity;
-
-    @NotNull @Size(max=20)
-    private String name;
-
-    @NotNull @Size(max=10)
-    private String gender;
-
-    @NotNull
-    private LocalDateTime birth;
-
-    @NotNull @Size(max=20)
-    private String company;
-
-    @NotNull @Size(max=20)
-    private String job;
-
-    @NotNull @Size(max=20)
-    private String university;
-
-    @NotNull @Size(max=4)
-    private String mbti;
-
-    @NotNull
-    private Boolean smokingYn;
-
-    @NotNull @Size(max=20)
+    @Column(nullable = false, length = 20)
     private String kakaoId;
 
-    @NotNull @Size(max=10)
-    private String religion;
+    @Column(nullable = false)
+    private Long addressId;
 
-    @Size(max=100)
+    @Column(nullable = false, length = 20)
+    private String name;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    @Column(nullable = false)
+    private LocalDateTime birthday;
+
+    @Column(nullable = false)
+    private Integer age;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private AgeRelationType filteringConditionAgeRelation;
+
+    @Column(nullable = false, length = 20)
+    private String company;
+
+    @Column(nullable = false, length = 30)
+    private String job;
+
+    @Column(nullable = false, length = 30)
+    private String university;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Mbti mbti;
+
+    @Column(nullable = false)
+    private Boolean smokingYn;
+
+    private Boolean filteringConditionSmokingYn;
+
+    @Column(nullable = false)
+    private Religion religion;
+
+    private Religion filteringConditionReligion;
+
+    @Column(length = 100)
     private String charmingPoint;
 
-    @Size(max=100)
-    private String filteringCondition;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private LocalDateTime depositDate;
 
-    private Timestamp depositDate;
-
-    @Size(max=100)
+    @Column
     private String note;
 
-    @NotNull
-    private int passCount;
+    @ColumnDefault("5")
+    private Integer passCount;
 
-    @NotNull
-    private int chance;
+    @ColumnDefault("2")
+    private Integer chance;
 
-    @NotNull
-    @Size(max=10)
-    private String approvalStatus;
+    @Column(length = 20)
+    @Convert(converter = ApprovalStatusConverter.class)
+    private ApprovalStatus approvalStatus;
 
-    @NotNull @Size(max=1)
-    private String status;
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ActiveStatus status;
+
+    private MemberEntity(final String kakaoId,
+                         final Long addressId,
+                         final String name,
+                         final Gender gender,
+                         final LocalDateTime birthday,
+                         final Integer age,
+                         final AgeRelationType filteringConditionAgeRelation,
+                         final String company,
+                         final String job,
+                         final String university,
+                         final Mbti mbti,
+                         final Boolean smokingYn,
+                         final Boolean filteringConditionSmokingYn,
+                         final Religion religion,
+                         final Religion filteringConditionReligion,
+                         final String charmingPoint,
+                         final LocalDateTime depositDate,
+                         final String note,
+                         final Integer passCount,
+                         final Integer chance,
+                         final ApprovalStatus approvalStatus,
+                         final ActiveStatus status
+    ) {
+        this.kakaoId = kakaoId;
+        this.addressId = addressId;
+        this.name = name;
+        this.gender = gender;
+        this.birthday = birthday;
+        this.age = age;
+        this.filteringConditionAgeRelation = filteringConditionAgeRelation;
+        this.company = company;
+        this.job = job;
+        this.university = university;
+        this.mbti = mbti;
+        this.smokingYn = smokingYn;
+        this.filteringConditionSmokingYn = filteringConditionSmokingYn;
+        this.religion = religion;
+        this.filteringConditionReligion = filteringConditionReligion;
+        this.charmingPoint = charmingPoint;
+        this.depositDate = depositDate;
+        this.note = note;
+        this.passCount = passCount;
+        this.chance = chance;
+        this.approvalStatus = approvalStatus;
+        this.status = status;
+    }
+
+    public static MemberEntity of(
+            final String kakaoId,
+            final Long addressId,
+            final String name,
+            final Gender gender,
+            final LocalDateTime birthday,
+            final Integer age,
+            final AgeRelationType filteringConditionAgeRelation,
+            final String company,
+            final String job,
+            final String university,
+            final Mbti mbti,
+            final Boolean smokingYn,
+            final Boolean filteringConditionSmokingYn,
+            final Religion religion,
+            final Religion filteringConditionReligion,
+            final String charmingPoint,
+            final LocalDateTime depositDate,
+            final String note,
+            final Integer passCount,
+            final Integer chance,
+            final ApprovalStatus approvalStatus,
+            final ActiveStatus status
+    ) {
+        return new MemberEntity(kakaoId,
+                addressId,
+                name,
+                gender,
+                birthday,
+                age,
+                filteringConditionAgeRelation,
+                company,
+                job,
+                university,
+                mbti,
+                smokingYn,
+                filteringConditionSmokingYn,
+                religion,
+                filteringConditionReligion,
+                charmingPoint,
+                depositDate,
+                note,
+                passCount,
+                chance,
+                approvalStatus,
+                status);
+    }
+
 
 }
