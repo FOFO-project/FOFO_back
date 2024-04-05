@@ -38,7 +38,7 @@ public class QAddressEntity extends EntityPathBase<AddressEntity> {
 
     public final StringPath sigungu = createString("sigungu");
 
-    public final StringPath status = createString("status");
+    public final EnumPath<com.fofo.core.domain.ActiveStatus> status = createEnum("status", com.fofo.core.domain.ActiveStatus.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedTime = _super.updatedTime;

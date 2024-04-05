@@ -30,7 +30,7 @@ public class QMemberImageEntity extends EntityPathBase<MemberImageEntity> {
 
     public final NumberPath<Long> memberId = createNumber("memberId", Long.class);
 
-    public final StringPath status = createString("status");
+    public final EnumPath<com.fofo.core.domain.ActiveStatus> status = createEnum("status", com.fofo.core.domain.ActiveStatus.class);
 
     public final StringPath type = createString("type");
 

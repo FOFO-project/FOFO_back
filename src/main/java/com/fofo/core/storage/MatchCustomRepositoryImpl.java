@@ -1,6 +1,8 @@
 package com.fofo.core.storage;
 
+import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.match.Match;
+import com.fofo.core.domain.match.MatchingStatus;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +25,9 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     @Override
     public long deleteMatchesBy(List<Long> matchIdList, String hold) {
         return jpaQueryFactory.update(match)
-                .set(match.status, "d")
+                .set(match.status, ActiveStatus.DELETED)
                 .where(match.id.in(matchIdList),
-                        match.matchingStatus.eq(hold))
+                        match.matchingStatus.eq(MatchingStatus.MATCHING_PENDING))
                 .execute();
     }
 
@@ -45,9 +47,9 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                 .join(maleMember).on(match.maleMemberId.eq(maleMember.id))
                 .join(femaleMember).on(match.femaleMemberId.eq(femaleMember.id))
                 .where(
-                        match.status.ne("d"),
-                        maleMember.status.ne("d"),
-                        femaleMember.status.ne("d")
+                        match.status.ne(ActiveStatus.DELETED),
+                        maleMember.status.ne(ActiveStatus.DELETED),
+                        femaleMember.status.ne(ActiveStatus.DELETED)
                 )
                 .orderBy(match.createdTime.asc())
                 .offset(pageable.getOffset())
@@ -57,9 +59,9 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                 .select(match.count())
                 .from(match)
                 .where(
-                        match.status.ne("d"),
-                        maleMember.status.ne("d"),
-                        femaleMember.status.ne("d")
+                        match.status.ne(ActiveStatus.DELETED),
+                        maleMember.status.ne(ActiveStatus.DELETED),
+                        femaleMember.status.ne(ActiveStatus.DELETED)
                 )
                 .fetchOne();
         return new PageImpl<>(matchResultList, pageable, count == null? 0 : count);

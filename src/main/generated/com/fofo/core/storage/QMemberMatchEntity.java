@@ -30,9 +30,9 @@ public class QMemberMatchEntity extends EntityPathBase<MemberMatchEntity> {
 
     public final NumberPath<Long> maleMemberId = createNumber("maleMemberId", Long.class);
 
-    public final StringPath matchingStatus = createString("matchingStatus");
+    public final EnumPath<com.fofo.core.domain.match.MatchingStatus> matchingStatus = createEnum("matchingStatus", com.fofo.core.domain.match.MatchingStatus.class);
 
-    public final StringPath status = createString("status");
+    public final EnumPath<com.fofo.core.domain.ActiveStatus> status = createEnum("status", com.fofo.core.domain.ActiveStatus.class);
 
     //inherited
     public final DateTimePath<java.time.LocalDateTime> updatedTime = _super.updatedTime;

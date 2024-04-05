@@ -25,7 +25,7 @@ public class QMemberEntity extends EntityPathBase<MemberEntity> {
 
     public final NumberPath<Integer> age = createNumber("age", Integer.class);
 
-    public final StringPath approvalStatus = createString("approvalStatus");
+    public final EnumPath<com.fofo.core.domain.member.ApprovalStatus> approvalStatus = createEnum("approvalStatus", com.fofo.core.domain.member.ApprovalStatus.class);
 
     public final DateTimePath<java.time.LocalDateTime> birthday = createDateTime("birthday", java.time.LocalDateTime.class);
 
@@ -40,13 +40,13 @@ public class QMemberEntity extends EntityPathBase<MemberEntity> {
 
     public final DateTimePath<java.time.LocalDateTime> depositDate = createDateTime("depositDate", java.time.LocalDateTime.class);
 
-    public final StringPath filteringConditionAgeRelation = createString("filteringConditionAgeRelation");
+    public final EnumPath<com.fofo.core.domain.member.AgeRelationType> filteringConditionAgeRelation = createEnum("filteringConditionAgeRelation", com.fofo.core.domain.member.AgeRelationType.class);
 
-    public final StringPath filteringConditionReligion = createString("filteringConditionReligion");
+    public final EnumPath<com.fofo.core.domain.member.Religion> filteringConditionReligion = createEnum("filteringConditionReligion", com.fofo.core.domain.member.Religion.class);
 
     public final BooleanPath filteringConditionSmokingYn = createBoolean("filteringConditionSmokingYn");
 
-    public final StringPath gender = createString("gender");
+    public final EnumPath<com.fofo.core.domain.member.Gender> gender = createEnum("gender", com.fofo.core.domain.member.Gender.class);
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
@@ -54,7 +54,7 @@ public class QMemberEntity extends EntityPathBase<MemberEntity> {
 
     public final StringPath kakaoId = createString("kakaoId");
 
-    public final StringPath mbti = createString("mbti");
+    public final EnumPath<com.fofo.core.domain.member.Mbti> mbti = createEnum("mbti", com.fofo.core.domain.member.Mbti.class);
 
     public final StringPath name = createString("name");
 
@@ -62,11 +62,11 @@ public class QMemberEntity extends EntityPathBase<MemberEntity> {
 
     public final NumberPath<Integer> passCount = createNumber("passCount", Integer.class);
 
-    public final StringPath religion = createString("religion");
+    public final EnumPath<com.fofo.core.domain.member.Religion> religion = createEnum("religion", com.fofo.core.domain.member.Religion.class);
 
     public final BooleanPath smokingYn = createBoolean("smokingYn");
 
-    public final StringPath status = createString("status");
+    public final EnumPath<com.fofo.core.domain.ActiveStatus> status = createEnum("status", com.fofo.core.domain.ActiveStatus.class);
 
     public final StringPath university = createString("university");
 

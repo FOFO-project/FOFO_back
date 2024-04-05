@@ -1,6 +1,7 @@
 package com.fofo.core.domain.match;
 
 import com.fofo.core.controller.response.MatchResponseDto.MatchResponseDto;
+import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.Member;
 import com.fofo.core.storage.MemberMatchEntity;
 
@@ -12,16 +13,16 @@ public record Match(
         Long id,
         Member male,
         Member female,
-        String matchingStatus,
-        String status,
+        MatchingStatus matchingStatus,
+        ActiveStatus status,
         LocalDateTime createdTime,
         LocalDateTime modifiedTime
 ) {
     public static Match of(
             final Member male,
             final Member female,
-            final String matchingStatus,
-            final String status
+            final MatchingStatus matchingStatus,
+            final ActiveStatus status
     ) {
         return new Match(
                 null,
