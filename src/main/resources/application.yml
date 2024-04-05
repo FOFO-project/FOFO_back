@@ -3,10 +3,19 @@ spring.profiles.active: local
 
 server:
   tomcat:
-    max-connections: 20000
+    max-connections: 2048
     threads:
-      max: 600
-      min-spare: 100
+      max: 50
+      min-spare: 25
+spring:
+  jpa:
+    open-in-view: false
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
 
 ---
 spring.config.activate.on-profile: local
@@ -25,7 +34,6 @@ spring:
       ddl-auto: create
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
         show_sql: true
         format_sql: true
 
@@ -43,7 +51,4 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: none
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
+      ddl-auto: create-drop

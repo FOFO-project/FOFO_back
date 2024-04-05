@@ -22,10 +22,10 @@ public abstract class BaseEntity {
     @NotNull
     @CreatedDate
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    protected LocalDateTime createTime;
+    protected LocalDateTime createdTime;
 
     @NotNull
     @LastModifiedDate
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-    protected LocalDateTime updateTime;
+    protected LocalDateTime updatedTime;
 }
