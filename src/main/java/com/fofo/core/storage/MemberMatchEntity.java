@@ -25,10 +25,10 @@ public class MemberMatchEntity extends BaseEntity {
     private Long id;
 
     @Column(nullable = false)
-    private Long maleMemberId;
+    private Long manMemberId;
 
     @Column(nullable = false)
-    private Long femaleMemberId;
+    private Long womanMemberId;
 
     @Column(nullable = false)
     @Convert(converter = MatchingStatusConverter.class)
