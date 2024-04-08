@@ -8,7 +8,6 @@ import java.time.LocalDateTime;
 public record Member(
         Long id,
         String kakaoId,
-        Address address,
         String name,
         Gender gender,
         LocalDateTime birthday,
@@ -18,8 +17,8 @@ public record Member(
         String job,
         String university,
         Mbti mbti,
-        Boolean smokingYn,
-        Boolean filteringConditionSmokingYn,
+        boolean smokingYn,
+        boolean filteringConditionSmokingYn,
         Religion religion,
         Religion filteringConditionReligion,
         String charmingPoint,
@@ -35,7 +34,6 @@ public record Member(
 
     public static Member of(
             final String kakaoId,
-            final Address address,
             final String name,
             final Gender gender,
             final LocalDateTime birthday,
@@ -51,7 +49,6 @@ public record Member(
             final Religion filteringConditionReligion,
             final String charmingPoint,
             final LocalDateTime depositDate,
-            final String note,
             final Integer passCount,
             final Integer chance,
             final ApprovalStatus approvalStatus,
@@ -60,7 +57,6 @@ public record Member(
         return new Member(
                 null,
                 kakaoId,
-                address,
                 name,
                 gender,
                 birthday,
@@ -76,7 +72,7 @@ public record Member(
                 filteringConditionReligion,
                 charmingPoint,
                 depositDate,
-                note,
+                "",
                 passCount,
                 chance,
                 approvalStatus,
@@ -87,7 +83,6 @@ public record Member(
 
     public MemberEntity toEntity() {
         return MemberEntity.of(kakaoId,
-                address.id(),
                 name,
                 gender,
                 birthday,

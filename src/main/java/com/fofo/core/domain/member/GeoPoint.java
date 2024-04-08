@@ -1,8 +1,14 @@
 package com.fofo.core.domain.member;
 
-public record GeoPoint(
-    Double x,
-    Double y
-) {
+import org.springframework.data.geo.Point;
 
+public class GeoPoint extends Point {
+
+    public GeoPoint(final double x, final double y) {
+        super(x, y);
+    }
+
+    public GeoPoint(final Point point) {
+        super(point);
+    }
 }

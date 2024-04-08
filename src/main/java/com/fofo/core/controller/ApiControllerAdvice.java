@@ -5,6 +5,10 @@ import com.fofo.core.support.error.CoreErrorType;
 import com.fofo.core.support.response.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -22,10 +26,27 @@ public class ApiControllerAdvice {
         return new ResponseEntity<>(ApiResponse.error(e.getErrorType(), e.getData()), e.getErrorType().getStatus());
     }
 
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<?>> handleHttpMessageNotReadableException(final HttpMessageNotReadableException e) {
+        return handleCoreApiException(new CoreApiException(CoreErrorType.INVALID_JSON_ERROR));
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiResponse<?>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+        BindingResult bindingResult = e.getBindingResult();
+        StringBuilder stringBuilder = new StringBuilder();
+        for (FieldError fieldError : bindingResult.getFieldErrors()) {
+            stringBuilder.append(fieldError.getField()).append("-");
+            stringBuilder.append(fieldError.getDefaultMessage());
+            stringBuilder.append(", ");
+        }
+        return new ResponseEntity<>(ApiResponse.error(CoreErrorType.INVALID_ARGUMENT_ERROR, stringBuilder), CoreErrorType.INVALID_ARGUMENT_ERROR.getStatus());
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiResponse<?>> handleException(final Exception e) {
         log.error("Exception : {}", e.getMessage(), e);
         return new ResponseEntity<>(ApiResponse.error(CoreErrorType.DEFAULT_ERROR), CoreErrorType.DEFAULT_ERROR.getStatus());
     }
-    
+
 }
