@@ -12,7 +12,7 @@ public class MatchRemover {
 
     private final MatchRepository matchRepository;
 
-    public void removeMatch(List<Long> matchIdList, String hold) {
-        matchRepository.deleteMatchesBy(matchIdList, hold);
+    public void removeMatch(final List<Long> matchIdList) {
+        matchRepository.deleteMatchesBy(matchIdList);
     }
 }

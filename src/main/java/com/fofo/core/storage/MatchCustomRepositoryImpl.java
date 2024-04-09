@@ -5,6 +5,7 @@ import com.fofo.core.domain.match.Match;
 import com.fofo.core.domain.match.MatchingStatus;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -19,20 +21,24 @@ import java.util.List;
 @Transactional
 public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     private final JPAQueryFactory jpaQueryFactory;
+    private final EntityManager em;
     private final QMemberMatchEntity match = QMemberMatchEntity.memberMatchEntity;
     private final QMemberEntity maleMember = QMemberEntity.memberEntity;
     private final QMemberEntity femaleMember = QMemberEntity.memberEntity;
     @Override
-    public long deleteMatchesBy(List<Long> matchIdList, String hold) {
-        return jpaQueryFactory.update(match)
+    public long deleteMatchesBy(final List<Long> matchIdList) {
+        long result = jpaQueryFactory.update(match)
                 .set(match.status, ActiveStatus.DELETED)
-                .where(match.id.in(matchIdList),
-                        match.matchingStatus.eq(MatchingStatus.MATCHING_PENDING))
+                .set(match.updatedTime, LocalDateTime.now())
+                .where(match.id.in(matchIdList))
                 .execute();
+        em.flush();
+        em.clear();
+        return result;
     }
 
     @Override
-    public Page<Match> selectMatchResultList(Pageable pageable) {
+    public Page<Match> selectMatchResultList(final Pageable pageable) {
         List<Match> matchResultList = jpaQueryFactory
                 .select(
                         Projections.bean(
@@ -65,6 +71,18 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                 )
                 .fetchOne();
         return new PageImpl<>(matchResultList, pageable, count == null? 0 : count);
+    }
+
+    @Override
+    public long updateMatchStatus(final List<Long> matchIdList, final MatchingStatus matchingStatus) {
+        long result = jpaQueryFactory.update(match)
+                        .set(match.matchingStatus, matchingStatus)
+                        .set(match.updatedTime, LocalDateTime.now())
+                        .where(match.id.in(matchIdList))
+                        .execute();
+        em.flush();
+        em.clear();
+        return result;
     }
 
 

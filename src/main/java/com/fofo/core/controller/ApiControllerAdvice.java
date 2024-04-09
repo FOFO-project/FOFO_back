@@ -2,7 +2,7 @@ package com.fofo.core.controller;
 
 import com.fofo.core.support.error.CoreApiException;
 import com.fofo.core.support.error.CoreErrorType;
-import com.fofo.core.support.response.ApiResponse;
+import com.fofo.core.support.response.ApiResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -17,22 +17,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class ApiControllerAdvice {
 
     @ExceptionHandler(CoreApiException.class)
-    public ResponseEntity<ApiResponse<?>> handleCoreApiException(final CoreApiException e) {
+    public ResponseEntity<ApiResult<?>> handleCoreApiException(final CoreApiException e) {
         switch (e.getErrorType().getLogLevel()) {
             case ERROR -> log.error("CoreApiException : {}", e.getMessage(), e);
             case WARN -> log.warn("CoreApiException : {}", e.getMessage(), e);
             default -> log.info("CoreApiException : {}", e.getMessage(), e);
         }
-        return new ResponseEntity<>(ApiResponse.error(e.getErrorType(), e.getData()), e.getErrorType().getStatus());
+        return new ResponseEntity<>(ApiResult.error(e.getErrorType(), e.getData()), e.getErrorType().getStatus());
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ApiResponse<?>> handleHttpMessageNotReadableException(final HttpMessageNotReadableException e) {
+    public ResponseEntity<ApiResult<?>> handleHttpMessageNotReadableException(final HttpMessageNotReadableException e) {
         return handleCoreApiException(new CoreApiException(CoreErrorType.INVALID_JSON_ERROR));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiResponse<?>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+    public ResponseEntity<ApiResult<?>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
         BindingResult bindingResult = e.getBindingResult();
         StringBuilder stringBuilder = new StringBuilder();
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
@@ -40,13 +40,13 @@ public class ApiControllerAdvice {
             stringBuilder.append(fieldError.getDefaultMessage());
             stringBuilder.append(", ");
         }
-        return new ResponseEntity<>(ApiResponse.error(CoreErrorType.INVALID_ARGUMENT_ERROR, stringBuilder), CoreErrorType.INVALID_ARGUMENT_ERROR.getStatus());
+        return new ResponseEntity<>(ApiResult.error(CoreErrorType.INVALID_ARGUMENT_ERROR, stringBuilder), CoreErrorType.INVALID_ARGUMENT_ERROR.getStatus());
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<?>> handleException(final Exception e) {
+    public ResponseEntity<ApiResult<?>> handleException(final Exception e) {
         log.error("Exception : {}", e.getMessage(), e);
-        return new ResponseEntity<>(ApiResponse.error(CoreErrorType.DEFAULT_ERROR), CoreErrorType.DEFAULT_ERROR.getStatus());
+        return new ResponseEntity<>(ApiResult.error(CoreErrorType.DEFAULT_ERROR), CoreErrorType.DEFAULT_ERROR.getStatus());
     }
 
 }

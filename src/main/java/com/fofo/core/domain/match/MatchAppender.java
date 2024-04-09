@@ -6,17 +6,21 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
 public class MatchAppender {
     private final MatchRepository matchRepository;
 
-    public void appendMatches(List<Match> matchList) {
-        matchRepository.saveAll(Match.toEntities(matchList));
+    public void appendMatches(final List<Match> matchList) {
+        matchRepository.saveAll(matchList.stream()
+                .map(Match::toEntity)
+                .toList()
+        );
     }
 
-    public void appendMatch(MemberMatchEntity match) {
+    public void appendMatch(final MemberMatchEntity match) {
         matchRepository.save(match);
     }
 }

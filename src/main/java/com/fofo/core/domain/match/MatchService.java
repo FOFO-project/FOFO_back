@@ -2,7 +2,10 @@ package com.fofo.core.domain.match;
 
 import com.fofo.core.controller.request.MatchRequestDto.ManualMatchRequestDto;
 import com.fofo.core.controller.response.MatchResponseDto.MatchResponseDto;
+import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.Member;
+import com.fofo.core.domain.member.MemberFinder;
+import com.fofo.core.storage.MemberEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -14,12 +17,13 @@ import java.util.List;
 public class MatchService {
     private final MatchAppender matchAppender;
     private final MatchFinder matchFinder;
+    private final MemberFinder memberFinder;
     private final MatchUpdater matchUpdater;
     private final MatchRemover matchRemover;
     private final MatchManager matchManager;
 
     // 모든 매치 결과 조회
-    public Page<Match> getMatchResult(int page, int size) {
+    public Page<Match> getMatchResult(final int page, final int size) {
         return matchFinder.findMatches(page, size);
     }
 
@@ -33,22 +37,25 @@ public class MatchService {
         matchAppender.appendMatches(matchList);
     }
 
-    public void cancelMatch(List<Long> matchIdList) {
-        // 매칭 전 BEFORE(테이블엔 없음), 매칭 후 대기 HOLD, 프로필 발송 후 대기 PROCEED, 매칭 확정 COMPLETE
-        // HOLD 상태에서 매치를 삭제한다.
-        matchRemover.removeMatch(matchIdList, "HOLD");
+    public void cancelMatch(final List<Long> matchIdList) {
+        matchRemover.removeMatch(matchIdList);
     }
 
-    public void sendProfile(List<Long> matchIdList) {
-        // HOLD 상태에서 PROCEED
+    public void manualMatch(final Long maleMemberId, final Long femaleMemberId) {
 
+        MemberEntity maleMemberEntity = memberFinder.findMember(maleMemberId);
+        MemberEntity femaleMemberEntity = memberFinder.findMember(femaleMemberId);
+//        Match match = Match.of(
+//                Member.from(maleMemberEntity),
+//                Member.from(femaleMemberEntity),
+//                MatchingStatus.MATCHING_PENDING,
+//                ActiveStatus.CREATED
+//        );
+//        matchAppender.appendMatch(match.toEntity());
     }
 
-    public void confirmMatch(List<Long> matchIdList) {
-        matchUpdater.updateMatchComplete(matchIdList);
-    }
-
-    public void manualMatch(ManualMatchRequestDto manualMatchRequestDto) {
-        matchAppender.appendMatch(manualMatchRequestDto.toEntity());
+    public void goNextMatchStep(final List<Long> matchIdList, final MatchingStatus matchingStatus) {
+        MatchingStatus nextMatchingStatus = matchManager.getNextMatchingStatus(matchingStatus);
+        matchUpdater.updateMatchStatus(matchIdList, nextMatchingStatus);
     }
 }

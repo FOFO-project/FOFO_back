@@ -20,7 +20,7 @@ public class MatchFinder {
         return null;
     }
 
-    public Page<Match> findMatches(int page, int size) {
+    public Page<Match> findMatches(final int page, final int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return matchRepository.selectMatchResultList(pageRequest);
     }

@@ -12,7 +12,7 @@ public class MatchUpdater {
 
     private final MatchRepository matchRepository;
 
-    public void updateMatchComplete(List<Long> matchIdList) {
-        // 멤버
+    public void updateMatchStatus(final List<Long> matchIdList, final MatchingStatus matchingStatus) {
+        matchRepository.updateMatchStatus(matchIdList, matchingStatus);
     }
 }

@@ -44,9 +44,4 @@ public record Match(
         );
     }
 
-    public static List<MemberMatchEntity> toEntities(List<Match> matchList) {
-        ArrayList<MemberMatchEntity> matchEntities = new ArrayList<>();
-        matchList.forEach( match -> matchEntities.add(match.toEntity()));
-        return matchEntities;
-    }
 }

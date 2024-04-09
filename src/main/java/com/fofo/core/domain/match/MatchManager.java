@@ -9,7 +9,14 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class MatchManager {
-    public List<Match> matchByFilteringCondition(List<Member> matchPossibleMembers) {
+    public List<Match> matchByFilteringCondition(final List<Member> matchPossibleMembers) {
         return null;
+    }
+
+    public MatchingStatus getNextMatchingStatus(final MatchingStatus matchingStatus) {
+        return switch (matchingStatus){
+            case MATCHING_PENDING -> MatchingStatus.MATCHING_PROGRESSING;
+            case MATCHING_PROGRESSING, MATCHING_COMPLETED -> MatchingStatus.MATCHING_COMPLETED;
+        };
     }
 }
