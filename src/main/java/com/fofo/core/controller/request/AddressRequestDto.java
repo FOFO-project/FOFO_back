@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 
 @Schema(description = "주소 등록 요청")
-public record AppendAddressRequestDto(
+public record AddressRequestDto(
         @Schema(description = "우편번호", example = "07551")
         @Size(max = 5)
         String zipcode,

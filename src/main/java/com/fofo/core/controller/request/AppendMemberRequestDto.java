@@ -25,7 +25,7 @@ public record AppendMemberRequestDto(
         @NotEmpty @Size(max = 20)
         String kakaoId,
         @Valid @NotNull
-        AppendAddressRequestDto address,
+        AddressRequestDto address,
         @Schema(description = "이름", example = "황성준")
         @NotEmpty @Size(max=10)
         String name,
