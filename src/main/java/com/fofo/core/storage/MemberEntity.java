@@ -52,6 +52,9 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = false)
     private Integer age;
 
+    @Column(nullable = false, length = 30)
+    private String phoneNumber;
+
     @Enumerated(EnumType.STRING)
     private AgeRelationType filteringConditionAgeRelation;
 
@@ -106,6 +109,7 @@ public class MemberEntity extends BaseEntity {
                          final Gender gender,
                          final LocalDateTime birthday,
                          final Integer age,
+                         final String phoneNumber,
                          final AgeRelationType filteringConditionAgeRelation,
                          final String company,
                          final String job,
@@ -128,6 +132,7 @@ public class MemberEntity extends BaseEntity {
         this.gender = gender;
         this.birthday = birthday;
         this.age = age;
+        this.phoneNumber = phoneNumber;
         this.filteringConditionAgeRelation = filteringConditionAgeRelation;
         this.company = company;
         this.job = job;
@@ -152,6 +157,7 @@ public class MemberEntity extends BaseEntity {
             final Gender gender,
             final LocalDateTime birthday,
             final Integer age,
+            final String phoneNumber,
             final AgeRelationType filteringConditionAgeRelation,
             final String company,
             final String job,
@@ -175,6 +181,7 @@ public class MemberEntity extends BaseEntity {
                 gender,
                 birthday,
                 age,
+                phoneNumber,
                 filteringConditionAgeRelation,
                 company,
                 job,

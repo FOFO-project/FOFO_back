@@ -50,7 +50,7 @@ jobs:
           path: build/libs/
 
       # EC2에 배포
-      - name: Deploy to EC2
+      - name: Deploy to server
         uses: appleboy/scp-action@master
         with:
           host: ${{secrets.HOST}}

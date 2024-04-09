@@ -33,12 +33,6 @@ public class AddressEntity extends BaseEntity {
     @Column(length = 20)
     private String eupmyundong;
 
-    @Column(length = 300)
-    private String detail;
-
-    @Column(length = 12)
-    private String roadNameCd;
-
     private Point location;
 
     @Column(nullable = false)
@@ -48,16 +42,12 @@ public class AddressEntity extends BaseEntity {
                             final String sido,
                             final String sigungu,
                             final String eupmyundong,
-                            final String detail,
-                            final String roadNameCd,
                             final Point location,
                             final ActiveStatus status) {
         this.zipCode = zipCode;
         this.sido = sido;
         this.sigungu = sigungu;
         this.eupmyundong = eupmyundong;
-        this.detail = detail;
-        this.roadNameCd = roadNameCd;
         this.location = location;
         this.status = status;
     }
@@ -66,11 +56,9 @@ public class AddressEntity extends BaseEntity {
                                    final String sido,
                                    final String sigungu,
                                    final String eupmyundong,
-                                   final String detail,
-                                   final String roadNameCd,
                                    final Point location,
                                    final ActiveStatus status) {
-        return new AddressEntity(zipcode, sido, sigungu, eupmyundong, detail, roadNameCd, location, status);
+        return new AddressEntity(zipcode, sido, sigungu, eupmyundong, location, status);
     }
 
     public Long id() {

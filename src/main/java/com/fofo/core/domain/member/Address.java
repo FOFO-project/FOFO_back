@@ -13,8 +13,6 @@ public record Address(
         String sido,
         String sigungu,
         String eupmyundong,
-        String detail,
-        String roadNameCd,
         GeoPoint location,
         ActiveStatus status,
         LocalDateTime createdTime,
@@ -24,10 +22,8 @@ public record Address(
                              final String sido,
                              final String sigungu,
                              final String eupmyundong,
-                             final String detail,
-                             final String roadNameCd,
                              final GeoPoint location) {
-        return new Address(null, zipcode, sido, sigungu, eupmyundong, detail, roadNameCd, location, ActiveStatus.CREATED, null, null);
+        return new Address(null, zipcode, sido, sigungu, eupmyundong, location, ActiveStatus.CREATED, null, null);
     }
 
     public AddressEntity toEntity() {
@@ -37,7 +33,7 @@ public record Address(
         } else {
             location = new Point(this.location);
         }
-        return AddressEntity.of(zipcode, sido, sigungu, eupmyundong, detail, roadNameCd, location, status);
+        return AddressEntity.of(zipcode, sido, sigungu, eupmyundong, location, status);
     }
 
 }
