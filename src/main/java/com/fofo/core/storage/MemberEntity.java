@@ -52,7 +52,6 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = false)
     private Integer age;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private AgeRelationType filteringConditionAgeRelation;
 
@@ -70,9 +69,9 @@ public class MemberEntity extends BaseEntity {
     private Mbti mbti;
 
     @Column(nullable = false)
-    private Boolean smokingYn;
+    private boolean smokingYn;
 
-    private Boolean filteringConditionSmokingYn;
+    private boolean filteringConditionSmokingYn;
 
     @Column(nullable = false)
     private Religion religion;
@@ -85,7 +84,7 @@ public class MemberEntity extends BaseEntity {
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime depositDate;
 
-    @Column
+    @Column(length = 100)
     private String note;
 
     @ColumnDefault("5")
@@ -103,7 +102,6 @@ public class MemberEntity extends BaseEntity {
     private ActiveStatus status;
 
     private MemberEntity(final String kakaoId,
-                         final Long addressId,
                          final String name,
                          final Gender gender,
                          final LocalDateTime birthday,
@@ -126,7 +124,6 @@ public class MemberEntity extends BaseEntity {
                          final ActiveStatus status
     ) {
         this.kakaoId = kakaoId;
-        this.addressId = addressId;
         this.name = name;
         this.gender = gender;
         this.birthday = birthday;
@@ -151,7 +148,6 @@ public class MemberEntity extends BaseEntity {
 
     public static MemberEntity of(
             final String kakaoId,
-            final Long addressId,
             final String name,
             final Gender gender,
             final LocalDateTime birthday,
@@ -173,8 +169,8 @@ public class MemberEntity extends BaseEntity {
             final ApprovalStatus approvalStatus,
             final ActiveStatus status
     ) {
-        return new MemberEntity(kakaoId,
-                addressId,
+        return new MemberEntity(
+                kakaoId,
                 name,
                 gender,
                 birthday,
@@ -197,5 +193,11 @@ public class MemberEntity extends BaseEntity {
                 status);
     }
 
+    public Long id() {
+        return id;
+    }
 
+    public void setAddressId(final Long addressId) {
+        this.addressId = addressId;
+    }
 }

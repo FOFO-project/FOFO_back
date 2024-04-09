@@ -5,6 +5,7 @@ import com.fofo.core.storage.AddressEntity;
 import org.springframework.data.geo.Point;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public record Address(
         Long id,
@@ -30,6 +31,13 @@ public record Address(
     }
 
     public AddressEntity toEntity() {
-        return AddressEntity.of(zipcode, sido, sigungu, eupmyundong, detail, roadNameCd, new Point(location.x(), location.y()), status);
+        Point location;
+        if (Objects.isNull(this.location)) {
+            location = null;
+        } else {
+            location = new Point(this.location);
+        }
+        return AddressEntity.of(zipcode, sido, sigungu, eupmyundong, detail, roadNameCd, location, status);
     }
+
 }

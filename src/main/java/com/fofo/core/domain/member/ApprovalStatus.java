@@ -10,7 +10,6 @@ public enum ApprovalStatus {
     DEPOSIT_PENDING("10"),
     DEPOSIT_COMPLETED("20"),
     APPROVED("30"),
-    UNDEFINED("-1")
     ;
 
     private final String codeValue;
@@ -23,6 +22,6 @@ public enum ApprovalStatus {
         return Arrays.stream(ApprovalStatus.values())
                 .filter(v -> v.codeValue().equals(codeValue))
                 .findAny()
-                .orElse(UNDEFINED);
+                .orElseThrow(IllegalAccessError::new);
     }
 }

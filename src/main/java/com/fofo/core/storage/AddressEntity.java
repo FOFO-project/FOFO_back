@@ -73,4 +73,7 @@ public class AddressEntity extends BaseEntity {
         return new AddressEntity(zipcode, sido, sigungu, eupmyundong, detail, roadNameCd, location, status);
     }
 
+    public Long id() {
+        return id;
+    }
 }
