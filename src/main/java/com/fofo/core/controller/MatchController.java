@@ -41,8 +41,8 @@ public class MatchController {
             @ApiResponse(responseCode = "200", description = "매치 결과")
     })
     @GetMapping("/match-result")
-    public ResponseEntity<ApiResult<PageDto<List<MatchResponseDto>>>> getMatchResult(@Positive @RequestParam int page,
-                                                                                     @Positive @RequestParam int size){
+    public ResponseEntity<ApiResult<PageDto<List<MatchResponseDto>>>> getMatchResult(@Positive @RequestParam("page") int page,
+                                                                                     @Positive @RequestParam("size") int size){
         Page<Match> matchPage = matchService.getMatchResult(page, size);
         PageInfo pageInfo = new PageInfo(page, size, (int) matchPage.getTotalElements(), matchPage.getTotalPages());
         List<MatchResponseDto> response = matchPage.getContent().stream()
