@@ -1,11 +1,10 @@
 package com.fofo.core.domain.match;
 
-import com.fofo.core.controller.request.MatchRequestDto.ManualMatchRequestDto;
-import com.fofo.core.controller.response.MatchResponseDto.MatchResponseDto;
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.Member;
 import com.fofo.core.domain.member.MemberFinder;
 import com.fofo.core.storage.MemberEntity;
+import com.fofo.core.storage.MemberMatchEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -29,7 +28,7 @@ public class MatchService {
 
     // 자동 매치
     public void autoMatch(){
-        // 매칭 가능한 멤버리스트 입금 순으로 찾기
+        // 매칭 가능한 멤버리스트 입금 순으로 찾기 status d 아니고 approval status 입금완료
         List<Member> matchPossibleMembers = matchFinder.findMatchPossibleMembers();
         // 매치 매니저 - 싫어하는 조건 제외 사람 중 랜덤하게 매칭
         List<Match> matchList = matchManager.matchByFilteringCondition(matchPossibleMembers);
@@ -42,16 +41,27 @@ public class MatchService {
     }
 
     public void manualMatch(final Long manMemberId, final Long womanMemberId) {
+        // Member 조회 기능 개발 이후 수정 예정
+        MemberEntity manMemberEntity = matchFinder.findMember(manMemberId);
+        MemberEntity womanMemberEntity = matchFinder.findMember(womanMemberId);
 
-        MemberEntity manMemberEntity = memberFinder.findMember(manMemberId);
-        MemberEntity womanMemberEntity = memberFinder.findMember(womanMemberId);
+        // member entity -> member domain 가능해지면 입금 된 유저인지 체크 로직 추가 예정
+
+        // Member 조회 기능 개발 이후 수정 예정
 //        Match match = Match.of(
-//                Member.from(manMemberEntity),
-//                Member.from(womanMemberEntity),
+//                man,
+//                woman,
 //                MatchingStatus.MATCHING_PENDING,
 //                ActiveStatus.CREATED
 //        );
 //        matchAppender.appendMatch(match.toEntity());
+
+        matchAppender.appendMatch(MemberMatchEntity.of(
+                manMemberId,
+                womanMemberId,
+                MatchingStatus.MATCHING_PENDING,
+                ActiveStatus.CREATED
+        ));
     }
 
     public void goNextMatchStep(final List<Long> matchIdList, final MatchingStatus matchingStatus) {
