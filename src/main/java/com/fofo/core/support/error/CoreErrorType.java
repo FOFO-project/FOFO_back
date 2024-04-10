@@ -16,7 +16,10 @@ public enum CoreErrorType {
     INVALID_ARGUMENT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.COME502, "Invalid argument error has occurred.", LogLevel.ERROR),
 
     // Member 관련 에러
-    DUPLICATE_MEMBER_ERROR(HttpStatus.CONFLICT, CoreErrorCode.MEME500, "Duplicate member error has occurred", LogLevel.ERROR)
+    DUPLICATE_MEMBER_ERROR(HttpStatus.CONFLICT, CoreErrorCode.MEME500, "Duplicate member error has occurred", LogLevel.ERROR),
+
+    //Match 관련 에러
+    MATCH_ALREADY_COMPLETED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.MATE500, "Match is already COMPLETED.", LogLevel.ERROR),
     ;
 
     private final HttpStatus status;

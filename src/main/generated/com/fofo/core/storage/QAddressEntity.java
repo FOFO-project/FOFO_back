@@ -24,15 +24,11 @@ public class QAddressEntity extends EntityPathBase<AddressEntity> {
     //inherited
     public final DateTimePath<java.time.LocalDateTime> createdTime = _super.createdTime;
 
-    public final StringPath detail = createString("detail");
-
     public final StringPath eupmyundong = createString("eupmyundong");
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
 
     public final SimplePath<org.springframework.data.geo.Point> location = createSimple("location", org.springframework.data.geo.Point.class);
-
-    public final StringPath roadNameCd = createString("roadNameCd");
 
     public final StringPath sido = createString("sido");
 

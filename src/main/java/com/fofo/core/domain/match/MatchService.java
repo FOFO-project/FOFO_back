@@ -41,13 +41,13 @@ public class MatchService {
         matchRemover.removeMatch(matchIdList);
     }
 
-    public void manualMatch(final Long maleMemberId, final Long femaleMemberId) {
+    public void manualMatch(final Long manMemberId, final Long womanMemberId) {
 
-        MemberEntity maleMemberEntity = memberFinder.findMember(maleMemberId);
-        MemberEntity femaleMemberEntity = memberFinder.findMember(femaleMemberId);
+        MemberEntity manMemberEntity = memberFinder.findMember(manMemberId);
+        MemberEntity womanMemberEntity = memberFinder.findMember(womanMemberId);
 //        Match match = Match.of(
-//                Member.from(maleMemberEntity),
-//                Member.from(femaleMemberEntity),
+//                Member.from(manMemberEntity),
+//                Member.from(womanMemberEntity),
 //                MatchingStatus.MATCHING_PENDING,
 //                ActiveStatus.CREATED
 //        );

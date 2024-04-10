@@ -11,23 +11,23 @@ import java.util.List;
 
 public record Match(
         Long id,
-        Member male,
-        Member female,
+        Member man,
+        Member woman,
         MatchingStatus matchingStatus,
         ActiveStatus status,
         LocalDateTime createdTime,
         LocalDateTime modifiedTime
 ) {
     public static Match of(
-            final Member male,
-            final Member female,
+            final Member man,
+            final Member woman,
             final MatchingStatus matchingStatus,
             final ActiveStatus status
     ) {
         return new Match(
                 null,
-                male,
-                female,
+                man,
+                woman,
                 matchingStatus,
                 status,
                 null,
@@ -37,8 +37,8 @@ public record Match(
 
     public MemberMatchEntity toEntity() {
         return MemberMatchEntity.of(
-                male.id(),
-                female.id(),
+                man.id(),
+                woman.id(),
                 matchingStatus,
                 status
         );

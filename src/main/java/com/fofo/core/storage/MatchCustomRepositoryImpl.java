@@ -23,8 +23,8 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     private final JPAQueryFactory jpaQueryFactory;
     private final EntityManager em;
     private final QMemberMatchEntity match = QMemberMatchEntity.memberMatchEntity;
-    private final QMemberEntity maleMember = QMemberEntity.memberEntity;
-    private final QMemberEntity femaleMember = QMemberEntity.memberEntity;
+    private final QMemberEntity manMember = QMemberEntity.memberEntity;
+    private final QMemberEntity womanMember = QMemberEntity.memberEntity;
     @Override
     public long deleteMatchesBy(final List<Long> matchIdList) {
         long result = jpaQueryFactory.update(match)
@@ -44,18 +44,18 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                         Projections.bean(
                                 Match.class,
                                 match.id,
-                                maleMember,
-                                femaleMember,
+                                manMember,
+                                womanMember,
                                 match.matchingStatus
                         )
                 )
                 .from(match)
-                .join(maleMember).on(match.maleMemberId.eq(maleMember.id))
-                .join(femaleMember).on(match.femaleMemberId.eq(femaleMember.id))
+                .join(manMember).on(match.manMemberId.eq(manMember.id))
+                .join(womanMember).on(match.womanMemberId.eq(womanMember.id))
                 .where(
                         match.status.ne(ActiveStatus.DELETED),
-                        maleMember.status.ne(ActiveStatus.DELETED),
-                        femaleMember.status.ne(ActiveStatus.DELETED)
+                        manMember.status.ne(ActiveStatus.DELETED),
+                        womanMember.status.ne(ActiveStatus.DELETED)
                 )
                 .orderBy(match.createdTime.asc())
                 .offset(pageable.getOffset())
@@ -66,8 +66,8 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                 .from(match)
                 .where(
                         match.status.ne(ActiveStatus.DELETED),
-                        maleMember.status.ne(ActiveStatus.DELETED),
-                        femaleMember.status.ne(ActiveStatus.DELETED)
+                        manMember.status.ne(ActiveStatus.DELETED),
+                        womanMember.status.ne(ActiveStatus.DELETED)
                 )
                 .fetchOne();
         return new PageImpl<>(matchResultList, pageable, count == null? 0 : count);

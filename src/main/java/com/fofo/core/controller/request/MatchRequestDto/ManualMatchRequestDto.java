@@ -11,10 +11,10 @@ import jakarta.validation.constraints.NotNull;
 public record ManualMatchRequestDto(
         @Schema(description = "남성 회원 ID", example = "1")
         @NotNull
-        Long maleMemberId,
+        Long manMemberId,
         @Schema(description = "여성 회원 ID", example = "2")
         @NotNull
-        Long femaleMemberId
+        Long womanMemberId
 ) {
 
 }

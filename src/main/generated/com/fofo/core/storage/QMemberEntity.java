@@ -62,6 +62,8 @@ public class QMemberEntity extends EntityPathBase<MemberEntity> {
 
     public final NumberPath<Integer> passCount = createNumber("passCount", Integer.class);
 
+    public final StringPath phoneNumber = createString("phoneNumber");
+
     public final EnumPath<com.fofo.core.domain.member.Religion> religion = createEnum("religion", com.fofo.core.domain.member.Religion.class);
 
     public final BooleanPath smokingYn = createBoolean("smokingYn");

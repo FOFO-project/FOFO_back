@@ -1,6 +1,8 @@
 package com.fofo.core.domain.match;
 
 import com.fofo.core.domain.member.Member;
+import com.fofo.core.support.error.CoreApiException;
+import com.fofo.core.support.error.CoreErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +18,8 @@ public class MatchManager {
     public MatchingStatus getNextMatchingStatus(final MatchingStatus matchingStatus) {
         return switch (matchingStatus){
             case MATCHING_PENDING -> MatchingStatus.MATCHING_PROGRESSING;
-            case MATCHING_PROGRESSING, MATCHING_COMPLETED -> MatchingStatus.MATCHING_COMPLETED;
+            case MATCHING_PROGRESSING -> MatchingStatus.MATCHING_COMPLETED;
+            case MATCHING_COMPLETED -> throw new CoreApiException(CoreErrorType.MATCH_ALREADY_COMPLETED_ERROR);
         };
     }
 }

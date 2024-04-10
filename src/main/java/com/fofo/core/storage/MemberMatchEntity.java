@@ -39,25 +39,25 @@ public class MemberMatchEntity extends BaseEntity {
     private ActiveStatus status;
 
     private MemberMatchEntity(
-            final Long maleMemberId,
-            final Long femaleMemberId,
+            final Long manMemberId,
+            final Long womanMemberId,
             final MatchingStatus matchingStatus,
             final ActiveStatus status
     ){
-        this.maleMemberId = maleMemberId;
-        this.femaleMemberId = femaleMemberId;
+        this.manMemberId = manMemberId;
+        this.womanMemberId = womanMemberId;
         this.matchingStatus = matchingStatus;
         this.status = status;
     }
 
     public static MemberMatchEntity of(
-            final Long maleMemberId,
-            final Long femaleMemberId,
+            final Long manMemberId,
+            final Long womanMemberId,
             final MatchingStatus matchingStatus,
             final ActiveStatus status) {
         return new MemberMatchEntity(
-                maleMemberId,
-                femaleMemberId,
+                manMemberId,
+                womanMemberId,
                 matchingStatus,
                 status
         );
