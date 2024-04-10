@@ -30,7 +30,8 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
         long result = jpaQueryFactory.update(match)
                 .set(match.status, ActiveStatus.DELETED)
                 .set(match.updatedTime, LocalDateTime.now())
-                .where(match.id.in(matchIdList))
+                .where(match.id.in(matchIdList),
+                        match.matchingStatus.eq(MatchingStatus.MATCHING_PENDING))
                 .execute();
         em.flush();
         em.clear();
@@ -64,6 +65,8 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
         Long count = jpaQueryFactory
                 .select(match.count())
                 .from(match)
+                .join(manMember).on(match.manMemberId.eq(manMember.id))
+                .join(womanMember).on(match.womanMemberId.eq(womanMember.id))
                 .where(
                         match.status.ne(ActiveStatus.DELETED),
                         manMember.status.ne(ActiveStatus.DELETED),
@@ -83,6 +86,18 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
         em.flush();
         em.clear();
         return result;
+    }
+
+    @Override
+    public List<MemberMatchEntity> findUnCancelableMatches(List<Long> matchIdList) {
+        return jpaQueryFactory.select(match)
+                .from(match)
+                .where(
+                        match.id.in(matchIdList),
+                        match.matchingStatus.ne(MatchingStatus.MATCHING_PENDING)
+                                .or(match.status.eq(ActiveStatus.DELETED))
+                        )
+                .fetch();
     }
 
 

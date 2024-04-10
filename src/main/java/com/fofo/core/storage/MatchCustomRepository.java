@@ -11,4 +11,6 @@ public interface MatchCustomRepository {
     long deleteMatchesBy(final List<Long> matchIdList);
     Page<Match> selectMatchResultList(final Pageable pageable);
     long updateMatchStatus(final List<Long> matchIdList, MatchingStatus matchingStatus);
+
+    List<MemberMatchEntity> findUnCancelableMatches(List<Long> matchIdList);
 }
