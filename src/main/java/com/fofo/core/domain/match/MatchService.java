@@ -8,6 +8,7 @@ import com.fofo.core.storage.MemberMatchEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,7 @@ public class MatchService {
     }
 
     // 자동 매치
+    @Transactional
     public void autoMatch(){
         // 매칭 가능한 멤버리스트 입금 순으로 찾기 status d 아니고 approval status 입금완료
         List<Member> matchPossibleMembers = matchFinder.findMatchPossibleMembers();
@@ -40,6 +42,7 @@ public class MatchService {
         matchRemover.removeMatch(matchIdList);
     }
 
+    @Transactional
     public void manualMatch(final Long manMemberId, final Long womanMemberId) {
         // Member 조회 기능 개발 이후 수정 예정
         MemberEntity manMemberEntity = matchFinder.findMember(manMemberId);
