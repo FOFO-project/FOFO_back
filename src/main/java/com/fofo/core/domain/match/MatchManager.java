@@ -3,13 +3,11 @@ package com.fofo.core.domain.match;
 import com.fofo.core.domain.member.Member;
 import com.fofo.core.support.error.CoreApiException;
 import com.fofo.core.support.error.CoreErrorType;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
-@RequiredArgsConstructor
 public class MatchManager {
     public List<Match> matchByFilteringCondition(final List<Member> matchPossibleMembers) {
         return null;
