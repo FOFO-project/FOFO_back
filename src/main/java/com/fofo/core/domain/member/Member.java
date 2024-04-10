@@ -109,4 +109,33 @@ public record Member(
                 status);
     }
 
+    public static Member from(MemberEntity memberEntity) {
+        return new Member(
+                memberEntity.getId(),
+                memberEntity.getKakaoId(),
+                memberEntity.getName(),
+                memberEntity.getGender(),
+                memberEntity.getBirthday(),
+                memberEntity.getAge(),
+                memberEntity.getPhoneNumber(),
+                memberEntity.getFilteringConditionAgeRelation(),
+                memberEntity.getCompany(),
+                memberEntity.getJob(),
+                memberEntity.getUniversity(),
+                memberEntity.getMbti(),
+                memberEntity.isSmokingYn(),
+                memberEntity.isFilteringConditionSmokingYn(),
+                memberEntity.getReligion(),
+                memberEntity.getFilteringConditionReligion(),
+                memberEntity.getCharmingPoint(),
+                memberEntity.getDepositDate(),
+                memberEntity.getNote(),
+                memberEntity.getPassCount(),
+                memberEntity.getChance(),
+                memberEntity.getApprovalStatus(),
+                memberEntity.getStatus(),
+                memberEntity.getCreatedTime(),
+                memberEntity.getUpdatedTime()
+        );
+    }
 }

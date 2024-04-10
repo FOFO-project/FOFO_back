@@ -21,7 +21,8 @@ public enum CoreErrorType {
 
     //Match 관련 에러
     MATCH_ALREADY_COMPLETED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.MATE500, "Match is already COMPLETED.", LogLevel.ERROR),
-    MATCH_UNCANCELABLE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.MATE500, "UnCancelable Match exists", LogLevel.ERROR)
+    MATCH_UNCANCELABLE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.MATE500, "UnCancelable Match exists", LogLevel.ERROR),
+    MATCHABLE_MEMBER_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.MATE500, "Matchable member is not found", LogLevel.ERROR)
     ;
 
     private final HttpStatus status;

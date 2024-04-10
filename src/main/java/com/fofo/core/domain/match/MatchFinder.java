@@ -21,7 +21,13 @@ public class MatchFinder {
     private final MemberRepository memberRepository;
 
     public List<Member> findMatchPossibleMembers() {
-        return null;
+        List<MemberEntity> memberEntityList = memberRepository.findMatchPossibleMembers();
+        if (memberEntityList.isEmpty()){
+            throw new CoreApiException(CoreErrorType.MATCHABLE_MEMBER_NOT_FOUND);
+        }
+        return memberEntityList.stream()
+                .map(Member::from)
+                .toList();
     }
 
     public Page<Match> findMatches(final int page, final int size) {
