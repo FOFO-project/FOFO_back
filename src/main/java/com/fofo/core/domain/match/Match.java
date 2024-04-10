@@ -1,16 +1,14 @@
 package com.fofo.core.domain.match;
 
-import com.fofo.core.controller.response.MatchResponseDto.MatchResponseDto;
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.Member;
 import com.fofo.core.storage.MemberMatchEntity;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 public record Match(
         Long id,
+        // 이후 member + address 합쳐진 domain으로 변경 예정
         Member man,
         Member woman,
         MatchingStatus matchingStatus,
