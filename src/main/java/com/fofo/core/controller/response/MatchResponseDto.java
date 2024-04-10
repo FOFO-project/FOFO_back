@@ -1,4 +1,4 @@
-package com.fofo.core.controller.response.MatchResponseDto;
+package com.fofo.core.controller.response;
 
 
 import com.fofo.core.domain.match.Match;

@@ -1,4 +1,4 @@
-package com.fofo.core.controller.request.MatchRequestDto;
+package com.fofo.core.controller.request;
 
 import com.fofo.core.domain.match.MatchingStatus;
 import io.swagger.v3.oas.annotations.media.Schema;

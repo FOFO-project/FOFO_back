@@ -1,10 +1,10 @@
 package com.fofo.core.controller;
 
-import com.fofo.core.controller.request.MatchRequestDto.AutoMatchRequestDto;
-import com.fofo.core.controller.request.MatchRequestDto.ManualMatchRequestDto;
-import com.fofo.core.controller.request.MatchRequestDto.MatchCancelRequestDto;
-import com.fofo.core.controller.request.MatchRequestDto.MatchRequestDto;
-import com.fofo.core.controller.response.MatchResponseDto.MatchResponseDto;
+import com.fofo.core.controller.request.AutoMatchRequestDto;
+import com.fofo.core.controller.request.ManualMatchRequestDto;
+import com.fofo.core.controller.request.MatchCancelRequestDto;
+import com.fofo.core.controller.request.MatchRequestDto;
+import com.fofo.core.controller.response.MatchResponseDto;
 import com.fofo.core.controller.response.PageDto;
 import com.fofo.core.domain.match.Match;
 import com.fofo.core.domain.match.MatchService;
