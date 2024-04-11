@@ -1,10 +1,10 @@
 package com.fofo.core.controller;
 
-import com.fofo.core.controller.request.MatchRequestDto.AutoMatchRequestDto;
-import com.fofo.core.controller.request.MatchRequestDto.ManualMatchRequestDto;
-import com.fofo.core.controller.request.MatchRequestDto.MatchCancelRequestDto;
-import com.fofo.core.controller.request.MatchRequestDto.MatchRequestDto;
-import com.fofo.core.controller.response.MatchResponseDto.MatchResponseDto;
+import com.fofo.core.controller.request.AutoMatchRequestDto;
+import com.fofo.core.controller.request.ManualMatchRequestDto;
+import com.fofo.core.controller.request.MatchCancelRequestDto;
+import com.fofo.core.controller.request.MatchRequestDto;
+import com.fofo.core.controller.response.MatchResponseDto;
 import com.fofo.core.controller.response.PageDto;
 import com.fofo.core.domain.match.Match;
 import com.fofo.core.domain.match.MatchService;
@@ -41,8 +41,8 @@ public class MatchController {
             @ApiResponse(responseCode = "200", description = "매치 결과")
     })
     @GetMapping("/match-result")
-    public ResponseEntity<ApiResult<PageDto<List<MatchResponseDto>>>> getMatchResult(@Positive @RequestParam int page,
-                                                                                     @Positive @RequestParam int size){
+    public ResponseEntity<ApiResult<PageDto<List<MatchResponseDto>>>> getMatchResult(@Positive @RequestParam("page") int page,
+                                                                                     @Positive @RequestParam("size") int size){
         Page<Match> matchPage = matchService.getMatchResult(page, size);
         PageInfo pageInfo = new PageInfo(page, size, (int) matchPage.getTotalElements(), matchPage.getTotalPages());
         List<MatchResponseDto> response = matchPage.getContent().stream()

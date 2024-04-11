@@ -17,11 +17,11 @@ public enum CoreErrorType {
 
     // Member 관련 에러
     DUPLICATE_MEMBER_ERROR(HttpStatus.CONFLICT, CoreErrorCode.MEME500, "Duplicate member error has occurred", LogLevel.ERROR),
-    MEMBER_NOT_FOUND_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.MEME500, "Memeber Not found", LogLevel.ERROR),
+    MEMBER_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, CoreErrorCode.MEME501, "Memeber Not found", LogLevel.ERROR),
 
     //Match 관련 에러
-    MATCH_ALREADY_COMPLETED_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.MATE500, "Match is already COMPLETED.", LogLevel.ERROR),
-    MATCH_UNCANCELABLE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.MATE500, "UnCancelable Match exists", LogLevel.ERROR),
+    MATCH_ALREADY_COMPLETED_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MATE500, "Match is already COMPLETED.", LogLevel.ERROR),
+    MATCH_UNCANCELABLE_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MATE501, "UnCancelable Match exists", LogLevel.ERROR),
     MATCHABLE_MEMBER_NOT_FOUND(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.MATE500, "Matchable member is not found", LogLevel.ERROR)
     ;
 

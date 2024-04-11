@@ -11,14 +11,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
 @RequiredArgsConstructor
-@Transactional
 public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     private final JPAQueryFactory jpaQueryFactory;
     private final EntityManager em;
