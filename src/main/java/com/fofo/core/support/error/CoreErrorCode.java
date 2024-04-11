@@ -7,6 +7,10 @@ public enum CoreErrorCode {
     COME502,
 
     // Member 관련 에러
-    MEME500
-    ;
+    MEME500,
+    MEME501,
+
+    // Match 관련 에러
+    MATE500,
+    MATE501;
 }

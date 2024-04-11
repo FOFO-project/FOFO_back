@@ -1,5 +1,6 @@
 package com.fofo.core.domain.match;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fofo.core.support.error.CoreApiException;
 import lombok.RequiredArgsConstructor;
 
@@ -20,10 +21,12 @@ public enum MatchingStatus {
         return codeValue;
     }
 
+    @JsonCreator
     public static MatchingStatus enumOfCode(final String codeValue) {
         return Arrays.stream(MatchingStatus.values())
                 .filter(v -> v.codeValue().equals(codeValue))
                 .findAny()
                 .orElseThrow(() -> new CoreApiException(ENUM_MAPPING_ERROR));
     }
+
 }

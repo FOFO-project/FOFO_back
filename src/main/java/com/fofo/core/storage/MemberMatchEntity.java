@@ -38,4 +38,28 @@ public class MemberMatchEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ActiveStatus status;
 
+    private MemberMatchEntity(
+            final Long manMemberId,
+            final Long womanMemberId,
+            final MatchingStatus matchingStatus,
+            final ActiveStatus status
+    ){
+        this.manMemberId = manMemberId;
+        this.womanMemberId = womanMemberId;
+        this.matchingStatus = matchingStatus;
+        this.status = status;
+    }
+
+    public static MemberMatchEntity of(
+            final Long manMemberId,
+            final Long womanMemberId,
+            final MatchingStatus matchingStatus,
+            final ActiveStatus status) {
+        return new MemberMatchEntity(
+                manMemberId,
+                womanMemberId,
+                matchingStatus,
+                status
+        );
+    }
 }
