@@ -13,6 +13,6 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     @Query("select m from MemberEntity m " +
             "where m.approvalStatus = '30' " +
             "and m.status != 'DELETED' " +
-            "order by m. deposit_date DESC ")
+            "order by m.depositDate DESC ")
     List<MemberEntity> findMatchPossibleMembers();
 }
