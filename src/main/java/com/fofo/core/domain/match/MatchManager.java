@@ -113,5 +113,6 @@ public class MatchManager {
     }
 
     public List<Match> selectedAutoMatchByFilteringCondition(List<Member> selectedMembers, List<Member> matchPossibleMembers) {
+        return null;
     }
 }
