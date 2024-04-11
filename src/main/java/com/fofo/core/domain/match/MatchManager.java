@@ -11,57 +11,80 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.LongStream;
 
 @Component
 @RequiredArgsConstructor
 public class MatchManager {
-    public List<Match> matchByFilteringCondition(final List<Member> matchPossibleMembers) {
 
+    public List<Match> autoMatchByFilteringCondition(final List<Member> matchPossibleMembers) {
         List<Match> result = new ArrayList<>();
+        Map<Member, Set<Member>> filterMap = getFilteredMemberMap(matchPossibleMembers);
+        Map<Member, Boolean> matchingYnMap = getMatchingYnMap(matchPossibleMembers);
+        List<Member> randomMemberlist = getRandomList(matchPossibleMembers);
 
+        for (Member member : matchPossibleMembers){
+            if(matchingYnMap.get(member)) continue;
+            for (Member targetMember : randomMemberlist){
+                if(matchingYnMap.get(targetMember)) continue;
+                Pair<Member, Member> memberPair = identifyGender(member, targetMember);
+                if (!filterMap.get(member).contains(targetMember) && !filterMap.get(targetMember).contains(member)){
+                    result.add(Match.of(
+                            memberPair.getLeft(),
+                            memberPair.getRight(),
+                            MatchingStatus.MATCHING_PENDING,
+                            ActiveStatus.CREATED
+                    ));
+                    matchingYnMap.put(member, true);
+                    matchingYnMap.put(targetMember, true);
+                    break;
+                }
+            }
+        }
+        return result;
+    }
+
+    public MatchingStatus getNextMatchingStatus(final MatchingStatus matchingStatus) {
+        return switch (matchingStatus){
+            case MATCHING_PENDING -> MatchingStatus.MATCHING_PROGRESSING;
+            case MATCHING_PROGRESSING -> MatchingStatus.MATCHING_COMPLETED;
+            case MATCHING_COMPLETED -> throw new CoreApiException(CoreErrorType.MATCH_ALREADY_COMPLETED_ERROR);
+        };
+    }
+
+    private List<Member> getRandomList(List<Member> matchPossibleMembers) {
         Random random = new Random();
         List<Integer> randomIdxList = random.ints(matchPossibleMembers.size())
                 .boxed()
                 .toList();
+        return randomIdxList.stream()
+                .map(matchPossibleMembers::get)
+                .toList();
+    }
 
-        for(int i = 0; i < matchPossibleMembers.size(); i++){
-            Member member = matchPossibleMembers.get(i);
-            if (member == null) continue;
-            for(int j : randomIdxList){
-                Member targetMember = matchPossibleMembers.get(j);
-                if (i == j || targetMember == null){
-                    continue;
-                }
-
-                if (member.gender().equals(targetMember.gender())){
-                    continue;
-                }
-
-                if (member.filteringConditionSmokingYn() == targetMember.smokingYn()
-                        || member.filteringConditionReligion().equals(targetMember.religion())
-                        || member.filteringConditionAgeRelation().equals(getAgeRelation(member, targetMember))){
-                    continue;
-                }
-
-                Pair<Member, Member> memberPair = identifyGender(member, targetMember);
-                result.add(Match.of(
-                        memberPair.getLeft(),
-                        memberPair.getRight(),
-                        MatchingStatus.MATCHING_PENDING,
-                        ActiveStatus.CREATED
+    private Map<Member, Boolean> getMatchingYnMap(List<Member> matchPossibleMembers) {
+        return matchPossibleMembers.stream()
+                .collect(Collectors.toMap(
+                        member -> member,
+                        member -> false
                 ));
-                matchPossibleMembers.set(i, null);
-                matchPossibleMembers.set(j, null);
-                break;
-            }
-        }
+    }
 
-        return result;
+    private Map<Member, Set<Member>> getFilteredMemberMap(List<Member> matchPossibleMembers) {
+        return matchPossibleMembers.stream()
+                .collect(Collectors.toMap(
+                        member -> member,
+                        member -> matchPossibleMembers.stream()
+                                .filter(targetMember -> member.equals(targetMember)
+                                        || member.filteringConditionSmokingYn() == targetMember.smokingYn()
+                                        || member.filteringConditionReligion().equals(targetMember.religion())
+                                        || member.filteringConditionAgeRelation().equals(getAgeRelation(member, targetMember)))
+                                .collect(Collectors.toSet())
+                ));
     }
 
     private Pair<Member, Member> identifyGender(Member memberA, Member memberB) {
@@ -82,11 +105,13 @@ public class MatchManager {
         }
     }
 
-    public MatchingStatus getNextMatchingStatus(final MatchingStatus matchingStatus) {
-        return switch (matchingStatus){
-            case MATCHING_PENDING -> MatchingStatus.MATCHING_PROGRESSING;
-            case MATCHING_PROGRESSING -> MatchingStatus.MATCHING_COMPLETED;
-            case MATCHING_COMPLETED -> throw new CoreApiException(CoreErrorType.MATCH_ALREADY_COMPLETED_ERROR);
-        };
+    public List<Member> getSelectedMebers(List<Long> memberIdList, List<Member> matchPossibleMembers) {
+        return null;
+//        return matchPossibleMembers.stream()
+//                .filter(member -> memberIdList.stream().findFirst())
+//                .toList();
+    }
+
+    public List<Match> selectedAutoMatchByFilteringCondition(List<Member> selectedMembers, List<Member> matchPossibleMembers) {
     }
 }

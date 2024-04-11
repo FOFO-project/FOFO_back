@@ -28,11 +28,22 @@ public class MatchService {
 
     // 자동 매치
     public void autoMatch(){
+        // 매칭 가능한 멤버리스트 입금 순으로 찾기
+        List<Member> matchPossibleMembers = matchFinder.findMatchPossibleMembers();
+        // 싫어하는 조건 제외 사람 중 랜덤하게 매칭
+        List<Match> matchList = matchManager.autoMatchByFilteringCondition(matchPossibleMembers);
+
+        matchAppender.appendMatches(matchList);
+    }
+
+    // 선택 자동 매치
+    public void selectedAutoMatch(final List<Long> memberIdList) {
         // 매칭 가능한 멤버리스트 입금 순으로 찾기 status d 아니고 approval status 입금완료
         List<Member> matchPossibleMembers = matchFinder.findMatchPossibleMembers();
-        // 매치 매니저 - 싫어하는 조건 제외 사람 중 랜덤하게 매칭
-        List<Match> matchList = matchManager.matchByFilteringCondition(matchPossibleMembers);
-        // 매치 어펜더 - 매치 추가
+        // memberIdList인 애들만 filtering
+        List<Member> selectedMembers = matchManager.getSelectedMebers(memberIdList, matchPossibleMembers);
+        //
+        List<Match> matchList = matchManager.selectedAutoMatchByFilteringCondition(selectedMembers, matchPossibleMembers);
         matchAppender.appendMatches(matchList);
     }
 
@@ -68,4 +79,5 @@ public class MatchService {
         MatchingStatus nextMatchingStatus = matchManager.getNextMatchingStatus(matchingStatus);
         matchUpdater.updateMatchStatus(matchIdList, nextMatchingStatus);
     }
+
 }

@@ -58,7 +58,11 @@ public class MatchController {
     })
     @PostMapping("/match/auto")
     public ResponseEntity<ApiResult<?>> autoMatch(@Valid @RequestBody AutoMatchRequestDto autoMatchRequestDto){
-        matchService.autoMatch();
+        if(autoMatchRequestDto.memberIdList() == null || autoMatchRequestDto.memberIdList().isEmpty()){
+            matchService.autoMatch();
+        } else{
+            matchService.selectedAutoMatch(autoMatchRequestDto.memberIdList());
+        }
         return new ResponseEntity<>(ApiResult.success(), HttpStatus.CREATED);
     }
 

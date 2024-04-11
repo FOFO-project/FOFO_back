@@ -1,9 +1,5 @@
 package com.fofo.core.controller.request.MatchRequestDto;
 
-import com.fofo.core.domain.ActiveStatus;
-import com.fofo.core.domain.match.Match;
-import com.fofo.core.domain.match.MatchingStatus;
-import com.fofo.core.storage.MemberMatchEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
