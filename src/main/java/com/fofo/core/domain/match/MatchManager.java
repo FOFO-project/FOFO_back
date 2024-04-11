@@ -6,7 +6,6 @@ import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.Member;
 import com.fofo.core.support.error.CoreApiException;
 import com.fofo.core.support.error.CoreErrorType;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 
@@ -15,21 +14,42 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
 public class MatchManager {
 
-    public List<Match> autoMatchByFilteringCondition(final List<Member> matchPossibleMembers) {
-        List<Match> result = new ArrayList<>();
-        Map<Member, Set<Member>> filterMap = getFilteredMemberMap(matchPossibleMembers);
-        Map<Member, Boolean> matchingYnMap = getMatchingYnMap(matchPossibleMembers);
-        List<Member> randomMemberlist = getRandomList(matchPossibleMembers);
+    public List<Match> autoMatchByFilteringCondition(
+            final List<Member> selectedMembers,
+            final List<Member> matchPossibleMembers
+    ) {
+        return getMatchList(
+                selectedMembers,
+                getShuffledList(matchPossibleMembers),
+                getFilteredMemberMap(matchPossibleMembers),
+                getMatchingYnMap(matchPossibleMembers)
+        );
+    }
 
-        for (Member member : matchPossibleMembers){
+    public MatchingStatus getNextMatchingStatus(final MatchingStatus matchingStatus) {
+        return switch (matchingStatus){
+            case MATCHING_PENDING -> MatchingStatus.MATCHING_PROGRESSING;
+            case MATCHING_PROGRESSING -> MatchingStatus.MATCHING_COMPLETED;
+            case MATCHING_COMPLETED -> throw new CoreApiException(CoreErrorType.MATCH_ALREADY_COMPLETED_ERROR);
+        };
+    }
+
+    private List<Match> getMatchList(
+            List<Member> selectedMembers,
+            List<Member> matchPossibleMembers,
+            Map<Member, Set<Member>> filterMap,
+            Map<Member, Boolean> matchingYnMap)
+    {
+        List<Match> result = new ArrayList<>();
+        for (Member member : selectedMembers){
             if(matchingYnMap.get(member)) continue;
-            for (Member targetMember : randomMemberlist){
+            for (Member targetMember : matchPossibleMembers){
                 if(matchingYnMap.get(targetMember)) continue;
                 Pair<Member, Member> memberPair = identifyGender(member, targetMember);
                 if (!filterMap.get(member).contains(targetMember) && !filterMap.get(targetMember).contains(member)){
@@ -48,15 +68,7 @@ public class MatchManager {
         return result;
     }
 
-    public MatchingStatus getNextMatchingStatus(final MatchingStatus matchingStatus) {
-        return switch (matchingStatus){
-            case MATCHING_PENDING -> MatchingStatus.MATCHING_PROGRESSING;
-            case MATCHING_PROGRESSING -> MatchingStatus.MATCHING_COMPLETED;
-            case MATCHING_COMPLETED -> throw new CoreApiException(CoreErrorType.MATCH_ALREADY_COMPLETED_ERROR);
-        };
-    }
-
-    private List<Member> getRandomList(List<Member> matchPossibleMembers) {
+    private List<Member> getShuffledList(List<Member> matchPossibleMembers) {
         Random random = new Random();
         List<Integer> randomIdxList = random.ints(matchPossibleMembers.size())
                 .boxed()
@@ -105,14 +117,10 @@ public class MatchManager {
         }
     }
 
-    public List<Member> getSelectedMebers(List<Long> memberIdList, List<Member> matchPossibleMembers) {
-        return null;
-//        return matchPossibleMembers.stream()
-//                .filter(member -> memberIdList.stream().findFirst())
-//                .toList();
+    public List<Member> getSelectedMembers(List<Long> memberIdList, List<Member> matchPossibleMembers) {
+        return matchPossibleMembers.stream()
+                .filter(member -> memberIdList.stream().anyMatch(Predicate.isEqual(member.id())))
+                .toList();
     }
 
-    public List<Match> selectedAutoMatchByFilteringCondition(List<Member> selectedMembers, List<Member> matchPossibleMembers) {
-        return null;
-    }
 }

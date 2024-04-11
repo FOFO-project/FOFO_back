@@ -57,12 +57,9 @@ public class MatchController {
             @ApiResponse(responseCode = "200", description = "자동 매치")
     })
     @PostMapping("/match/auto")
-    public ResponseEntity<ApiResult<?>> autoMatch(@Valid @RequestBody AutoMatchRequestDto autoMatchRequestDto){
-        if(autoMatchRequestDto.memberIdList() == null || autoMatchRequestDto.memberIdList().isEmpty()){
-            matchService.autoMatch();
-        } else{
-            matchService.selectedAutoMatch(autoMatchRequestDto.memberIdList());
-        }
+    public ResponseEntity<ApiResult<?>> autoMatch(@Valid @RequestBody(required = false) AutoMatchRequestDto autoMatchRequestDto){
+        // 랜덤으로 오토매치를 하게되면 -> 만약 대상 멤버 중 매칭이 이루어 지지않은 멤버가 생긴 경우 전체 매칭 취소? 아니면 매치 되지 않은 멤버 빼고 매치?
+        matchService.autoMatch(autoMatchRequestDto == null ? null : autoMatchRequestDto.memberIdList());
         return new ResponseEntity<>(ApiResult.success(), HttpStatus.CREATED);
     }
 

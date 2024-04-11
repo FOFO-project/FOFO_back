@@ -27,25 +27,21 @@ public class MatchService {
         return matchFinder.findMatches(page, size);
     }
 
-    // 자동 매치
     @Transactional
-    public void autoMatch(){
+    public void autoMatch(final List<Long> memberIdList){
         // 매칭 가능한 멤버리스트 입금 순으로 찾기
         List<Member> matchPossibleMembers = matchFinder.findMatchPossibleMembers();
-        // 싫어하는 조건 제외 사람 중 랜덤하게 매칭
-        List<Match> matchList = matchManager.autoMatchByFilteringCondition(matchPossibleMembers);
-
-        matchAppender.appendMatches(matchList);
-    }
-
-    // 선택 자동 매치
-    public void selectedAutoMatch(final List<Long> memberIdList) {
-        // 매칭 가능한 멤버리스트 입금 순으로 찾기 status d 아니고 approval status 입금완료
-        List<Member> matchPossibleMembers = matchFinder.findMatchPossibleMembers();
-        // memberIdList인 애들만 filtering
-        List<Member> selectedMembers = matchManager.getSelectedMebers(memberIdList, matchPossibleMembers);
-        //
-        List<Match> matchList = matchManager.selectedAutoMatchByFilteringCondition(selectedMembers, matchPossibleMembers);
+        List<Match> matchList;
+        if(memberIdList == null || memberIdList.isEmpty()){
+            // 자동 매치
+            // 싫어하는 조건 제외 사람 중 랜덤하게 매칭
+            matchList = matchManager.autoMatchByFilteringCondition(matchPossibleMembers, matchPossibleMembers);
+        } else{
+            //선택 자동 매치
+            // memberIdList인 애들만 filtering
+            List<Member> selectedMembers = matchManager.getSelectedMembers(memberIdList, matchPossibleMembers);
+            matchList = matchManager.autoMatchByFilteringCondition(selectedMembers, matchPossibleMembers);
+        }
         matchAppender.appendMatches(matchList);
     }
 
