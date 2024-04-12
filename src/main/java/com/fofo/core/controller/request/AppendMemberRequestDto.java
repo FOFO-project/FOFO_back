@@ -55,7 +55,7 @@ public record AppendMemberRequestDto(
         @Schema(description = "흡연 여부", example = "false")
         boolean smokingYn,
         @Schema(description = "상대 흡연 조건", example = "false")
-        boolean filteringConditionSmokingYn,
+        boolean filteringSmoker,
         @Schema(description = "종교")
         @NotNull
         Religion religion,
@@ -80,7 +80,7 @@ public record AppendMemberRequestDto(
                         university,
                         mbti,
                         smokingYn,
-                        filteringConditionSmokingYn,
+                        filteringSmoker,
                         religion,
                         filteringConditionReligion,
                         charmingPoint,

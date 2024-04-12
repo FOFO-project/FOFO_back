@@ -18,12 +18,14 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "MEMBER", uniqueConstraints = {@UniqueConstraint(name = "KAKAO_ID_UNIQUE", columnNames = {"KAKAO_ID"})})
@@ -74,7 +76,8 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = false)
     private boolean smokingYn;
 
-    private boolean filteringConditionSmokingYn;
+    @Column(nullable = false)
+    private boolean filteringSmoker;
 
     @Column(nullable = false)
     private Religion religion;
@@ -116,7 +119,7 @@ public class MemberEntity extends BaseEntity {
                          final String university,
                          final Mbti mbti,
                          final Boolean smokingYn,
-                         final Boolean filteringConditionSmokingYn,
+                         final Boolean filteringSmoker,
                          final Religion religion,
                          final Religion filteringConditionReligion,
                          final String charmingPoint,
@@ -139,7 +142,7 @@ public class MemberEntity extends BaseEntity {
         this.university = university;
         this.mbti = mbti;
         this.smokingYn = smokingYn;
-        this.filteringConditionSmokingYn = filteringConditionSmokingYn;
+        this.filteringSmoker = filteringSmoker;
         this.religion = religion;
         this.filteringConditionReligion = filteringConditionReligion;
         this.charmingPoint = charmingPoint;
@@ -164,7 +167,7 @@ public class MemberEntity extends BaseEntity {
             final String university,
             final Mbti mbti,
             final Boolean smokingYn,
-            final Boolean filteringConditionSmokingYn,
+            final Boolean filteringSmoker,
             final Religion religion,
             final Religion filteringConditionReligion,
             final String charmingPoint,
@@ -188,7 +191,7 @@ public class MemberEntity extends BaseEntity {
                 university,
                 mbti,
                 smokingYn,
-                filteringConditionSmokingYn,
+                filteringSmoker,
                 religion,
                 filteringConditionReligion,
                 charmingPoint,

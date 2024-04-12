@@ -19,7 +19,7 @@ public record Member(
         String university,
         Mbti mbti,
         boolean smokingYn,
-        boolean filteringConditionSmokingYn,
+        boolean filteringSmoker,
         Religion religion,
         Religion filteringConditionReligion,
         String charmingPoint,
@@ -46,7 +46,7 @@ public record Member(
             final String university,
             final Mbti mbti,
             final Boolean smokingYn,
-            final Boolean filteringConditionSmokingYn,
+            final Boolean filteringSmoker,
             final Religion religion,
             final Religion filteringConditionReligion,
             final String charmingPoint,
@@ -70,7 +70,7 @@ public record Member(
                 university,
                 mbti,
                 smokingYn,
-                filteringConditionSmokingYn,
+                filteringSmoker,
                 religion,
                 filteringConditionReligion,
                 charmingPoint,
@@ -97,7 +97,7 @@ public record Member(
                 university,
                 mbti,
                 smokingYn,
-                filteringConditionSmokingYn,
+                filteringSmoker,
                 religion,
                 filteringConditionReligion,
                 charmingPoint,
@@ -109,4 +109,33 @@ public record Member(
                 status);
     }
 
+    public static Member from(MemberEntity memberEntity) {
+        return new Member(
+                memberEntity.getId(),
+                memberEntity.getKakaoId(),
+                memberEntity.getName(),
+                memberEntity.getGender(),
+                memberEntity.getBirthday(),
+                memberEntity.getAge(),
+                memberEntity.getPhoneNumber(),
+                memberEntity.getFilteringConditionAgeRelation(),
+                memberEntity.getCompany(),
+                memberEntity.getJob(),
+                memberEntity.getUniversity(),
+                memberEntity.getMbti(),
+                memberEntity.isSmokingYn(),
+                memberEntity.isFilteringSmoker(),
+                memberEntity.getReligion(),
+                memberEntity.getFilteringConditionReligion(),
+                memberEntity.getCharmingPoint(),
+                memberEntity.getDepositDate(),
+                memberEntity.getNote(),
+                memberEntity.getPassCount(),
+                memberEntity.getChance(),
+                memberEntity.getApprovalStatus(),
+                memberEntity.getStatus(),
+                memberEntity.getCreatedTime(),
+                memberEntity.getUpdatedTime()
+        );
+    }
 }

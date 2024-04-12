@@ -2,6 +2,7 @@ package com.fofo.core.domain.match;
 
 import com.fofo.core.domain.member.Member;
 import com.fofo.core.storage.MatchRepository;
+import com.fofo.core.storage.MatchResultDto;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
@@ -21,10 +22,16 @@ public class MatchFinder {
     private final MemberRepository memberRepository;
 
     public List<Member> findMatchPossibleMembers() {
-        return null;
+        List<MemberEntity> memberEntityList = memberRepository.findMatchPossibleMembers();
+        if (memberEntityList.isEmpty()){
+            throw new CoreApiException(CoreErrorType.MATCHABLE_MEMBER_NOT_FOUND);
+        }
+        return memberEntityList.stream()
+                .map(Member::from)
+                .toList();
     }
 
-    public Page<Match> findMatches(final int page, final int size) {
+    public Page<MatchResultDto> findMatches(final int page, final int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return matchRepository.selectMatchResultList(pageRequest);
     }
@@ -35,4 +42,5 @@ public class MatchFinder {
                         CoreErrorType.MEMBER_NOT_FOUND_ERROR)
                 );
     }
+
 }
