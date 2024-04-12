@@ -7,7 +7,6 @@ import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Religion;
 import com.fofo.core.storage.converter.ApprovalStatusConverter;
-import com.querydsl.core.annotations.QueryProjection;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -107,8 +106,7 @@ public class MemberEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ActiveStatus status;
 
-    @QueryProjection
-    public MemberEntity(final String kakaoId,
+    private MemberEntity(final String kakaoId,
                          final String name,
                          final Gender gender,
                          final LocalDateTime birthday,
