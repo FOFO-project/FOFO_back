@@ -56,7 +56,8 @@ public class MatchController {
 
     @Operation(summary = "전체 or 선택 자동 매치")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "자동 매치")
+            @ApiResponse(responseCode = "201", description = "자동 매치 생성"),
+            @ApiResponse(responseCode = "500", description = "Matchable member is not found")
     })
     @PostMapping("/match/auto")
     public ResponseEntity<ApiResult<MatchResponseDto>> autoMatch(@Valid @RequestBody(required = false) AutoMatchRequestDto autoMatchRequestDto){
@@ -70,7 +71,7 @@ public class MatchController {
 
     @Operation(summary = "수동 매치")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "수동 매치")
+            @ApiResponse(responseCode = "201", description = "수동 매치 생성")
     })
     @PostMapping("/match/manual")
     public ResponseEntity<ApiResult<?>> manualMatch(@Valid @RequestBody ManualMatchRequestDto manualMatchRequestDto){
@@ -83,7 +84,8 @@ public class MatchController {
 
     @Operation(summary = "매칭 취소")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "매칭 취소")
+            @ApiResponse(responseCode = "200", description = "매칭 취소"),
+            @ApiResponse(responseCode = "400", description = "취소 불가능한 매치 존재 에러")
     })
     @DeleteMapping("/match")
     public ResponseEntity<ApiResult<?>> cancelMatch(@Valid @RequestBody MatchCancelRequestDto matchCancelRequestDto){
@@ -93,7 +95,8 @@ public class MatchController {
 
     @Operation(summary = "매칭 다음 단계")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "매칭 다음 단계")
+            @ApiResponse(responseCode = "200", description = "매칭 다음 단계"),
+            @ApiResponse(responseCode = "400", description = "이미 완료된 매치 에러")
     })
     @PostMapping("/match")
     public ResponseEntity<ApiResult<?>> goNextMatchStep(@Valid @RequestBody MatchRequestDto matchRequestDto){
