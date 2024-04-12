@@ -22,7 +22,7 @@ public record MatchResultMemberDto (
     String university,
     Mbti mbti,
     boolean smokingYn,
-    boolean filteringConditionSmokingYn,
+    boolean filteringSmoker,
     Religion religion,
     Religion filteringConditionReligion,
     String charmingPoint,
@@ -33,7 +33,7 @@ public record MatchResultMemberDto (
     String imageUrl
 ){
     @QueryProjection
-    public MatchResultMemberDto(String kakaoId, MatchResultAddressDto address, String name, Gender gender, LocalDateTime birthday, Integer age, String phoneNumber, AgeRelationType filteringConditionAgeRelation, String company, String job, String university, Mbti mbti, boolean smokingYn, boolean filteringConditionSmokingYn, Religion religion, Religion filteringConditionReligion, String charmingPoint, LocalDateTime depositDate, String note, Integer passCount, Integer chance, String imageUrl) {
+    public MatchResultMemberDto(String kakaoId, MatchResultAddressDto address, String name, Gender gender, LocalDateTime birthday, Integer age, String phoneNumber, AgeRelationType filteringConditionAgeRelation, String company, String job, String university, Mbti mbti, boolean smokingYn, boolean filteringSmoker, Religion religion, Religion filteringConditionReligion, String charmingPoint, LocalDateTime depositDate, String note, Integer passCount, Integer chance, String imageUrl) {
         this.kakaoId = kakaoId;
         this.address = address;
         this.name = name;
@@ -47,7 +47,7 @@ public record MatchResultMemberDto (
         this.university = university;
         this.mbti = mbti;
         this.smokingYn = smokingYn;
-        this.filteringConditionSmokingYn = filteringConditionSmokingYn;
+        this.filteringSmoker = filteringSmoker;
         this.religion = religion;
         this.filteringConditionReligion = filteringConditionReligion;
         this.charmingPoint = charmingPoint;
@@ -73,7 +73,7 @@ public record MatchResultMemberDto (
                 member.university,
                 member.mbti,
                 member.smokingYn,
-                member.filteringConditionSmokingYn,
+                member.filteringSmoker,
                 member.religion,
                 member.filteringConditionReligion,
                 member.charmingPoint,
