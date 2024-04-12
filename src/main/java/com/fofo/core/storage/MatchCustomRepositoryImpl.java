@@ -19,8 +19,11 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     private final JPAQueryFactory jpaQueryFactory;
     private final EntityManager em;
     private final QMemberMatchEntity match = QMemberMatchEntity.memberMatchEntity;
-    private final QMemberEntity manMember = QMemberEntity.memberEntity;
-    private final QMemberEntity womanMember = QMemberEntity.memberEntity;
+    private final QMemberEntity manMember = new QMemberEntity("manMember");
+    private final QMemberEntity womanMember = new QMemberEntity("womanMember");
+    private final QAddressEntity manAddress = new QAddressEntity("manAddress");
+    private final QAddressEntity womanAddress = new QAddressEntity("womanAddress");
+
     @Override
     public long deleteMatchesBy(final List<Long> matchIdList) {
         long result = jpaQueryFactory.update(match)
@@ -37,10 +40,12 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     @Override
     public Page<MatchResultDto> selectMatchResultList(final Pageable pageable) {
         List<MatchResultDto> matchResultList = jpaQueryFactory
-                .select(MatchResultDto.getQMatchResultDto(match, manMember, womanMember))
+                .select(MatchResultDto.from(match, manMember, womanMember, manAddress, womanAddress))
                 .from(match)
-                .join(manMember).on(match.manMemberId.eq(manMember.id))
-                .join(womanMember).on(match.womanMemberId.eq(womanMember.id))
+                .leftJoin(manMember).on(match.manMemberId.eq(manMember.id))
+                .leftJoin(womanMember).on(match.womanMemberId.eq(womanMember.id))
+                .leftJoin(manAddress).on(manMember.addressId.eq(manAddress.id))
+                .leftJoin(womanAddress).on(womanMember.addressId.eq(womanAddress.id))
                 .where(
                         match.status.ne(ActiveStatus.DELETED),
                         manMember.status.ne(ActiveStatus.DELETED),
@@ -61,6 +66,7 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                         womanMember.status.ne(ActiveStatus.DELETED)
                 )
                 .fetchOne();
+//        List<MatchResultDto> matchResultList = new ArrayList<>();
         return new PageImpl<>(matchResultList, pageable, count == null? 0 : count);
     }
 

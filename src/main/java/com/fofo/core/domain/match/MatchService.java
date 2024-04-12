@@ -2,7 +2,6 @@ package com.fofo.core.domain.match;
 
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.Member;
-import com.fofo.core.domain.member.MemberFinder;
 import com.fofo.core.storage.MatchResultDto;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberMatchEntity;
@@ -71,6 +70,8 @@ public class MatchService {
     public void goNextMatchStep(final List<Long> matchIdList, final MatchingStatus matchingStatus) {
         MatchingStatus nextMatchingStatus = matchManager.getNextMatchingStatus(matchingStatus);
         matchUpdater.updateMatchStatus(matchIdList, nextMatchingStatus);
+        // 멤버에 passcount -> 멤버가 싫다고 했을때 바뀐다.
+        // chance 0 -> chance가 0이 되면?
     }
 
 }

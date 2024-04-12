@@ -11,8 +11,7 @@ public interface MemberRepository extends JpaRepository<MemberEntity, Long> {
     Optional<MemberEntity> findByKakaoId(String kakaoId);
 
     @Query("select m from MemberEntity m " +
-            "where m.approvalStatus = '20' " +
-            "and m.status != 'DELETED' " +
+            "where m.approvalStatus = ApprovalStatus.APPROVED and m.status != 'DELETED' " +
             "order by m.depositDate DESC ")
     List<MemberEntity> findMatchPossibleMembers();
 }

@@ -2,7 +2,6 @@ package com.fofo.core.domain.match;
 
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.Address;
-import com.fofo.core.domain.member.AgeRelationType;
 import com.fofo.core.domain.member.ApprovalStatus;
 import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.GeoPoint;
@@ -12,15 +11,15 @@ import com.fofo.core.domain.member.MemberService;
 import com.fofo.core.domain.member.Religion;
 import com.fofo.core.storage.MatchRepository;
 import com.fofo.core.storage.MatchResultDto;
+import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberMatchEntity;
+import com.fofo.core.storage.MemberRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 @SpringBootTest
@@ -31,6 +30,8 @@ class MatchServiceTest {
     @Autowired MemberService memberService;
     @Autowired
     MatchRepository matchRepository;
+    @Autowired
+    MemberRepository memberRepository;
 
     @Test
     void autoMatch() {
@@ -64,10 +65,20 @@ class MatchServiceTest {
         );
         System.out.println("===========================================");
 
+        List<MemberEntity> memberList = memberRepository.findAll();
+        System.out.println("====================멤버리스트=======================");
+        for (MemberEntity member : memberList){
+            System.out.println(member.getId());
+            System.out.println(member.getName());
+            System.out.println(member.getApprovalStatus());
+            System.out.println(member.getStatus());
+            System.out.println(member.getGender());
+        }
+        System.out.println("===========================================");
 
-        List<MatchResultDto> matchList = matchService.getMatchResult(1, 10).getContent();
+        List<MatchResultDto> matchList = matchService.getMatchResult(0, 10).getContent();
         System.out.println("=============== 매치리스트 ==================");
-        matchList.forEach(match -> System.out.println(match.toString()));
+        matchList.forEach(match -> System.out.println(match.id()));
         System.out.println("===========================================");
     }
 
@@ -100,9 +111,9 @@ class MatchServiceTest {
                 null,
                 "",
                 LocalDateTime.now(),
-                5,
-                3,
-                ApprovalStatus.DEPOSIT_COMPLETED,
+                null,
+                null,
+                ApprovalStatus.APPROVED,
                 ActiveStatus.CREATED
         );
     }
