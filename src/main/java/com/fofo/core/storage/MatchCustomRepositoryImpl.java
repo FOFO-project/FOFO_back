@@ -1,9 +1,7 @@
 package com.fofo.core.storage;
 
 import com.fofo.core.domain.ActiveStatus;
-import com.fofo.core.domain.match.Match;
 import com.fofo.core.domain.match.MatchingStatus;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +19,11 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     private final JPAQueryFactory jpaQueryFactory;
     private final EntityManager em;
     private final QMemberMatchEntity match = QMemberMatchEntity.memberMatchEntity;
-    private final QMemberEntity manMember = QMemberEntity.memberEntity;
-    private final QMemberEntity womanMember = QMemberEntity.memberEntity;
+    private final QMemberEntity manMember = new QMemberEntity("manMember");
+    private final QMemberEntity womanMember = new QMemberEntity("womanMember");
+    private final QAddressEntity manAddress = new QAddressEntity("manAddress");
+    private final QAddressEntity womanAddress = new QAddressEntity("womanAddress");
+
     @Override
     public long deleteMatchesBy(final List<Long> matchIdList) {
         long result = jpaQueryFactory.update(match)
@@ -37,26 +38,20 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     }
 
     @Override
-    public Page<Match> selectMatchResultList(final Pageable pageable) {
-        List<Match> matchResultList = jpaQueryFactory
-                .select(
-                        Projections.bean(
-                                Match.class,
-                                match.id,
-                                manMember,
-                                womanMember,
-                                match.matchingStatus
-                        )
-                )
+    public Page<MatchResultDto> selectMatchResultList(final Pageable pageable) {
+        List<MatchResultDto> matchResultList = jpaQueryFactory
+                .select(MatchResultDto.from(match, manMember, womanMember, manAddress, womanAddress))
                 .from(match)
-                .join(manMember).on(match.manMemberId.eq(manMember.id))
-                .join(womanMember).on(match.womanMemberId.eq(womanMember.id))
+                .leftJoin(manMember).on(match.manMemberId.eq(manMember.id))
+                .leftJoin(womanMember).on(match.womanMemberId.eq(womanMember.id))
+                .leftJoin(manAddress).on(manMember.addressId.eq(manAddress.id))
+                .leftJoin(womanAddress).on(womanMember.addressId.eq(womanAddress.id))
                 .where(
                         match.status.ne(ActiveStatus.DELETED),
                         manMember.status.ne(ActiveStatus.DELETED),
                         womanMember.status.ne(ActiveStatus.DELETED)
                 )
-                .orderBy(match.createdTime.asc())
+                .orderBy(match.createdTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -71,6 +66,7 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                         womanMember.status.ne(ActiveStatus.DELETED)
                 )
                 .fetchOne();
+//        List<MatchResultDto> matchResultList = new ArrayList<>();
         return new PageImpl<>(matchResultList, pageable, count == null? 0 : count);
     }
 
@@ -97,6 +93,5 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                         )
                 .fetch();
     }
-
 
 }

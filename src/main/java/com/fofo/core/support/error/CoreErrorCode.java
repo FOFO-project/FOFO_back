@@ -12,5 +12,6 @@ public enum CoreErrorCode {
 
     // Match 관련 에러
     MATE500,
-    MATE501;
+    MATE501,
+    MATE502;
 }

@@ -2,7 +2,7 @@ package com.fofo.core.domain.match;
 
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.Member;
-import com.fofo.core.domain.member.MemberFinder;
+import com.fofo.core.storage.MatchResultDto;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberMatchEntity;
 import lombok.RequiredArgsConstructor;
@@ -17,25 +17,25 @@ import java.util.List;
 public class MatchService {
     private final MatchAppender matchAppender;
     private final MatchFinder matchFinder;
-    private final MemberFinder memberFinder;
     private final MatchUpdater matchUpdater;
     private final MatchRemover matchRemover;
     private final MatchManager matchManager;
 
     // 모든 매치 결과 조회
-    public Page<Match> getMatchResult(final int page, final int size) {
+    public Page<MatchResultDto> getMatchResult(final int page, final int size) {
         return matchFinder.findMatches(page, size);
     }
 
-    // 자동 매치
     @Transactional
-    public void autoMatch(){
-        // 매칭 가능한 멤버리스트 입금 순으로 찾기 status d 아니고 approval status 입금완료
+    public List<Long> autoMatch(final List<Long> memberIdList){
+        // 매칭 가능한 멤버리스트 입금 순으로 찾기
         List<Member> matchPossibleMembers = matchFinder.findMatchPossibleMembers();
-        // 매치 매니저 - 싫어하는 조건 제외 사람 중 랜덤하게 매칭
-        List<Match> matchList = matchManager.matchByFilteringCondition(matchPossibleMembers);
-        // 매치 어펜더 - 매치 추가
+        // 매칭 선택된 멤버리스트 불러오기
+        List<Member> selectedMembers = matchManager.getSelectedMembers(memberIdList, matchPossibleMembers);
+        // 자동 매치
+        List<Match> matchList = matchManager.autoMatchByFilteringCondition(selectedMembers, matchPossibleMembers);
         matchAppender.appendMatches(matchList);
+        return matchManager.findUnmatchedMemberIdList(selectedMembers, matchList);
     }
 
     public void cancelMatch(final List<Long> matchIdList) {
@@ -70,5 +70,8 @@ public class MatchService {
     public void goNextMatchStep(final List<Long> matchIdList, final MatchingStatus matchingStatus) {
         MatchingStatus nextMatchingStatus = matchManager.getNextMatchingStatus(matchingStatus);
         matchUpdater.updateMatchStatus(matchIdList, nextMatchingStatus);
+        // 멤버에 passcount -> 멤버가 싫다고 했을때 바뀐다.
+        // chance 0 -> chance가 0이 되면?
     }
+
 }

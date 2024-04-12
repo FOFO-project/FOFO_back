@@ -46,7 +46,7 @@ public record Member(
             final String university,
             final Mbti mbti,
             final Boolean smokingYn,
-            final Boolean filteringConditionSmokingYn,
+            final Boolean filteringSmoker,
             final Religion religion,
             final Religion filteringConditionReligion,
             final String charmingPoint,
@@ -67,7 +67,7 @@ public record Member(
                 university,
                 mbti,
                 smokingYn,
-                filteringConditionSmokingYn,
+                filteringSmoker,
                 religion,
                 filteringConditionReligion,
                 charmingPoint,
@@ -135,5 +135,4 @@ public record Member(
                 approvalStatus,
                 status);
     }
-
 }
