@@ -24,7 +24,7 @@ public class MemberAppender {
         }
 
         memberEntity.setAddressId(addressRepository.save(address.toEntity()).id());
-        return memberRepository.save(memberEntity).id();
+        return memberRepository.save(memberEntity).getId();
     }
 
 }

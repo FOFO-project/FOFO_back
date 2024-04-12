@@ -2,6 +2,7 @@ package com.fofo.core.storage;
 
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.match.MatchingStatus;
+import com.fofo.core.storage.converter.ActiveStatusConverter;
 import com.fofo.core.storage.converter.MatchingStatusConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -34,8 +35,8 @@ public class MemberMatchEntity extends BaseEntity {
     @Convert(converter = MatchingStatusConverter.class)
     private MatchingStatus matchingStatus;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 2)
+    @Convert(converter = ActiveStatusConverter.class)
     private ActiveStatus status;
 
     private MemberMatchEntity(
