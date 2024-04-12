@@ -1,9 +1,7 @@
 package com.fofo.core.storage;
 
 import com.fofo.core.domain.ActiveStatus;
-import com.fofo.core.domain.match.Match;
 import com.fofo.core.domain.match.MatchingStatus;
-import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -37,17 +35,9 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     }
 
     @Override
-    public Page<Match> selectMatchResultList(final Pageable pageable) {
-        List<Match> matchResultList = jpaQueryFactory
-                .select(
-                        Projections.bean(
-                                Match.class,
-                                match.id,
-                                manMember,
-                                womanMember,
-                                match.matchingStatus
-                        )
-                )
+    public Page<MatchResultDto> selectMatchResultList(final Pageable pageable) {
+        List<MatchResultDto> matchResultList = jpaQueryFactory
+                .select(MatchResultDto.getQMatchResultDto(match, manMember, womanMember))
                 .from(match)
                 .join(manMember).on(match.manMemberId.eq(manMember.id))
                 .join(womanMember).on(match.womanMemberId.eq(womanMember.id))
@@ -56,7 +46,7 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                         manMember.status.ne(ActiveStatus.DELETED),
                         womanMember.status.ne(ActiveStatus.DELETED)
                 )
-                .orderBy(match.createdTime.asc())
+                .orderBy(match.createdTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
@@ -97,6 +87,5 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                         )
                 .fetch();
     }
-
 
 }

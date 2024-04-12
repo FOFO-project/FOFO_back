@@ -10,9 +10,10 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -27,9 +28,21 @@ public class MatchManager {
         return getMatchList(
                 selectedMembers,
                 getShuffledList(matchPossibleMembers),
-                getFilteredMemberMap(matchPossibleMembers),
+                getFilteredMemberIdMap(matchPossibleMembers),
                 getMatchingYnMap(matchPossibleMembers)
         );
+    }
+
+    public List<Long> findUnmatchedMemberIdList(List<Member> selectedMembers, List<Match> matchList) {
+        return selectedMembers.stream()
+                .filter(member -> matchList.stream()
+                        .allMatch(match -> !Objects.equals(member.id(), match.man().id())
+                                        && !Objects.equals(member.id(), match.woman().id())
+                        )
+
+                )
+                .map(Member::id)
+                .collect(Collectors.toList());
     }
 
     public MatchingStatus getNextMatchingStatus(final MatchingStatus matchingStatus) {
@@ -43,24 +56,31 @@ public class MatchManager {
     private List<Match> getMatchList(
             List<Member> selectedMembers,
             List<Member> matchPossibleMembers,
-            Map<Member, Set<Member>> filterMap,
-            Map<Member, Boolean> matchingYnMap)
+            Map<Long, Set<Long>> filterMap,
+            Map<Long, Boolean> matchingYnMap)
     {
         List<Match> result = new ArrayList<>();
         for (Member member : selectedMembers){
-            if(matchingYnMap.get(member)) continue;
+            if(matchingYnMap.get(member.id())) continue;
             for (Member targetMember : matchPossibleMembers){
-                if(matchingYnMap.get(targetMember)) continue;
+                if(matchingYnMap.get(targetMember.id())
+                        || member.id().equals(targetMember.id())
+                        || member.gender().equals(targetMember.gender())
+                ) {
+                    continue;
+                }
                 Pair<Member, Member> memberPair = identifyGender(member, targetMember);
-                if (!filterMap.get(member).contains(targetMember) && !filterMap.get(targetMember).contains(member)){
+                if (!filterMap.get(member.id()).contains(targetMember.id())
+                        && !filterMap.get(targetMember.id()).contains(member.id())
+                ){
                     result.add(Match.of(
                             memberPair.getLeft(),
                             memberPair.getRight(),
                             MatchingStatus.MATCHING_PENDING,
                             ActiveStatus.CREATED
                     ));
-                    matchingYnMap.put(member, true);
-                    matchingYnMap.put(targetMember, true);
+                    matchingYnMap.put(member.id(), true);
+                    matchingYnMap.put(targetMember.id(), true);
                     break;
                 }
             }
@@ -69,32 +89,29 @@ public class MatchManager {
     }
 
     private List<Member> getShuffledList(List<Member> matchPossibleMembers) {
-        Random random = new Random();
-        List<Integer> randomIdxList = random.ints(matchPossibleMembers.size())
-                .boxed()
-                .toList();
-        return randomIdxList.stream()
-                .map(matchPossibleMembers::get)
-                .toList();
+        List<Member> newMemberList = new ArrayList<>(matchPossibleMembers.stream().toList());
+        Collections.shuffle(newMemberList);
+        return newMemberList;
     }
 
-    private Map<Member, Boolean> getMatchingYnMap(List<Member> matchPossibleMembers) {
+    private Map<Long, Boolean> getMatchingYnMap(List<Member> matchPossibleMembers) {
         return matchPossibleMembers.stream()
                 .collect(Collectors.toMap(
-                        member -> member,
+                        Member::id,
                         member -> false
                 ));
     }
 
-    private Map<Member, Set<Member>> getFilteredMemberMap(List<Member> matchPossibleMembers) {
+    private Map<Long, Set<Long>> getFilteredMemberIdMap(List<Member> matchPossibleMembers) {
         return matchPossibleMembers.stream()
                 .collect(Collectors.toMap(
-                        member -> member,
+                        Member::id,
                         member -> matchPossibleMembers.stream()
-                                .filter(targetMember -> member.equals(targetMember)
-                                        || member.filteringConditionSmokingYn() == targetMember.smokingYn()
-                                        || member.filteringConditionReligion().equals(targetMember.religion())
-                                        || member.filteringConditionAgeRelation().equals(getAgeRelation(member, targetMember)))
+                                .filter(targetMember -> !member.equals(targetMember)
+                                        && (member.filteringConditionSmokingYn() && targetMember.smokingYn())
+                                        || (member.filteringConditionReligion() != null && member.filteringConditionReligion().equals(targetMember.religion()))
+                                        || (member.filteringConditionAgeRelation() != null && member.filteringConditionAgeRelation().equals(getAgeRelation(member, targetMember))))
+                                .map(Member::id)
                                 .collect(Collectors.toSet())
                 ));
     }
@@ -118,6 +135,9 @@ public class MatchManager {
     }
 
     public List<Member> getSelectedMembers(List<Long> memberIdList, List<Member> matchPossibleMembers) {
+        if(memberIdList == null || memberIdList.isEmpty()){
+            return matchPossibleMembers;
+        }
         return matchPossibleMembers.stream()
                 .filter(member -> memberIdList.stream().anyMatch(Predicate.isEqual(member.id())))
                 .toList();

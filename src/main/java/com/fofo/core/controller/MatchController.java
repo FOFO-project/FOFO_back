@@ -6,8 +6,8 @@ import com.fofo.core.controller.request.MatchCancelRequestDto;
 import com.fofo.core.controller.request.MatchRequestDto;
 import com.fofo.core.controller.response.MatchResponseDto;
 import com.fofo.core.controller.response.PageDto;
-import com.fofo.core.domain.match.Match;
 import com.fofo.core.domain.match.MatchService;
+import com.fofo.core.storage.MatchResultDto;
 import com.fofo.core.support.response.ApiResult;
 import com.fofo.core.support.response.PageInfo;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,15 +41,15 @@ public class MatchController {
             @ApiResponse(responseCode = "200", description = "매치 결과")
     })
     @GetMapping("/match-result")
-    public ResponseEntity<ApiResult<PageDto<List<MatchResponseDto>>>> getMatchResult(@Positive @RequestParam("page") int page,
-                                                                                     @Positive @RequestParam("size") int size){
-        Page<Match> matchPage = matchService.getMatchResult(page, size);
+    public ResponseEntity<ApiResult<PageDto<List<MatchResultDto>>>> getMatchResult(@Positive @RequestParam("page") int page,
+                                                                                           @Positive @RequestParam("size") int size){
+        Page<MatchResultDto> matchPage = matchService.getMatchResult(--page, size);
         PageInfo pageInfo = new PageInfo(page, size, (int) matchPage.getTotalElements(), matchPage.getTotalPages());
-        List<MatchResponseDto> response = matchPage.getContent().stream()
-                .map(MatchResponseDto::from)
-                .toList();
+//        List<MatchResultResponseDto> response = matchPage.getContent().stream()
+//                .map(MatchResultResponseDto::from)
+//                .toList();
 
-        return new ResponseEntity<>(ApiResult.success(new PageDto<>(response, pageInfo)), HttpStatus.OK);
+        return new ResponseEntity<>(ApiResult.success(new PageDto<>(matchPage.getContent(), pageInfo)), HttpStatus.OK);
     }
 
     @Operation(summary = "전체 or 선택 자동 매치")
@@ -57,10 +57,13 @@ public class MatchController {
             @ApiResponse(responseCode = "200", description = "자동 매치")
     })
     @PostMapping("/match/auto")
-    public ResponseEntity<ApiResult<?>> autoMatch(@Valid @RequestBody(required = false) AutoMatchRequestDto autoMatchRequestDto){
-        // 랜덤으로 오토매치를 하게되면 -> 만약 대상 멤버 중 매칭이 이루어 지지않은 멤버가 생긴 경우 전체 매칭 취소? 아니면 매치 되지 않은 멤버 빼고 매치?
-        matchService.autoMatch(autoMatchRequestDto == null ? null : autoMatchRequestDto.memberIdList());
-        return new ResponseEntity<>(ApiResult.success(), HttpStatus.CREATED);
+    public ResponseEntity<ApiResult<MatchResponseDto>> autoMatch(@Valid @RequestBody(required = false) AutoMatchRequestDto autoMatchRequestDto){
+        MatchResponseDto matchResponseDto = MatchResponseDto.of(
+                matchService.autoMatch(
+                        autoMatchRequestDto == null ? null : autoMatchRequestDto.memberIdList()
+                )
+        );
+        return new ResponseEntity<>(ApiResult.success(matchResponseDto), HttpStatus.CREATED);
     }
 
     @Operation(summary = "수동 매치")
