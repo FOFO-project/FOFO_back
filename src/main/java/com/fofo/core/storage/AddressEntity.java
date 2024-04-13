@@ -1,7 +1,9 @@
 package com.fofo.core.storage;
 
 import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.storage.converter.ActiveStatusConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,7 +37,8 @@ public class AddressEntity extends BaseEntity {
 
     private Point location;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
+    @Convert(converter = ActiveStatusConverter.class)
     private ActiveStatus status;
 
     private AddressEntity(final String zipCode,

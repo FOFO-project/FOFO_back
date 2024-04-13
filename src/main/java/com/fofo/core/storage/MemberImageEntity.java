@@ -1,7 +1,10 @@
 package com.fofo.core.storage;
 
 import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.storage.converter.ActiveStatusConverter;
+import com.fofo.core.storage.converter.ApprovalStatusConverter;
 import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -30,7 +33,7 @@ public class MemberImageEntity extends BaseEntity {
     @Column(nullable = false)
     private String imageUrl;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    @Convert(converter = ActiveStatusConverter.class)
     private ActiveStatus status;
 }
