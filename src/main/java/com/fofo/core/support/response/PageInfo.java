@@ -5,4 +5,9 @@ public record PageInfo (
         int size,
         int totalElements,
         int totalPages
-) {}
+) {
+    public static PageInfo of(int page, int size, int totalElements, int totalPages) {
+        return new PageInfo(page, size, totalElements, totalPages);
+    }
+
+}
