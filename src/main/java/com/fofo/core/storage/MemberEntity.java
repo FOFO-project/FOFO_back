@@ -6,7 +6,11 @@ import com.fofo.core.domain.member.ApprovalStatus;
 import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Religion;
+import com.fofo.core.storage.converter.ActiveStatusConverter;
+import com.fofo.core.storage.converter.AgeRelationTypeConverter;
 import com.fofo.core.storage.converter.ApprovalStatusConverter;
+import com.fofo.core.storage.converter.GenderConverter;
+import com.fofo.core.storage.converter.ReligionConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -20,7 +24,7 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
@@ -39,13 +43,15 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String kakaoId;
 
+    @Setter
     @Column(nullable = false)
     private Long addressId;
 
     @Column(nullable = false, length = 20)
     private String name;
 
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 10)
+    @Convert(converter = GenderConverter.class)
     private Gender gender;
 
     @Column(nullable = false)
@@ -57,7 +63,8 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = false, length = 30)
     private String phoneNumber;
 
-    @Enumerated(EnumType.STRING)
+    @Column(length = 1)
+    @Convert(converter = AgeRelationTypeConverter.class)
     private AgeRelationType filteringConditionAgeRelation;
 
     @Column(nullable = false, length = 20)
@@ -79,9 +86,12 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = false)
     private boolean filteringSmoker;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 20)
+    @Convert(converter = ReligionConverter.class)
     private Religion religion;
 
+    @Column(length = 20)
+    @Convert(converter = ReligionConverter.class)
     private Religion filteringConditionReligion;
 
     @Column(length = 100)
@@ -93,18 +103,18 @@ public class MemberEntity extends BaseEntity {
     @Column(length = 100)
     private String note;
 
-    @ColumnDefault("5")
-    private Integer passCount;
+    @Column(nullable = false, columnDefinition = "integer default 5")
+    private int passCount;
 
-    @ColumnDefault("2")
-    private Integer chance;
+    @Column(nullable = false, columnDefinition = "integer default 2")
+    private int chance;
 
-    @Column(length = 20)
+    @Column(nullable = false, length = 20)
     @Convert(converter = ApprovalStatusConverter.class)
     private ApprovalStatus approvalStatus;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 20)
+    @Convert(converter = ActiveStatusConverter.class)
     private ActiveStatus status;
 
     private MemberEntity(final String kakaoId,
@@ -201,13 +211,5 @@ public class MemberEntity extends BaseEntity {
                 chance,
                 approvalStatus,
                 status);
-    }
-
-    public Long id() {
-        return id;
-    }
-
-    public void setAddressId(final Long addressId) {
-        this.addressId = addressId;
     }
 }

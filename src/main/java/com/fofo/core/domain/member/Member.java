@@ -50,9 +50,6 @@ public record Member(
             final Religion religion,
             final Religion filteringConditionReligion,
             final String charmingPoint,
-            final LocalDateTime depositDate,
-            final Integer passCount,
-            final Integer chance,
             final ApprovalStatus approvalStatus,
             final ActiveStatus status
     ) {
@@ -74,42 +71,17 @@ public record Member(
                 religion,
                 filteringConditionReligion,
                 charmingPoint,
-                depositDate,
+                null,
                 "",
-                passCount,
-                chance,
+                5,
+                2,
                 approvalStatus,
                 status,
                 null,
                 null);
     }
 
-    public MemberEntity toEntity() {
-        return MemberEntity.of(kakaoId,
-                name,
-                gender,
-                birthday,
-                age,
-                phoneNumber,
-                filteringConditionAgeRelation,
-                company,
-                job,
-                university,
-                mbti,
-                smokingYn,
-                filteringSmoker,
-                religion,
-                filteringConditionReligion,
-                charmingPoint,
-                depositDate,
-                note,
-                passCount,
-                chance,
-                approvalStatus,
-                status);
-    }
-
-    public static Member from(MemberEntity memberEntity) {
+    public static Member from(final MemberEntity memberEntity) {
         return new Member(
                 memberEntity.getId(),
                 memberEntity.getKakaoId(),
@@ -135,7 +107,32 @@ public record Member(
                 memberEntity.getApprovalStatus(),
                 memberEntity.getStatus(),
                 memberEntity.getCreatedTime(),
-                memberEntity.getUpdatedTime()
-        );
+                memberEntity.getUpdatedTime());
+    }
+
+    public MemberEntity toEntity() {
+        return MemberEntity.of(
+                kakaoId,
+                name,
+                gender,
+                birthday,
+                age,
+                phoneNumber,
+                filteringConditionAgeRelation,
+                company,
+                job,
+                university,
+                mbti,
+                smokingYn,
+                filteringSmoker,
+                religion,
+                filteringConditionReligion,
+                charmingPoint,
+                depositDate,
+                note,
+                passCount,
+                chance,
+                approvalStatus,
+                status);
     }
 }
