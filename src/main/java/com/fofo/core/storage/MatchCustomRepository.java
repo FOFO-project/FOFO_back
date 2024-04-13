@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface MatchCustomRepository {
     long deleteMatchesBy(final List<Long> matchIdList);
+    List<MemberEntity> findMatchPossibleMembers();
     Page<MatchResultDto> selectMatchResultList(final Pageable pageable);
     long updateMatchStatus(final List<Long> matchIdList, MatchingStatus matchingStatus);
-
     List<MemberMatchEntity> findUnCancelableMatches(List<Long> matchIdList);
 }

@@ -22,7 +22,7 @@ public class MatchFinder {
     private final MemberRepository memberRepository;
 
     public List<Member> findMatchPossibleMembers() {
-        List<MemberEntity> memberEntityList = memberRepository.findMatchPossibleMembers();
+        List<MemberEntity> memberEntityList = matchRepository.findMatchPossibleMembers();
         if (memberEntityList.isEmpty()){
             throw new CoreApiException(CoreErrorType.MATCHABLE_MEMBER_NOT_FOUND);
         }

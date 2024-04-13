@@ -2,6 +2,9 @@ package com.fofo.core.storage;
 
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.match.MatchingStatus;
+import com.fofo.core.domain.member.ApprovalStatus;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     private final JPAQueryFactory jpaQueryFactory;
     private final EntityManager em;
     private final QMemberMatchEntity match = QMemberMatchEntity.memberMatchEntity;
+    private final QMemberEntity member = QMemberEntity.memberEntity;
     private final QMemberEntity manMember = new QMemberEntity("manMember");
     private final QMemberEntity womanMember = new QMemberEntity("womanMember");
     private final QAddressEntity manAddress = new QAddressEntity("manAddress");
@@ -36,6 +40,31 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
         em.clear();
         return result;
     }
+
+    @Override
+    public List<MemberEntity> findMatchPossibleMembers() {
+        List<Tuple> result = jpaQueryFactory.select(member, match)
+                .from(member)
+                .leftJoin(match).on(member.id.eq(match.manMemberId).or(member.id.eq(match.womanMemberId)))
+                .where(
+                        member.approvalStatus.eq(ApprovalStatus.APPROVED), //멤버 승인상태
+                        member.status.ne(ActiveStatus.DELETED), //멤버 삭제되지 않은 상태
+                        matchPossible()
+                )
+                .orderBy(member.depositDate.desc())
+                .fetch();
+        for(Tuple tuple : result){
+            System.out.println(tuple);
+        }
+        return result.stream().map(tuple -> tuple.get(member)).toList();
+    }
+
+    private BooleanExpression matchPossible() {
+        return match.status.ne(ActiveStatus.DELETED).and(match.matchingStatus.eq(MatchingStatus.MATCHING_COMPLETED)) //매치 완료 상태
+                .or(match.status.eq(ActiveStatus.DELETED)) // 매치 삭제된 상태
+                .or(match.isNull()); //매치 진행 된 적 없는 상태
+    }
+
 
     @Override
     public Page<MatchResultDto> selectMatchResultList(final Pageable pageable) {
@@ -66,7 +95,7 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                         womanMember.status.ne(ActiveStatus.DELETED)
                 )
                 .fetchOne();
-//        List<MatchResultDto> matchResultList = new ArrayList<>();
+
         return new PageImpl<>(matchResultList, pageable, count == null? 0 : count);
     }
 
