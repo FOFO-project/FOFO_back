@@ -16,7 +16,7 @@ public record MatchResultMemberDto (
     LocalDateTime birthday,
     Integer age,
     String phoneNumber,
-    AgeRelationType filteringConditionAgeRelation,
+    AgeRelationType filteringAgeRelation,
     String company,
     String job,
     String university,
@@ -24,7 +24,7 @@ public record MatchResultMemberDto (
     boolean smokingYn,
     boolean filteringSmoker,
     Religion religion,
-    Religion filteringConditionReligion,
+    Religion filteringReligion,
     String charmingPoint,
     LocalDateTime depositDate,
     String note,
@@ -33,7 +33,7 @@ public record MatchResultMemberDto (
     String imageUrl
 ){
     @QueryProjection
-    public MatchResultMemberDto(String kakaoId, MatchResultAddressDto address, String name, Gender gender, LocalDateTime birthday, Integer age, String phoneNumber, AgeRelationType filteringConditionAgeRelation, String company, String job, String university, Mbti mbti, boolean smokingYn, boolean filteringSmoker, Religion religion, Religion filteringConditionReligion, String charmingPoint, LocalDateTime depositDate, String note, Integer passCount, Integer chance, String imageUrl) {
+    public MatchResultMemberDto(String kakaoId, MatchResultAddressDto address, String name, Gender gender, LocalDateTime birthday, Integer age, String phoneNumber, AgeRelationType filteringAgeRelation, String company, String job, String university, Mbti mbti, boolean smokingYn, boolean filteringSmoker, Religion religion, Religion filteringReligion, String charmingPoint, LocalDateTime depositDate, String note, Integer passCount, Integer chance, String imageUrl) {
         this.kakaoId = kakaoId;
         this.address = address;
         this.name = name;
@@ -41,7 +41,7 @@ public record MatchResultMemberDto (
         this.birthday = birthday;
         this.age = age;
         this.phoneNumber = phoneNumber;
-        this.filteringConditionAgeRelation = filteringConditionAgeRelation;
+        this.filteringAgeRelation = filteringAgeRelation;
         this.company = company;
         this.job = job;
         this.university = university;
@@ -49,7 +49,7 @@ public record MatchResultMemberDto (
         this.smokingYn = smokingYn;
         this.filteringSmoker = filteringSmoker;
         this.religion = religion;
-        this.filteringConditionReligion = filteringConditionReligion;
+        this.filteringReligion = filteringReligion;
         this.charmingPoint = charmingPoint;
         this.depositDate = depositDate;
         this.note = note;
@@ -67,7 +67,7 @@ public record MatchResultMemberDto (
                 member.birthday,
                 member.age,
                 member.phoneNumber,
-                member.filteringConditionAgeRelation,
+                member.filteringAgeRelation,
                 member.company,
                 member.job,
                 member.university,
@@ -75,7 +75,7 @@ public record MatchResultMemberDto (
                 member.smokingYn,
                 member.filteringSmoker,
                 member.religion,
-                member.filteringConditionReligion,
+                member.filteringReligion,
                 member.charmingPoint,
                 member.depositDate,
                 member.note,

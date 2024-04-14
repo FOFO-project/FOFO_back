@@ -13,7 +13,7 @@ public class AddressAppender {
 
     @Transactional
     public Long append(final Address address) {
-        return addressRepository.save(address.toEntity()).id();
+        return addressRepository.save(address.toEntity()).getId();
     }
 
 }

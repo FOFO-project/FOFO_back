@@ -63,7 +63,7 @@ public class MemberController {
     })
     @GetMapping("/members")
     public ResponseEntity<ApiResult<PageResult<List<FindMemberResponseDto>>>> findMembers(
-            @ModelAttribute("condition") final FindMembersConditionDto condition,
+            @Valid @ModelAttribute("condition") final FindMembersConditionDto condition,
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @Positive @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
     ) {

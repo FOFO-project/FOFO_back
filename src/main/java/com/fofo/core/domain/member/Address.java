@@ -18,12 +18,26 @@ public record Address(
         LocalDateTime createdTime,
         LocalDateTime modifiedTime
 ) {
-    public static Address of(final String zipcode,
-                             final String sido,
-                             final String sigungu,
-                             final String eupmyundong,
-                             final GeoPoint location) {
+    public static Address of(
+            final String zipcode,
+            final String sido,
+            final String sigungu,
+            final String eupmyundong,
+            final GeoPoint location) {
         return new Address(null, zipcode, sido, sigungu, eupmyundong, location, ActiveStatus.CREATED, null, null);
+    }
+
+    public static Address from(final AddressEntity addressEntity) {
+        return new Address(
+                addressEntity.getId(),
+                addressEntity.getZipCode(),
+                addressEntity.getSido(),
+                addressEntity.getSigungu(),
+                addressEntity.getEupmyundong(),
+                new GeoPoint(addressEntity.getLocation()),
+                addressEntity.getStatus(),
+                addressEntity.getCreatedTime(),
+                addressEntity.getUpdatedTime());
     }
 
     public AddressEntity toEntity() {
