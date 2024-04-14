@@ -6,6 +6,8 @@ import com.fofo.core.controller.response.AppendMemberResponseDto;
 import com.fofo.core.controller.response.FindMemberResponseDto;
 import com.fofo.core.domain.member.MemberService;
 import com.fofo.core.support.response.ApiResult;
+import com.fofo.core.support.response.PageInfo;
+import com.fofo.core.support.response.PageResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -13,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Tag(name = "맴버 API")
 @RestController
@@ -60,15 +62,14 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "멤버 전체 조회")
     })
     @GetMapping("/members")
-    public ResponseEntity<ApiResult<List<FindMemberResponseDto>>> findMembers(
-            @ModelAttribute("condition") final FindMembersConditionDto condition,
+    public ResponseEntity<ApiResult<PageResult<List<FindMemberResponseDto>>>> findMembers(
+            @Valid @ModelAttribute("condition") final FindMembersConditionDto condition,
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
             @Positive @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
     ) {
-        List<FindMemberResponseDto> response = memberService.findAll(condition.toFindMember(), pageNumber, pageSize).stream()
-                .map(FindMemberResponseDto::from)
-                .collect(Collectors.toList());
-        return new ResponseEntity<>(ApiResult.success(response), HttpStatus.OK);
+        Page<FindMemberResponseDto> response = memberService.findAll(condition.toFindMember(), pageNumber, pageSize).map(FindMemberResponseDto::from);
+        PageInfo pageInfo = new PageInfo(pageNumber, pageSize, (int) response.getTotalElements(), response.getTotalPages());
+        return new ResponseEntity<>(ApiResult.success(PageResult.of(response.getContent(), pageInfo)), HttpStatus.OK);
     }
 
 }

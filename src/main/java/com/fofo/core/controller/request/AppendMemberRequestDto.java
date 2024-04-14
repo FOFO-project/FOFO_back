@@ -39,7 +39,7 @@ public record AppendMemberRequestDto(
         @Pattern(regexp = "^01([0|1|6|7|8|9])(-)?([0-9]{3,4})(-)?([0-9]{4})$")
         String phoneNumber,
         @Schema(description = "연령 관계")
-        AgeRelationType filteringConditionAgeRelation,
+        AgeRelationType filteringAgeRelation,
         @Schema(description = "회사", example = "한화시스템")
         @NotEmpty @Size(max=20)
         String company,
@@ -60,7 +60,7 @@ public record AppendMemberRequestDto(
         @NotNull
         Religion religion,
         @Schema(description = "상대 종교 조건")
-        Religion filteringConditionReligion,
+        Religion filteringReligion,
         @Schema(description = "어필 포인트", example = "저는 잘생겼습니다.")
         @Size(max=100)
         String charmingPoint
@@ -74,7 +74,7 @@ public record AppendMemberRequestDto(
                         birthday,
                         AgeUtil.toKoreanAge(birthday),
                         phoneNumber,
-                        filteringConditionAgeRelation,
+                        filteringAgeRelation,
                         company,
                         job,
                         university,
@@ -82,7 +82,7 @@ public record AppendMemberRequestDto(
                         smokingYn,
                         filteringSmoker,
                         religion,
-                        filteringConditionReligion,
+                        filteringReligion,
                         charmingPoint,
                         ApprovalStatus.DEPOSIT_PENDING,
                         ActiveStatus.CREATED

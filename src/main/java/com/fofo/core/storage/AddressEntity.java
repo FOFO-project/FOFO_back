@@ -10,9 +10,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.geo.Point;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "Address")
@@ -64,7 +66,4 @@ public class AddressEntity extends BaseEntity {
         return new AddressEntity(zipcode, sido, sigungu, eupmyundong, location, status);
     }
 
-    public Long id() {
-        return id;
-    }
 }

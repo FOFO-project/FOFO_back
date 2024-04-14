@@ -17,13 +17,13 @@ public class MemberAppender {
     private final AddressRepository addressRepository;
 
     @Transactional
-    public Long append(final Member member, final Address address) {
+    public long append(final Member member, final Address address) {
         MemberEntity memberEntity = member.toEntity();
         if (memberRepository.findByKakaoId(member.kakaoId()).isPresent()) {
             throw new CoreApiException(CoreErrorType.DUPLICATE_MEMBER_ERROR);
         }
 
-        memberEntity.setAddressId(addressRepository.save(address.toEntity()).id());
+        memberEntity.setAddressId(addressRepository.save(address.toEntity()).getId());
         return memberRepository.save(memberEntity).getId();
     }
 

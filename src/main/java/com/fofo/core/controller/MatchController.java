@@ -5,11 +5,11 @@ import com.fofo.core.controller.request.ManualMatchRequestDto;
 import com.fofo.core.controller.request.MatchCancelRequestDto;
 import com.fofo.core.controller.request.MatchRequestDto;
 import com.fofo.core.controller.response.MatchResponseDto;
-import com.fofo.core.controller.response.PageDto;
 import com.fofo.core.domain.match.MatchService;
 import com.fofo.core.storage.MatchResultDto;
 import com.fofo.core.support.response.ApiResult;
 import com.fofo.core.support.response.PageInfo;
+import com.fofo.core.support.response.PageResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -41,7 +41,7 @@ public class MatchController {
             @ApiResponse(responseCode = "200", description = "매치 결과")
     })
     @GetMapping("/match-result")
-    public ResponseEntity<ApiResult<PageDto<List<MatchResultDto>>>> getMatchResult(
+    public ResponseEntity<ApiResult<PageResult<List<MatchResultDto>>>> getMatchResult(
             @RequestParam(value="pageNumber", required = false, defaultValue = "0") int pageNumber,
             @Positive @RequestParam(value="pageSize", required = false, defaultValue = "20") int pageSize)
     {
@@ -51,7 +51,7 @@ public class MatchController {
 //                .map(MatchResultResponseDto::from)
 //                .toList();
 
-        return new ResponseEntity<>(ApiResult.success(new PageDto<>(matchPage.getContent(), pageInfo)), HttpStatus.OK);
+        return new ResponseEntity<>(ApiResult.success(new PageResult<>(matchPage.getContent(), pageInfo)), HttpStatus.OK);
     }
 
     @Operation(summary = "전체 or 선택 자동 매치")

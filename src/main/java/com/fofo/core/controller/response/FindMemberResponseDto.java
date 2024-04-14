@@ -6,6 +6,7 @@ import com.fofo.core.domain.member.ApprovalStatus;
 import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Member;
+import com.fofo.core.domain.member.MemberWithAddress;
 import com.fofo.core.domain.member.Religion;
 
 import java.time.LocalDateTime;
@@ -13,12 +14,13 @@ import java.time.LocalDateTime;
 public record FindMemberResponseDto(
         long id,
         String kakaoId,
+        AddressResponseDto address,
         String name,
         Gender gender,
         LocalDateTime birthday,
         int age,
         String phoneNumber,
-        AgeRelationType filteringConditionAgeRelation,
+        AgeRelationType filteringAgeRelation,
         String company,
         String job,
         String university,
@@ -26,7 +28,7 @@ public record FindMemberResponseDto(
         boolean smokingYn,
         boolean filteringSmoker,
         Religion religion,
-        Religion filteringConditionReligion,
+        Religion filteringReligion,
         String charmingPoint,
         LocalDateTime depositDate,
         String note,
@@ -37,16 +39,18 @@ public record FindMemberResponseDto(
         LocalDateTime createdTime,
         LocalDateTime modifiedTime
 ) {
-    public static FindMemberResponseDto from(final Member member) {
+    public static FindMemberResponseDto from(final MemberWithAddress memberWithAddress) {
+        Member member = memberWithAddress.member();
         return new FindMemberResponseDto(
                 member.id(),
                 member.kakaoId(),
+                AddressResponseDto.from(memberWithAddress.address()),
                 member.name(),
                 member.gender(),
                 member.birthday(),
                 member.age(),
                 member.phoneNumber(),
-                member.filteringConditionAgeRelation(),
+                member.filteringAgeRelation(),
                 member.company(),
                 member.job(),
                 member.university(),
@@ -54,7 +58,7 @@ public record FindMemberResponseDto(
                 member.smokingYn(),
                 member.filteringSmoker(),
                 member.religion(),
-                member.filteringConditionReligion(),
+                member.filteringReligion(),
                 member.charmingPoint(),
                 member.depositDate(),
                 member.note(),
