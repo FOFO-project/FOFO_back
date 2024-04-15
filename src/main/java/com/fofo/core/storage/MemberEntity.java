@@ -65,7 +65,7 @@ public class MemberEntity extends BaseEntity {
 
     @Column(length = 1)
     @Convert(converter = AgeRelationTypeConverter.class)
-    private AgeRelationType filteringConditionAgeRelation;
+    private AgeRelationType filteringAgeRelation;
 
     @Column(nullable = false, length = 20)
     private String company;
@@ -92,7 +92,7 @@ public class MemberEntity extends BaseEntity {
 
     @Column(length = 20)
     @Convert(converter = ReligionConverter.class)
-    private Religion filteringConditionReligion;
+    private Religion filteringReligion;
 
     @Column(length = 100)
     private String charmingPoint;
@@ -119,28 +119,29 @@ public class MemberEntity extends BaseEntity {
     @Convert(converter = ActiveStatusConverter.class)
     private ActiveStatus status;
 
-    private MemberEntity(final String kakaoId,
-                         final String name,
-                         final Gender gender,
-                         final LocalDateTime birthday,
-                         final Integer age,
-                         final String phoneNumber,
-                         final AgeRelationType filteringConditionAgeRelation,
-                         final String company,
-                         final String job,
-                         final String university,
-                         final Mbti mbti,
-                         final Boolean smokingYn,
-                         final Boolean filteringSmoker,
-                         final Religion religion,
-                         final Religion filteringConditionReligion,
-                         final String charmingPoint,
-                         final LocalDateTime depositDate,
-                         final String note,
-                         final Integer passCount,
-                         final Integer chance,
-                         final ApprovalStatus approvalStatus,
-                         final ActiveStatus status
+    private MemberEntity(
+            final String kakaoId,
+            final String name,
+            final Gender gender,
+            final LocalDateTime birthday,
+            final Integer age,
+            final String phoneNumber,
+            final AgeRelationType filteringAgeRelation,
+            final String company,
+            final String job,
+            final String university,
+            final Mbti mbti,
+            final Boolean smokingYn,
+            final Boolean filteringSmoker,
+            final Religion religion,
+            final Religion filteringReligion,
+            final String charmingPoint,
+            final LocalDateTime depositDate,
+            final String note,
+            final Integer passCount,
+            final Integer chance,
+            final ApprovalStatus approvalStatus,
+            final ActiveStatus status
     ) {
         this.kakaoId = kakaoId;
         this.name = name;
@@ -148,7 +149,7 @@ public class MemberEntity extends BaseEntity {
         this.birthday = birthday;
         this.age = age;
         this.phoneNumber = phoneNumber;
-        this.filteringConditionAgeRelation = filteringConditionAgeRelation;
+        this.filteringAgeRelation = filteringAgeRelation;
         this.company = company;
         this.job = job;
         this.university = university;
@@ -156,7 +157,7 @@ public class MemberEntity extends BaseEntity {
         this.smokingYn = smokingYn;
         this.filteringSmoker = filteringSmoker;
         this.religion = religion;
-        this.filteringConditionReligion = filteringConditionReligion;
+        this.filteringReligion = filteringReligion;
         this.charmingPoint = charmingPoint;
         this.depositDate = depositDate;
         this.note = note;

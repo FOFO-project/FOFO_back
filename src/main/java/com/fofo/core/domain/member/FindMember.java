@@ -7,7 +7,7 @@ public record FindMember(
         String name,
         Gender gender,
         LocalDate yearOfBirthday,
-        AgeRelationType filteringConditionAgeRelation,
+        AgeRelationType filteringAgeRelation,
         String company,
         String job,
         String university,
@@ -15,7 +15,7 @@ public record FindMember(
         Boolean smokingYn,
         Boolean filteringSmoker,
         Religion religion,
-        Religion filteringConditionReligion,
+        Religion filteringReligion,
         ApprovalStatus approvalStatus
 ) {
 

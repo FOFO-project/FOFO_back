@@ -9,6 +9,7 @@ public enum CoreErrorCode {
     // Member 관련 에러
     MEME500,
     MEME501,
+    MEME502,
 
     // Match 관련 에러
     MATE500,

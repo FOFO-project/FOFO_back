@@ -16,7 +16,7 @@ public record FindMembersConditionDto(
         Gender gender,
         @DateTimeFormat(pattern = "yyyy")
         LocalDate yearOfBirthday,
-        AgeRelationType filteringConditionAgeRelation,
+        AgeRelationType filteringAgeRelation,
         String company,
         String job,
         String university,
@@ -24,7 +24,7 @@ public record FindMembersConditionDto(
         Boolean smokingYn,
         Boolean filteringSmoker,
         Religion religion,
-        Religion filteringConditionReligion,
+        Religion filteringReligion,
         ApprovalStatus approvalStatus
 ) {
 
@@ -34,7 +34,7 @@ public record FindMembersConditionDto(
                 name,
                 gender,
                 yearOfBirthday,
-                filteringConditionAgeRelation,
+                filteringAgeRelation,
                 company,
                 job,
                 university,
@@ -42,7 +42,7 @@ public record FindMembersConditionDto(
                 smokingYn,
                 filteringSmoker,
                 religion,
-                filteringConditionReligion,
+                filteringReligion,
                 approvalStatus
                 );
     }
