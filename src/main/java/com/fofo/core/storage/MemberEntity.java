@@ -30,6 +30,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "MEMBER", uniqueConstraints = {@UniqueConstraint(name = "KAKAO_ID_UNIQUE", columnNames = {"KAKAO_ID"})})
@@ -43,7 +44,6 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = false, length = 20)
     private String kakaoId;
 
-    @Setter
     @Column(nullable = false)
     private Long addressId;
 

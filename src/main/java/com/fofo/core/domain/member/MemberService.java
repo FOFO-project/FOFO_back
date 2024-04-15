@@ -11,6 +11,7 @@ public class MemberService {
 
     private final MemberAppender memberAppender;
     private final MemberFinder memberFinder;
+    private final MemberUpdater memberUpdater;
 
     public long append(final Member member, final Address address) {
         return memberAppender.append(member, address);
@@ -23,6 +24,10 @@ public class MemberService {
     public Page<MemberWithAddress> findAll(final FindMember findMember, final int pageNumber, final int pageSize) {
         PageRequest pageRequest = PageRequest.of(pageNumber, pageSize);
         return memberFinder.findAll(findMember, pageRequest);
+    }
+
+    public long update(final long memberId, final UpdateMember updateMember, final UpdateAddress updateAddress) {
+        return memberUpdater.update(memberId, updateMember, updateAddress);
     }
 
 }

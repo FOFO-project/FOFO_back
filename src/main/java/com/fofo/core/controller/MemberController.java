@@ -2,8 +2,9 @@ package com.fofo.core.controller;
 
 import com.fofo.core.controller.request.AppendMemberRequestDto;
 import com.fofo.core.controller.request.FindMembersConditionDto;
-import com.fofo.core.controller.response.AppendMemberResponseDto;
+import com.fofo.core.controller.request.UpdateMemberRequestDto;
 import com.fofo.core.controller.response.FindMemberResponseDto;
+import com.fofo.core.controller.response.UpsertMemberResponseDto;
 import com.fofo.core.domain.member.MemberService;
 import com.fofo.core.support.response.ApiResult;
 import com.fofo.core.support.response.PageInfo;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,9 +43,9 @@ public class MemberController {
             @ApiResponse(responseCode = "409", description = "멤버 중복 등록 Conflict")
     })
     @PostMapping("/member")
-    public ResponseEntity<ApiResult<AppendMemberResponseDto>> appendMember(@RequestBody @Valid final AppendMemberRequestDto request) {
-        long memberId = memberService.append(request.toMember(), request.toAddress());
-        return new ResponseEntity<>(ApiResult.success(new AppendMemberResponseDto(memberId)), HttpStatus.CREATED);
+    public ResponseEntity<ApiResult<UpsertMemberResponseDto>> appendMember(@RequestBody @Valid final AppendMemberRequestDto request) {
+        long appendMemberId = memberService.append(request.toMember(), request.toAddress());
+        return new ResponseEntity<>(ApiResult.success(new UpsertMemberResponseDto(appendMemberId)), HttpStatus.CREATED);
     }
 
     @Operation(summary = "맴버 조회 API")
@@ -52,7 +54,7 @@ public class MemberController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 멤버")
     })
     @GetMapping("/members/{memberId}")
-    public ResponseEntity<ApiResult<FindMemberResponseDto>> findMember(@PathVariable("memberId") long memberId) {
+    public ResponseEntity<ApiResult<FindMemberResponseDto>> findMember(@PathVariable("memberId") final long memberId) {
         FindMemberResponseDto response = FindMemberResponseDto.from(memberService.find(memberId));
         return new ResponseEntity<>(ApiResult.success(response), HttpStatus.OK);
     }
@@ -64,12 +66,25 @@ public class MemberController {
     @GetMapping("/members")
     public ResponseEntity<ApiResult<PageResult<List<FindMemberResponseDto>>>> findMembers(
             @Valid @ModelAttribute("condition") final FindMembersConditionDto condition,
-            @RequestParam(value = "pageNumber", required = false, defaultValue = "0") int pageNumber,
-            @Positive @RequestParam(value = "pageSize", required = false, defaultValue = "20") int pageSize
+            @RequestParam(value = "pageNumber", required = false, defaultValue = "0") final int pageNumber,
+            @Positive @RequestParam(value = "pageSize", required = false, defaultValue = "20") final int pageSize
     ) {
         Page<FindMemberResponseDto> response = memberService.findAll(condition.toFindMember(), pageNumber, pageSize).map(FindMemberResponseDto::from);
         PageInfo pageInfo = new PageInfo(pageNumber, pageSize, (int) response.getTotalElements(), response.getTotalPages());
         return new ResponseEntity<>(ApiResult.success(PageResult.of(response.getContent(), pageInfo)), HttpStatus.OK);
+    }
+
+    @Operation(summary = "맴버 수정 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "멤버 수정"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 멤버")
+    })
+    @PatchMapping("/members/{memberId}")
+    public ResponseEntity<ApiResult<UpsertMemberResponseDto>> updateMember(
+            @PathVariable("memberId") final long memberId,
+            @RequestBody @Valid final UpdateMemberRequestDto request) {
+        long updateMemberId = memberService.update(memberId, request.toUpdateMember(), request.toUpdateAddress());
+        return new ResponseEntity<>(ApiResult.success(new UpsertMemberResponseDto(updateMemberId)), HttpStatus.OK);
     }
 
 }
