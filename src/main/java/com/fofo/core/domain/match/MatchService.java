@@ -3,7 +3,6 @@ package com.fofo.core.domain.match;
 import com.fofo.core.controller.request.MatchRequestDto;
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.Member;
-import com.fofo.core.storage.MatchResultDto;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberMatchEntity;
 import com.fofo.core.support.error.CoreApiException;
@@ -25,7 +24,7 @@ public class MatchService {
     private final MatchManager matchManager;
 
     // 모든 매치 결과 조회
-    public Page<MatchResultDto> getMatchResult(final int page, final int size) {
+    public Page<MatchResult> getMatchResult(final int page, final int size) {
         return matchFinder.findMatches(page, size);
     }
 

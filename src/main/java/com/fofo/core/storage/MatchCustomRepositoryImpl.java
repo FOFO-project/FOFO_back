@@ -8,8 +8,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -53,9 +52,9 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
 
 
     @Override
-    public Page<MatchResultDto> findMatchResultList(final Pageable pageable) {
-        List<MatchResultDto> matchResultList = jpaQueryFactory
-                .select(MatchResultDto.from(match, manMember, womanMember, manAddress, womanAddress))
+    public Pair<List<Tuple>, Long> findMatchResultList(final Pageable pageable) {
+        List<Tuple> matchResultTupleList = jpaQueryFactory
+                .select(match, manMember, womanMember, manAddress, womanAddress)
                 .from(match)
                 .leftJoin(manMember).on(match.manMemberId.eq(manMember.id))
                 .leftJoin(womanMember).on(match.womanMemberId.eq(womanMember.id))
@@ -82,7 +81,7 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                 )
                 .fetchOne();
 
-        return new PageImpl<>(matchResultList, pageable, count == null? 0 : count);
+        return Pair.of(matchResultTupleList, count);
     }
 
 }
