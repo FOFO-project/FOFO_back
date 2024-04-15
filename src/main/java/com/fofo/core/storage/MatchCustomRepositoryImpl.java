@@ -13,7 +13,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -27,19 +26,6 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     private final QMemberEntity womanMember = new QMemberEntity("womanMember");
     private final QAddressEntity manAddress = new QAddressEntity("manAddress");
     private final QAddressEntity womanAddress = new QAddressEntity("womanAddress");
-
-    @Override
-    public long deleteMatchesBy(final List<Long> matchIdList) {
-        long result = jpaQueryFactory.update(match)
-                .set(match.status, ActiveStatus.DELETED)
-                .set(match.updatedTime, LocalDateTime.now())
-                .where(match.id.in(matchIdList),
-                        match.matchingStatus.eq(MatchingStatus.MATCHING_PENDING))
-                .execute();
-        em.flush();
-        em.clear();
-        return result;
-    }
 
     @Override
     public List<MemberEntity> findMatchPossibleMembers() {
@@ -67,7 +53,7 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
 
 
     @Override
-    public Page<MatchResultDto> selectMatchResultList(final Pageable pageable) {
+    public Page<MatchResultDto> findMatchResultList(final Pageable pageable) {
         List<MatchResultDto> matchResultList = jpaQueryFactory
                 .select(MatchResultDto.from(match, manMember, womanMember, manAddress, womanAddress))
                 .from(match)
@@ -97,30 +83,6 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                 .fetchOne();
 
         return new PageImpl<>(matchResultList, pageable, count == null? 0 : count);
-    }
-
-    @Override
-    public long updateMatchStatus(final List<Long> matchIdList, final MatchingStatus matchingStatus) {
-        long result = jpaQueryFactory.update(match)
-                        .set(match.matchingStatus, matchingStatus)
-                        .set(match.updatedTime, LocalDateTime.now())
-                        .where(match.id.in(matchIdList))
-                        .execute();
-        em.flush();
-        em.clear();
-        return result;
-    }
-
-    @Override
-    public List<MemberMatchEntity> findUnCancelableMatches(List<Long> matchIdList) {
-        return jpaQueryFactory.select(match)
-                .from(match)
-                .where(
-                        match.id.in(matchIdList),
-                        match.matchingStatus.ne(MatchingStatus.MATCHING_PENDING)
-                                .or(match.status.eq(ActiveStatus.DELETED))
-                        )
-                .fetch();
     }
 
 }

@@ -7,8 +7,6 @@ import com.fofo.core.storage.converter.MatchingStatusConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +14,7 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -33,10 +32,12 @@ public class MemberMatchEntity extends BaseEntity {
     @Column(nullable = false)
     private Long womanMemberId;
 
+    @Setter
     @Column(nullable = false)
     @Convert(converter = MatchingStatusConverter.class)
     private MatchingStatus matchingStatus;
 
+    @Setter
     @Column(nullable = false, length = 2)
     @Convert(converter = ActiveStatusConverter.class)
     private ActiveStatus status;

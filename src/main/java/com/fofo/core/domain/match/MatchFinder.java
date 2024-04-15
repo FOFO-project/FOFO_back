@@ -33,7 +33,7 @@ public class MatchFinder {
 
     public Page<MatchResultDto> findMatches(final int page, final int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        return matchRepository.selectMatchResultList(pageRequest);
+        return matchRepository.findMatchResultList(pageRequest);
     }
 
     public MemberEntity findMember(Long memberId) {

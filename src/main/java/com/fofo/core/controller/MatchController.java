@@ -99,8 +99,8 @@ public class MatchController {
             @ApiResponse(responseCode = "400", description = "이미 완료된 매치 에러")
     })
     @PostMapping("/match")
-    public ResponseEntity<ApiResult<?>> goNextMatchStep(@Valid @RequestBody MatchRequestDto matchRequestDto){
-        matchService.goNextMatchStep(matchRequestDto.matchIdList(), matchRequestDto.matchingStatus());
+    public ResponseEntity<ApiResult<?>> matchStatusChange(@Valid @RequestBody List<MatchRequestDto> matchRequestDtoList){
+        matchService.goNextMatchStep(matchRequestDtoList);
         return new ResponseEntity<>(ApiResult.success(), HttpStatus.OK);
     }
 }

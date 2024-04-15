@@ -1,10 +1,13 @@
 package com.fofo.core.domain.match;
 
+import com.fofo.core.controller.request.MatchRequestDto;
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.Member;
 import com.fofo.core.storage.MatchResultDto;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberMatchEntity;
+import com.fofo.core.support.error.CoreApiException;
+import com.fofo.core.support.error.CoreErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -67,11 +70,30 @@ public class MatchService {
         ));
     }
 
-    public void goNextMatchStep(final List<Long> matchIdList, final MatchingStatus matchingStatus) {
-        MatchingStatus nextMatchingStatus = matchManager.getNextMatchingStatus(matchingStatus);
-        matchUpdater.updateMatchStatus(matchIdList, nextMatchingStatus);
-        // 멤버에 passcount -> 멤버가 싫다고 했을때 바뀐다.
-        // chance 0 -> chance가 0이 되면?
+    @Transactional
+    public void goNextMatchStep(final List<MatchRequestDto> matchRequestDtoList) {
+        for(MatchRequestDto matchRequestDto : matchRequestDtoList){
+            MatchingStatus nextMatchingStatus = matchManager.getNextMatchingStatus(matchRequestDto.matchingStatus());
+            if(MatchingStatus.MATCHING_PROGRESSING.equals(nextMatchingStatus)){
+                matchUpdater.updateMatchProgressing(
+                        matchRequestDto.id(),
+                        nextMatchingStatus
+                );
+            } else if(MatchingStatus.MATCHING_COMPLETED.equals(nextMatchingStatus)){
+                // 남자, 여자 동의 상태를 보고 판단
+                matchUpdater.updateMatchCOMPLETED(
+                        matchRequestDto.id(),
+                        matchRequestDto.manId(),
+                        matchRequestDto.manAgreement(),
+                        matchRequestDto.womanId(),
+                        matchRequestDto.womanAgreement(),
+                        nextMatchingStatus
+                );
+            } else{
+                throw new CoreApiException(CoreErrorType.ENUM_MAPPING_ERROR);
+            }
+
+        }
     }
 
 }
