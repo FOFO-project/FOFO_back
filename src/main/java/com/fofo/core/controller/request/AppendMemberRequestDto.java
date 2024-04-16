@@ -4,10 +4,12 @@ import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.Address;
 import com.fofo.core.domain.member.AgeRelationType;
 import com.fofo.core.domain.member.ApprovalStatus;
+import com.fofo.core.domain.member.FilteringSmoker;
 import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Member;
 import com.fofo.core.domain.member.Religion;
+import com.fofo.core.domain.member.SmokingYn;
 import com.fofo.core.support.util.AgeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -18,6 +20,7 @@ import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Schema(description = "멤버 등록 요청")
 public record AppendMemberRequestDto(
@@ -36,9 +39,9 @@ public record AppendMemberRequestDto(
         @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         LocalDateTime birthday,
         @Schema(description = "휴대전화번호", example = "01012345678")
-        @Pattern(regexp = "^01([0|1|6|7|8|9])(-)?([0-9]{3,4})(-)?([0-9]{4})$")
+        @NotEmpty @Pattern(regexp = "^01([0|1|6|7|8|9])(-)?([0-9]{3,4})(-)?([0-9]{4})$")
         String phoneNumber,
-        @Schema(description = "연령 관계")
+        @Schema(description = "절대 안되는 연령 관계")
         AgeRelationType filteringAgeRelation,
         @Schema(description = "회사", example = "한화시스템")
         @NotEmpty @Size(max=20)
@@ -52,14 +55,15 @@ public record AppendMemberRequestDto(
         @Schema(description = "mbti")
         @NotNull
         Mbti mbti,
-        @Schema(description = "흡연 여부", example = "false")
-        boolean smokingYn,
-        @Schema(description = "상대 흡연 조건", example = "false")
-        boolean filteringSmoker,
+        @Schema(description = "흡연 여부", example = "N")
+        @NotNull
+        SmokingYn smokingYn,
+        @Schema(description = "절대 안되는 흡연 조건", example = "N")
+        FilteringSmoker filteringSmoker,
         @Schema(description = "종교")
         @NotNull
         Religion religion,
-        @Schema(description = "상대 종교 조건")
+        @Schema(description = "절대 안되는 종교 조건")
         Religion filteringReligion,
         @Schema(description = "어필 포인트", example = "저는 잘생겼습니다.")
         @Size(max=100)
@@ -79,8 +83,10 @@ public record AppendMemberRequestDto(
                         job,
                         university,
                         mbti,
-                        smokingYn,
-                        filteringSmoker,
+                        smokingYn.isCodeValue(),
+                        Optional.ofNullable(filteringSmoker)
+                                .map(FilteringSmoker::isCodeValue)
+                                .orElse(null),
                         religion,
                         filteringReligion,
                         charmingPoint,

@@ -3,11 +3,13 @@ package com.fofo.core.controller.response;
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.AgeRelationType;
 import com.fofo.core.domain.member.ApprovalStatus;
+import com.fofo.core.domain.member.FilteringSmoker;
 import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Member;
 import com.fofo.core.domain.member.MemberWithAddress;
 import com.fofo.core.domain.member.Religion;
+import com.fofo.core.domain.member.SmokingYn;
 
 import java.time.LocalDateTime;
 
@@ -25,8 +27,8 @@ public record FindMemberResponseDto(
         String job,
         String university,
         Mbti mbti,
-        boolean smokingYn,
-        boolean filteringSmoker,
+        SmokingYn smokingYn,
+        FilteringSmoker filteringSmoker,
         Religion religion,
         Religion filteringReligion,
         String charmingPoint,
@@ -55,8 +57,8 @@ public record FindMemberResponseDto(
                 member.job(),
                 member.university(),
                 member.mbti(),
-                member.smokingYn(),
-                member.filteringSmoker(),
+                SmokingYn.enumOfCode(member.smokingYn()),
+                FilteringSmoker.enumOfCode(member.filteringSmoker()),
                 member.religion(),
                 member.filteringReligion(),
                 member.charmingPoint(),
