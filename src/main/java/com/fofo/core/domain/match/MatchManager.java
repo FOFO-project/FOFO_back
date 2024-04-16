@@ -126,7 +126,7 @@ public class MatchManager {
 
     private AgeRelationType getAgeRelation(Member memberA, Member memberB) {
         if (memberA.age() > memberB.age()) {
-            return AgeRelationType.ORDER;
+            return AgeRelationType.OLDER;
         } else if (memberA.age() == memberB.age()) {
             return AgeRelationType.SAME;
         } else {

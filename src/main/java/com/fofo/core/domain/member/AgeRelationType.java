@@ -10,7 +10,7 @@ import static com.fofo.core.support.error.CoreErrorType.ENUM_MAPPING_ERROR;
 
 @RequiredArgsConstructor
 public enum AgeRelationType {
-    ORDER("1"),
+    OLDER("1"),
     YOUNGER("-1"),
     SAME("0")
     ;
