@@ -16,7 +16,7 @@ public class GenderConverter implements AttributeConverter<Gender, String> {
     }
 
     @Override
-    public Gender convertToEntityAttribute(final String code) {
-        return Gender.enumOfCode(code);
+    public Gender convertToEntityAttribute(final String name) {
+        return Gender.enumOfName(name);
     }
 }

@@ -11,9 +11,9 @@ public enum Gender {
     MAN, WOMAN;
 
     @JsonCreator
-    public static Gender enumOfCode(final String value) {
+    public static Gender enumOfName(final String name) {
         return Arrays.stream(Gender.values())
-                .filter(v -> v.name().equals(value.toUpperCase()))
+                .filter(v -> v.name().equals(name.toUpperCase()))
                 .findAny()
                 .orElseThrow(() -> new CoreApiException(ENUM_MAPPING_ERROR));
     }
