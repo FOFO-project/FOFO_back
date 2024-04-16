@@ -20,6 +20,7 @@ import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Schema(description = "멤버 등록 요청")
 public record AppendMemberRequestDto(
@@ -38,7 +39,7 @@ public record AppendMemberRequestDto(
         @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         LocalDateTime birthday,
         @Schema(description = "휴대전화번호", example = "01012345678")
-        @Pattern(regexp = "^01([0|1|6|7|8|9])(-)?([0-9]{3,4})(-)?([0-9]{4})$")
+        @NotEmpty @Pattern(regexp = "^01([0|1|6|7|8|9])(-)?([0-9]{3,4})(-)?([0-9]{4})$")
         String phoneNumber,
         @Schema(description = "절대 안되는 연령 관계")
         AgeRelationType filteringAgeRelation,
@@ -55,6 +56,7 @@ public record AppendMemberRequestDto(
         @NotNull
         Mbti mbti,
         @Schema(description = "흡연 여부", example = "N")
+        @NotNull
         SmokingYn smokingYn,
         @Schema(description = "절대 안되는 흡연 조건", example = "N")
         FilteringSmoker filteringSmoker,
@@ -82,7 +84,9 @@ public record AppendMemberRequestDto(
                         university,
                         mbti,
                         smokingYn.isCodeValue(),
-                        filteringSmoker.isCodeValue(),
+                        Optional.ofNullable(filteringSmoker)
+                                .map(FilteringSmoker::isCodeValue)
+                                .orElse(null),
                         religion,
                         filteringReligion,
                         charmingPoint,
