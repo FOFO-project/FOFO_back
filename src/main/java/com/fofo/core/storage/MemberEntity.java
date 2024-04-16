@@ -63,7 +63,7 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = false, length = 30)
     private String phoneNumber;
 
-    @Column(length = 1)
+    @Column(length = 10)
     @Convert(converter = AgeRelationTypeConverter.class)
     private AgeRelationType filteringAgeRelation;
 

@@ -14,10 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
-import static com.fofo.core.support.error.CoreErrorType.ADDRESS_NOT_FOUND_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.MEMBER_NOT_FOUND_ERROR;
 
 @Component
@@ -28,10 +25,12 @@ public class MemberFinder {
 
     public MemberWithAddress find(final long memberId) {
         Tuple findTuple = memberRepository.findMemberById(memberId);
-        MemberEntity memberEntity = Optional.ofNullable(findTuple.get(QMemberEntity.memberEntity))
-                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
-        AddressEntity addressEntity = Optional.ofNullable(findTuple.get(QAddressEntity.addressEntity))
-                .orElseThrow(() -> new CoreApiException(ADDRESS_NOT_FOUND_ERROR));
+        if (findTuple == null) {
+            throw new CoreApiException(MEMBER_NOT_FOUND_ERROR);
+        }
+
+        MemberEntity memberEntity = findTuple.get(QMemberEntity.memberEntity);
+        AddressEntity addressEntity = findTuple.get(QAddressEntity.addressEntity);
 
         return MemberWithAddress.of(Member.from(memberEntity), Address.from(addressEntity));
     }
@@ -40,8 +39,8 @@ public class MemberFinder {
         List<Tuple> findTuples = memberRepository.findMembersWithCondition(findMember, pageable);
         List<MemberWithAddress> memberWithAddresses = findTuples.stream()
                 .map(tuple -> {
-                    MemberEntity memberEntity = Objects.requireNonNull(tuple.get(QMemberEntity.memberEntity));
-                    AddressEntity addressEntity = Objects.requireNonNull(tuple.get(QAddressEntity.addressEntity));
+                    MemberEntity memberEntity = tuple.get(QMemberEntity.memberEntity);
+                    AddressEntity addressEntity = tuple.get(QAddressEntity.addressEntity);
                     return MemberWithAddress.of(Member.from(memberEntity), Address.from(addressEntity));
                 })
                 .toList();

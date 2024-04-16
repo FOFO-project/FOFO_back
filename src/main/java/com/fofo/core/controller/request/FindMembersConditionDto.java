@@ -2,13 +2,16 @@ package com.fofo.core.controller.request;
 
 import com.fofo.core.domain.member.AgeRelationType;
 import com.fofo.core.domain.member.ApprovalStatus;
+import com.fofo.core.domain.member.FilteringSmoker;
 import com.fofo.core.domain.member.FindMember;
 import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Religion;
+import com.fofo.core.domain.member.SmokingYn;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 public record FindMembersConditionDto(
         String kakaoId,
@@ -21,8 +24,8 @@ public record FindMembersConditionDto(
         String job,
         String university,
         Mbti mbti,
-        Boolean smokingYn,
-        Boolean filteringSmoker,
+        SmokingYn smokingYn,
+        FilteringSmoker filteringSmoker,
         Religion religion,
         Religion filteringReligion,
         ApprovalStatus approvalStatus
@@ -39,8 +42,12 @@ public record FindMembersConditionDto(
                 job,
                 university,
                 mbti,
-                smokingYn,
-                filteringSmoker,
+                Optional.ofNullable(smokingYn)
+                        .map(SmokingYn::isCodeValue)
+                        .orElse(null),
+                Optional.ofNullable(filteringSmoker)
+                        .map(FilteringSmoker::isCodeValue)
+                        .orElse(null),
                 religion,
                 filteringReligion,
                 approvalStatus
