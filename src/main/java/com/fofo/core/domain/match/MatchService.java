@@ -1,10 +1,7 @@
 package com.fofo.core.domain.match;
 
 import com.fofo.core.controller.request.MatchRequestDto;
-import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.Member;
-import com.fofo.core.storage.MemberEntity;
-import com.fofo.core.storage.MemberMatchEntity;
 import com.fofo.core.support.error.CoreApiException;
 import com.fofo.core.support.error.CoreErrorType;
 import lombok.RequiredArgsConstructor;
@@ -44,29 +41,8 @@ public class MatchService {
         matchRemover.removeMatch(matchIdList);
     }
 
-    @Transactional
     public void manualMatch(final Long manMemberId, final Long womanMemberId) {
-        // Member 조회 기능 개발 이후 수정 예정
-        MemberEntity manMemberEntity = matchFinder.findMember(manMemberId);
-        MemberEntity womanMemberEntity = matchFinder.findMember(womanMemberId);
-
-        // member entity -> member domain 가능해지면 입금 된 유저인지 체크 로직 추가 예정
-
-        // Member 조회 기능 개발 이후 수정 예정
-//        Match match = Match.of(
-//                man,
-//                woman,
-//                MatchingStatus.MATCHING_PENDING,
-//                ActiveStatus.CREATED
-//        );
-//        matchAppender.appendMatch(match.toEntity());
-
-        matchAppender.appendMatch(MemberMatchEntity.of(
-                manMemberId,
-                womanMemberId,
-                MatchingStatus.MATCHING_PENDING,
-                ActiveStatus.CREATED
-        ));
+        matchAppender.appendMatch(manMemberId, womanMemberId);
     }
 
     @Transactional
@@ -91,7 +67,6 @@ public class MatchService {
             } else{
                 throw new CoreApiException(CoreErrorType.ENUM_MAPPING_ERROR);
             }
-
         }
     }
 
