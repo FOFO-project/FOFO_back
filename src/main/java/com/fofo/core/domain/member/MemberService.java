@@ -30,4 +30,7 @@ public class MemberService {
         return memberUpdater.update(memberId, updateMember, updateAddress);
     }
 
+    public long remove(final long memberId) {
+        return memberUpdater.remove(memberId);
+    }
 }

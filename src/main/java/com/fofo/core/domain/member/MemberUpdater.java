@@ -1,5 +1,6 @@
 package com.fofo.core.domain.member;
 
+import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.storage.AddressEntity;
 import com.fofo.core.storage.AddressRepository;
 import com.fofo.core.storage.MemberEntity;
@@ -19,6 +20,19 @@ public class MemberUpdater {
 
     private final MemberRepository memberRepository;
     private final AddressRepository addressRepository;
+
+    @Transactional
+    public long remove(final long memberId) {
+        MemberEntity findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CoreApiException(CoreErrorType.MEMBER_NOT_FOUND_ERROR));
+        findMember.setStatus(ActiveStatus.DELETED);
+
+        AddressEntity findAddress = addressRepository.findById(findMember.getAddressId())
+                .orElseThrow(() -> new CoreApiException(CoreErrorType.ADDRESS_NOT_FOUND_ERROR));
+        findAddress.setStatus(ActiveStatus.DELETED);
+
+        return findMember.getId();
+    }
 
     @Transactional
     public long update(final long memberId, final UpdateMember updateMember, final UpdateAddress updateAddress) {

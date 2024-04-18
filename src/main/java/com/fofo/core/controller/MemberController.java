@@ -4,7 +4,7 @@ import com.fofo.core.controller.request.AppendMemberRequestDto;
 import com.fofo.core.controller.request.FindMembersConditionDto;
 import com.fofo.core.controller.request.UpdateMemberRequestDto;
 import com.fofo.core.controller.response.FindMemberResponseDto;
-import com.fofo.core.controller.response.UpsertMemberResponseDto;
+import com.fofo.core.controller.response.MemberResponseDto;
 import com.fofo.core.domain.member.MemberService;
 import com.fofo.core.support.response.ApiResult;
 import com.fofo.core.support.response.PageInfo;
@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -39,18 +40,18 @@ public class MemberController {
 
     @Operation(summary = "맴버 등록 API")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "멤버 등록"),
+            @ApiResponse(responseCode = "201", description = "멤버 등록 성공"),
             @ApiResponse(responseCode = "409", description = "멤버 중복 등록 Conflict")
     })
     @PostMapping("/member")
-    public ResponseEntity<ApiResult<UpsertMemberResponseDto>> appendMember(@RequestBody @Valid final AppendMemberRequestDto request) {
+    public ResponseEntity<ApiResult<MemberResponseDto>> appendMember(@RequestBody @Valid final AppendMemberRequestDto request) {
         long appendMemberId = memberService.append(request.toMember(), request.toAddress());
-        return new ResponseEntity<>(ApiResult.success(new UpsertMemberResponseDto(appendMemberId)), HttpStatus.CREATED);
+        return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(appendMemberId)), HttpStatus.CREATED);
     }
 
     @Operation(summary = "맴버 조회 API")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "멤버 조회"),
+            @ApiResponse(responseCode = "200", description = "멤버 조회 성공"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 멤버")
     })
     @GetMapping("/members/{memberId}")
@@ -61,7 +62,7 @@ public class MemberController {
 
     @Operation(summary = "맴버 전체 조회 API")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "멤버 전체 조회")
+            @ApiResponse(responseCode = "200", description = "멤버 전체 조회 성공")
     })
     @GetMapping("/members")
     public ResponseEntity<ApiResult<PageResult<List<FindMemberResponseDto>>>> findMembers(
@@ -76,15 +77,26 @@ public class MemberController {
 
     @Operation(summary = "맴버 수정 API")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "멤버 수정"),
+            @ApiResponse(responseCode = "200", description = "멤버 수정 성공"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 멤버")
     })
     @PatchMapping("/members/{memberId}")
-    public ResponseEntity<ApiResult<UpsertMemberResponseDto>> updateMember(
+    public ResponseEntity<ApiResult<MemberResponseDto>> updateMember(
             @PathVariable("memberId") final long memberId,
             @RequestBody @Valid final UpdateMemberRequestDto request) {
         long updateMemberId = memberService.update(memberId, request.toUpdateMember(), request.toUpdateAddress());
-        return new ResponseEntity<>(ApiResult.success(new UpsertMemberResponseDto(updateMemberId)), HttpStatus.OK);
+        return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(updateMemberId)), HttpStatus.OK);
+    }
+
+    @Operation(summary = "맴버 삭제 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "멤버 삭제(가입 거절) 성공"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 멤버")
+    })
+    @DeleteMapping("/members/{memberId}")
+    public ResponseEntity<ApiResult<MemberResponseDto>> removeMember(@PathVariable("memberId") final long memberId) {
+        long deleteMemberId = memberService.remove(memberId);
+        return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(deleteMemberId)), HttpStatus.OK);
     }
 
 }
