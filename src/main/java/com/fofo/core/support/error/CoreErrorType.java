@@ -17,8 +17,13 @@ public enum CoreErrorType {
 
     // Member 관련 에러
     DUPLICATE_MEMBER_ERROR(HttpStatus.CONFLICT, CoreErrorCode.MEME500, "Duplicate member error has occurred", LogLevel.ERROR),
-    MEMBER_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, CoreErrorCode.MEME501, "Memeber Not found", LogLevel.ERROR),
+    MEMBER_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, CoreErrorCode.MEME501, "Member Not found", LogLevel.ERROR),
     ADDRESS_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, CoreErrorCode.MEME502, "Address Not found", LogLevel.ERROR),
+
+    // Member 승인 상태 관련 에러
+    NOT_PENDING_FOR_DEPOSIT_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MEME503, "Approval status is not deposit pending status. Please check and try again.", LogLevel.ERROR),
+    DEPOSIT_DATE_EXISTS_ERROR(HttpStatus.CONFLICT, CoreErrorCode.MEME504, "This member already has a deposit date.", LogLevel.ERROR),
+    NOT_WAITING_FOR_APPROVE_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MEME505, "Approval status is not deposit complete status. Please check and try again.", LogLevel.ERROR),
 
     //Match 관련 에러
     MATCH_ALREADY_COMPLETED_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MATE500, "Match is already COMPLETED.", LogLevel.ERROR),

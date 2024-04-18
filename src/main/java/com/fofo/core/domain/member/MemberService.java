@@ -5,12 +5,15 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 @RequiredArgsConstructor
 public class MemberService {
 
     private final MemberAppender memberAppender;
     private final MemberFinder memberFinder;
+    private final MemberUpdater memberUpdater;
 
     public long append(final Member member, final Address address) {
         return memberAppender.append(member, address);
@@ -25,4 +28,19 @@ public class MemberService {
         return memberFinder.findAll(findMember, pageRequest);
     }
 
+    public long update(final long memberId, final UpdateMember updateMember, final UpdateAddress updateAddress) {
+        return memberUpdater.update(memberId, updateMember, updateAddress);
+    }
+
+    public long remove(final long memberId) {
+        return memberUpdater.remove(memberId);
+    }
+
+    public long confirmDeposit(final long memberId, final LocalDateTime depositDate) {
+        return memberUpdater.confirmDeposit(memberId, depositDate);
+    }
+
+    public long approve(final long memberId) {
+        return memberUpdater.approve(memberId);
+    }
 }

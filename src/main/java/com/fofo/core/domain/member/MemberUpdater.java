@@ -1,7 +1,119 @@
 package com.fofo.core.domain.member;
 
+import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.storage.AddressEntity;
+import com.fofo.core.storage.AddressRepository;
+import com.fofo.core.storage.MemberEntity;
+import com.fofo.core.storage.MemberRepository;
+import com.fofo.core.support.error.CoreApiException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static com.fofo.core.support.error.CoreErrorType.ADDRESS_NOT_FOUND_ERROR;
+import static com.fofo.core.support.error.CoreErrorType.DEPOSIT_DATE_EXISTS_ERROR;
+import static com.fofo.core.support.error.CoreErrorType.MEMBER_NOT_FOUND_ERROR;
+import static com.fofo.core.support.error.CoreErrorType.NOT_PENDING_FOR_DEPOSIT_ERROR;
+import static com.fofo.core.support.error.CoreErrorType.NOT_WAITING_FOR_APPROVE_ERROR;
 
 @Component
+@RequiredArgsConstructor
 public class MemberUpdater {
+
+    private final MemberRepository memberRepository;
+    private final AddressRepository addressRepository;
+
+    @Transactional
+    public long remove(final long memberId) {
+        MemberEntity findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+        findMember.setStatus(ActiveStatus.DELETED);
+
+        AddressEntity findAddress = addressRepository.findById(findMember.getAddressId())
+                .orElseThrow(() -> new CoreApiException(ADDRESS_NOT_FOUND_ERROR));
+        findAddress.setStatus(ActiveStatus.DELETED);
+
+        return findMember.getId();
+    }
+
+    @Transactional
+    public long confirmDeposit(final long memberId, final LocalDateTime depositDate) {
+        MemberEntity findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+        if (findMember.getDepositDate() != null) {
+            throw new CoreApiException(DEPOSIT_DATE_EXISTS_ERROR);
+        }
+        if (findMember.getApprovalStatus() != ApprovalStatus.DEPOSIT_PENDING) {
+            throw new CoreApiException(NOT_PENDING_FOR_DEPOSIT_ERROR);
+        }
+
+        findMember.setDepositDate(depositDate);
+        findMember.setApprovalStatus(ApprovalStatus.DEPOSIT_COMPLETED);
+        findMember.setStatus(ActiveStatus.UPDATED);
+
+        return findMember.getId();
+    }
+
+    @Transactional
+    public long approve(final long memberId) {
+        MemberEntity findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+        if (findMember.getApprovalStatus() != ApprovalStatus.DEPOSIT_COMPLETED || findMember.getDepositDate() == null) {
+            throw new CoreApiException(NOT_WAITING_FOR_APPROVE_ERROR);
+        }
+
+        findMember.setApprovalStatus(ApprovalStatus.APPROVED);
+        findMember.setStatus(ActiveStatus.UPDATED);
+
+        return findMember.getId();
+    }
+
+    @Transactional
+    public long update(final long memberId, final UpdateMember updateMember, final UpdateAddress updateAddress) {
+        MemberEntity findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+        updateMemberInfo(findMember, updateMember);
+
+        if (updateAddress != null) {
+            AddressEntity findAddress = addressRepository.findById(findMember.getAddressId())
+                    .orElseThrow(() -> new CoreApiException(ADDRESS_NOT_FOUND_ERROR));
+
+            updateAddressInfo(findAddress, updateAddress);
+        }
+
+        return memberId;
+    }
+
+    private void updateMemberInfo(final MemberEntity findMember, final UpdateMember updateMember) {
+        Optional.ofNullable(updateMember.name()).ifPresent(findMember::setName);
+        Optional.ofNullable(updateMember.gender()).ifPresent(findMember::setGender);
+        Optional.ofNullable(updateMember.birthday()).ifPresent(findMember::setBirthday);
+        Optional.ofNullable(updateMember.age()).ifPresent(findMember::setAge);
+        Optional.ofNullable(updateMember.phoneNumber()).ifPresent(findMember::setPhoneNumber);
+        Optional.ofNullable(updateMember.filteringAgeRelation()).ifPresent(findMember::setFilteringAgeRelation);
+        Optional.ofNullable(updateMember.company()).ifPresent(findMember::setCompany);
+        Optional.ofNullable(updateMember.job()).ifPresent(findMember::setJob);
+        Optional.ofNullable(updateMember.university()).ifPresent(findMember::setUniversity);
+        Optional.ofNullable(updateMember.mbti()).ifPresent(findMember::setMbti);
+        Optional.ofNullable(updateMember.smokingYn()).ifPresent(findMember::setSmokingYn);
+        Optional.ofNullable(updateMember.filteringSmoker()).ifPresent(findMember::setFilteringSmoker);
+        Optional.ofNullable(updateMember.religion()).ifPresent(findMember::setReligion);
+        Optional.ofNullable(updateMember.filteringReligion()).ifPresent(findMember::setFilteringReligion);
+        Optional.ofNullable(updateMember.charmingPoint()).ifPresent(findMember::setCharmingPoint);
+        Optional.ofNullable(updateMember.note()).ifPresent(findMember::setNote);
+        findMember.setStatus(updateMember.status());
+    }
+
+    private void updateAddressInfo(final AddressEntity findAddress, final UpdateAddress updateAddress) {
+        Optional.ofNullable(updateAddress.zipcode()).ifPresent(findAddress::setZipCode);
+        Optional.ofNullable(updateAddress.sido()).ifPresent(findAddress::setSido);
+        Optional.ofNullable(updateAddress.sigungu()).ifPresent(findAddress::setSigungu);
+        Optional.ofNullable(updateAddress.eupmyundong()).ifPresent(findAddress::setEupmyundong);
+        Optional.ofNullable(updateAddress.location()).ifPresent(location -> findAddress.setLocation(new Point(location)));
+        findAddress.setStatus(updateAddress.status());
+    }
 }

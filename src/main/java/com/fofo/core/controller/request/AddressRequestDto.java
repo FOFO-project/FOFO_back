@@ -4,7 +4,7 @@ import com.fofo.core.domain.member.GeoPoint;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 
-@Schema(description = "주소 등록 요청")
+@Schema(description = "주소 등록/수정 요청")
 public record AddressRequestDto(
         @Schema(description = "우편번호", example = "07551")
         @Size(max = 5)
