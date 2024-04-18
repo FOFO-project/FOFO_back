@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -27,8 +28,22 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     private final QAddressEntity womanAddress = new QAddressEntity("womanAddress");
 
     @Override
+    public Optional<MemberEntity> findMatchPossibleMemberById(Long id) {
+        return Optional.ofNullable(jpaQueryFactory.select(member)
+                .from(member)
+                .leftJoin(match).on(member.id.eq(match.manMemberId).or(member.id.eq(match.womanMemberId)))
+                .where(
+                        member.id.eq(id),
+                        member.approvalStatus.eq(ApprovalStatus.APPROVED), //멤버 승인상태
+                        member.status.ne(ActiveStatus.DELETED), //멤버 삭제되지 않은 상태
+                        matchPossible()
+                )
+                .fetchOne());
+    }
+
+    @Override
     public List<MemberEntity> findMatchPossibleMembers() {
-        List<Tuple> result = jpaQueryFactory.select(member, match)
+        return jpaQueryFactory.select(member)
                 .from(member)
                 .leftJoin(match).on(member.id.eq(match.manMemberId).or(member.id.eq(match.womanMemberId)))
                 .where(
@@ -38,10 +53,6 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                 )
                 .orderBy(member.depositDate.desc())
                 .fetch();
-        for(Tuple tuple : result){
-            System.out.println(tuple);
-        }
-        return result.stream().map(tuple -> tuple.get(member)).toList();
     }
 
     private BooleanExpression matchPossible() {

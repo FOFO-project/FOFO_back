@@ -1,12 +1,16 @@
 package com.fofo.core.domain.match;
 
+import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.storage.MatchRepository;
+import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberMatchEntity;
+import com.fofo.core.support.error.CoreApiException;
+import com.fofo.core.support.error.CoreErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -20,7 +24,20 @@ public class MatchAppender {
         );
     }
 
-    public void appendMatch(final MemberMatchEntity match) {
-        matchRepository.save(match);
+    @Transactional
+    public void appendMatch(final Long manMemberId, final Long womanMemberId) {
+        MemberEntity manMemberEntity = matchRepository.findMatchPossibleMemberById(manMemberId)
+                .orElseThrow(() -> new CoreApiException(CoreErrorType.MATCHABLE_MEMBER_NOT_FOUND));
+        MemberEntity womanMemberEntity = matchRepository.findMatchPossibleMemberById(womanMemberId)
+                .orElseThrow(() -> new CoreApiException(CoreErrorType.MATCHABLE_MEMBER_NOT_FOUND));
+        if(manMemberEntity.getGender().equals(womanMemberEntity.getGender())){
+            throw new CoreApiException(CoreErrorType.MATCH_SAME_GENDER_ERROR);
+        }
+        matchRepository.save(MemberMatchEntity.of(
+                manMemberEntity.getId(),
+                womanMemberEntity.getId(),
+                MatchingStatus.MATCHING_PENDING,
+                ActiveStatus.CREATED
+        ));
     }
 }

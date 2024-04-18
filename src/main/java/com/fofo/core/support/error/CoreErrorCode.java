@@ -18,6 +18,7 @@ public enum CoreErrorCode {
     MATE500,
     MATE501,
     MATE502,
-    MATE503
+    MATE503,
+    MATE504
     ;
 }

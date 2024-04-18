@@ -7,7 +7,6 @@ import com.fofo.core.storage.AddressEntity;
 import com.fofo.core.storage.MatchRepository;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberMatchEntity;
-import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
 import com.fofo.core.support.error.CoreErrorType;
 import com.querydsl.core.Tuple;
@@ -26,7 +25,6 @@ import java.util.Objects;
 public class MatchFinder {
 
     private final MatchRepository matchRepository;
-    private final MemberRepository memberRepository;
 
     public List<Member> findMatchPossibleMembers() {
         List<MemberEntity> memberEntityList = matchRepository.findMatchPossibleMembers();
@@ -60,13 +58,6 @@ public class MatchFinder {
                 .toList();
         Long count = pair.getRight();
         return new PageImpl<>(matchResultList, pageRequest, count == null? 0 : count);
-    }
-
-    public MemberEntity findMember(Long memberId) {
-        return memberRepository.findById(memberId)
-                .orElseThrow(() -> new CoreApiException(
-                        CoreErrorType.MEMBER_NOT_FOUND_ERROR)
-                );
     }
 
 }
