@@ -5,8 +5,9 @@ import com.fofo.core.controller.request.ManualMatchRequestDto;
 import com.fofo.core.controller.request.MatchCancelRequestDto;
 import com.fofo.core.controller.request.MatchRequestDto;
 import com.fofo.core.controller.response.MatchResponseDto;
+import com.fofo.core.controller.response.MatchResultResponseDto;
+import com.fofo.core.domain.match.MatchResult;
 import com.fofo.core.domain.match.MatchService;
-import com.fofo.core.storage.MatchResultDto;
 import com.fofo.core.support.response.ApiResult;
 import com.fofo.core.support.response.PageInfo;
 import com.fofo.core.support.response.PageResult;
@@ -41,17 +42,17 @@ public class MatchController {
             @ApiResponse(responseCode = "200", description = "매치 결과")
     })
     @GetMapping("/match-result")
-    public ResponseEntity<ApiResult<PageResult<List<MatchResultDto>>>> getMatchResult(
+    public ResponseEntity<ApiResult<PageResult<List<MatchResultResponseDto>>>> getMatchResult(
             @RequestParam(value="pageNumber", required = false, defaultValue = "0") int pageNumber,
             @Positive @RequestParam(value="pageSize", required = false, defaultValue = "20") int pageSize)
     {
-        Page<MatchResultDto> matchPage = matchService.getMatchResult(pageNumber, pageSize);
+        Page<MatchResult> matchPage = matchService.getMatchResult(pageNumber, pageSize);
         PageInfo pageInfo = new PageInfo(pageNumber, pageSize, (int) matchPage.getTotalElements(), matchPage.getTotalPages());
-//        List<MatchResultResponseDto> response = matchPage.getContent().stream()
-//                .map(MatchResultResponseDto::from)
-//                .toList();
+        List<MatchResultResponseDto> response = matchPage.getContent().stream()
+                .map(MatchResultResponseDto::from)
+                .toList();
 
-        return new ResponseEntity<>(ApiResult.success(new PageResult<>(matchPage.getContent(), pageInfo)), HttpStatus.OK);
+        return new ResponseEntity<>(ApiResult.success(new PageResult<>(response, pageInfo)), HttpStatus.OK);
     }
 
     @Operation(summary = "전체 or 선택 자동 매치")
@@ -99,8 +100,8 @@ public class MatchController {
             @ApiResponse(responseCode = "400", description = "이미 완료된 매치 에러")
     })
     @PostMapping("/match")
-    public ResponseEntity<ApiResult<?>> goNextMatchStep(@Valid @RequestBody MatchRequestDto matchRequestDto){
-        matchService.goNextMatchStep(matchRequestDto.matchIdList(), matchRequestDto.matchingStatus());
+    public ResponseEntity<ApiResult<?>> matchStatusChange(@Valid @RequestBody List<MatchRequestDto> matchRequestDtoList){
+        matchService.goNextMatchStep(matchRequestDtoList);
         return new ResponseEntity<>(ApiResult.success(), HttpStatus.OK);
     }
 }

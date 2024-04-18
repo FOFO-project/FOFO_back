@@ -2,15 +2,16 @@ package com.fofo.core.storage;
 
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.match.MatchingStatus;
+import com.fofo.core.domain.member.ApprovalStatus;
+import com.querydsl.core.Tuple;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -19,28 +20,41 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     private final JPAQueryFactory jpaQueryFactory;
     private final EntityManager em;
     private final QMemberMatchEntity match = QMemberMatchEntity.memberMatchEntity;
+    private final QMemberEntity member = QMemberEntity.memberEntity;
     private final QMemberEntity manMember = new QMemberEntity("manMember");
     private final QMemberEntity womanMember = new QMemberEntity("womanMember");
     private final QAddressEntity manAddress = new QAddressEntity("manAddress");
     private final QAddressEntity womanAddress = new QAddressEntity("womanAddress");
 
     @Override
-    public long deleteMatchesBy(final List<Long> matchIdList) {
-        long result = jpaQueryFactory.update(match)
-                .set(match.status, ActiveStatus.DELETED)
-                .set(match.updatedTime, LocalDateTime.now())
-                .where(match.id.in(matchIdList),
-                        match.matchingStatus.eq(MatchingStatus.MATCHING_PENDING))
-                .execute();
-        em.flush();
-        em.clear();
-        return result;
+    public List<MemberEntity> findMatchPossibleMembers() {
+        List<Tuple> result = jpaQueryFactory.select(member, match)
+                .from(member)
+                .leftJoin(match).on(member.id.eq(match.manMemberId).or(member.id.eq(match.womanMemberId)))
+                .where(
+                        member.approvalStatus.eq(ApprovalStatus.APPROVED), //멤버 승인상태
+                        member.status.ne(ActiveStatus.DELETED), //멤버 삭제되지 않은 상태
+                        matchPossible()
+                )
+                .orderBy(member.depositDate.desc())
+                .fetch();
+        for(Tuple tuple : result){
+            System.out.println(tuple);
+        }
+        return result.stream().map(tuple -> tuple.get(member)).toList();
     }
 
+    private BooleanExpression matchPossible() {
+        return match.status.ne(ActiveStatus.DELETED).and(match.matchingStatus.eq(MatchingStatus.MATCHING_COMPLETED)) //매치 완료 상태
+                .or(match.status.eq(ActiveStatus.DELETED)) // 매치 삭제된 상태
+                .or(match.isNull()); //매치 진행 된 적 없는 상태
+    }
+
+
     @Override
-    public Page<MatchResultDto> selectMatchResultList(final Pageable pageable) {
-        List<MatchResultDto> matchResultList = jpaQueryFactory
-                .select(MatchResultDto.from(match, manMember, womanMember, manAddress, womanAddress))
+    public Pair<List<Tuple>, Long> findMatchResultList(final Pageable pageable) {
+        List<Tuple> matchResultTupleList = jpaQueryFactory
+                .select(match, manMember, womanMember, manAddress, womanAddress)
                 .from(match)
                 .leftJoin(manMember).on(match.manMemberId.eq(manMember.id))
                 .leftJoin(womanMember).on(match.womanMemberId.eq(womanMember.id))
@@ -66,32 +80,8 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                         womanMember.status.ne(ActiveStatus.DELETED)
                 )
                 .fetchOne();
-//        List<MatchResultDto> matchResultList = new ArrayList<>();
-        return new PageImpl<>(matchResultList, pageable, count == null? 0 : count);
-    }
 
-    @Override
-    public long updateMatchStatus(final List<Long> matchIdList, final MatchingStatus matchingStatus) {
-        long result = jpaQueryFactory.update(match)
-                        .set(match.matchingStatus, matchingStatus)
-                        .set(match.updatedTime, LocalDateTime.now())
-                        .where(match.id.in(matchIdList))
-                        .execute();
-        em.flush();
-        em.clear();
-        return result;
-    }
-
-    @Override
-    public List<MemberMatchEntity> findUnCancelableMatches(List<Long> matchIdList) {
-        return jpaQueryFactory.select(match)
-                .from(match)
-                .where(
-                        match.id.in(matchIdList),
-                        match.matchingStatus.ne(MatchingStatus.MATCHING_PENDING)
-                                .or(match.status.eq(ActiveStatus.DELETED))
-                        )
-                .fetch();
+        return Pair.of(matchResultTupleList, count);
     }
 
 }

@@ -2,18 +2,22 @@ package com.fofo.core.controller.request;
 
 import com.fofo.core.domain.match.MatchingStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
-import java.util.List;
-
-@Schema(description = "매치 다음 단계 요청 DTO")
+@Schema(description = "매치 상태 변화 DTO")
 public record MatchRequestDto(
-        @Schema(description = "매치 ID 리스트", example = "[1,2,3]")
-        @NotEmpty
-        List<Long> matchIdList,
-        @Schema(description = "현재 매치 상태", example = "10")
+        @NotNull @Schema(description = "매치 ID", example = "1")
+        Long id,
+        @Schema(description = "남자 멤버 ID", example = "1")
+        Long manId,
+        @Schema(description = "남자 동의 여부", example = "false")
+        Boolean manAgreement,
+        @Schema(description = "여자 멤버 ID", example = "2")
+        Long womanId,
+        @Schema(description = "여자 동의 여부", example = "true")
+        Boolean womanAgreement,
         @NotNull
+        @Schema(description = "현재 매치 상태", example = "20")
         MatchingStatus matchingStatus
 ) {
 }

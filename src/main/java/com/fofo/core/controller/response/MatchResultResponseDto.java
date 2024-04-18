@@ -1,32 +1,28 @@
 package com.fofo.core.controller.response;
 
 
-import com.fofo.core.domain.match.Match;
-import com.fofo.core.domain.member.Member;
+import com.fofo.core.domain.match.MatchResult;
+import com.fofo.core.domain.match.MatchingStatus;
+import com.fofo.core.domain.member.MemberWithAddress;
+
+import java.time.LocalDateTime;
 
 public record MatchResultResponseDto(
-        // 멤버 조회 Dto 아직 없어서 임시로 Member 도메인 사용
-//        MemberReponseDto man,
-//        MemberResponseDto woman
-        Member man,
-        Member woman
+        Long id,
+        MemberWithAddress man,
+        MemberWithAddress woman,
+        MatchingStatus matchingStatus,
+        LocalDateTime createdTime,
+        LocalDateTime updatedTime
 ) {
-   public static MatchResultResponseDto of(
-           final Member man,
-           final Member woman
-   ) {
+   public static MatchResultResponseDto from(final MatchResult matchResult){
        return new MatchResultResponseDto(
-               man,
-               woman
-       );
-   }
-
-   public static MatchResultResponseDto from(final Match match){
-//       MemberReponseDto.from(match.man())
-//       MemberReponseDto.from(match.woman())
-       return new MatchResultResponseDto(
-               match.man(),
-               match.woman()
+               matchResult.id(),
+               matchResult.man(),
+               matchResult.woman(),
+               matchResult.matchingStatus(),
+               matchResult.createdTime(),
+               matchResult.updatedTime()
        );
    }
 }

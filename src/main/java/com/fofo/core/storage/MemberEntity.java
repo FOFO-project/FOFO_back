@@ -103,9 +103,11 @@ public class MemberEntity extends BaseEntity {
     @Column(length = 100)
     private String note;
 
+    @Setter
     @Column(nullable = false, columnDefinition = "integer default 5")
     private int passCount;
 
+    @Setter
     @Column(nullable = false, columnDefinition = "integer default 2")
     private int chance;
 
@@ -212,5 +214,8 @@ public class MemberEntity extends BaseEntity {
                 chance,
                 approvalStatus,
                 status);
+    }
+
+    public void setChance() {
     }
 }
