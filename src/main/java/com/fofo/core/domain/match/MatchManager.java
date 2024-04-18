@@ -119,19 +119,18 @@ public class MatchManager {
     private Pair<Member, Member> identifyGender(Member memberA, Member memberB) {
         if(memberA.gender().equals(Gender.MAN)){
             return Pair.of(memberA, memberB);
-        } else {
-            return Pair.of(memberB, memberA);
         }
+        return Pair.of(memberB, memberA);
     }
 
     private AgeRelationType getAgeRelation(Member memberA, Member memberB) {
         if (memberA.age() > memberB.age()) {
             return AgeRelationType.OLDER;
-        } else if (memberA.age() == memberB.age()) {
-            return AgeRelationType.SAME;
-        } else {
-            return AgeRelationType.YOUNGER;
         }
+        if (memberA.age() == memberB.age()) {
+            return AgeRelationType.SAME;
+        }
+        return AgeRelationType.YOUNGER;
     }
 
     public List<Member> getSelectedMembers(List<Long> memberIdList, List<Member> matchPossibleMembers) {

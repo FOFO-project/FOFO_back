@@ -27,9 +27,8 @@ public class MatchRemover {
     private void updateCancel(MemberMatchEntity matchEntity) {
         if(!MatchingStatus.MATCHING_PENDING.equals(matchEntity.getMatchingStatus())){
             throw new CoreApiException(CoreErrorType.MATCH_UNCANCELABLE_ERROR);
-        } else {
-            matchEntity.setStatus(ActiveStatus.DELETED);
         }
+        matchEntity.setStatus(ActiveStatus.DELETED);
     }
 
 }
