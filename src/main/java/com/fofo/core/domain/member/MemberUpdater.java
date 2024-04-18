@@ -6,13 +6,19 @@ import com.fofo.core.storage.AddressRepository;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
-import com.fofo.core.support.error.CoreErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
+
+import static com.fofo.core.support.error.CoreErrorType.ADDRESS_NOT_FOUND_ERROR;
+import static com.fofo.core.support.error.CoreErrorType.DEPOSIT_DATE_EXISTS_ERROR;
+import static com.fofo.core.support.error.CoreErrorType.MEMBER_NOT_FOUND_ERROR;
+import static com.fofo.core.support.error.CoreErrorType.NOT_PENDING_FOR_DEPOSIT_ERROR;
+import static com.fofo.core.support.error.CoreErrorType.NOT_WAITING_FOR_APPROVE_ERROR;
 
 @Component
 @RequiredArgsConstructor
@@ -24,12 +30,44 @@ public class MemberUpdater {
     @Transactional
     public long remove(final long memberId) {
         MemberEntity findMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new CoreApiException(CoreErrorType.MEMBER_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
         findMember.setStatus(ActiveStatus.DELETED);
 
         AddressEntity findAddress = addressRepository.findById(findMember.getAddressId())
-                .orElseThrow(() -> new CoreApiException(CoreErrorType.ADDRESS_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new CoreApiException(ADDRESS_NOT_FOUND_ERROR));
         findAddress.setStatus(ActiveStatus.DELETED);
+
+        return findMember.getId();
+    }
+
+    @Transactional
+    public long confirmDeposit(final long memberId, final LocalDateTime depositDate) {
+        MemberEntity findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+        if (findMember.getDepositDate() != null) {
+            throw new CoreApiException(DEPOSIT_DATE_EXISTS_ERROR);
+        }
+        if (findMember.getApprovalStatus() != ApprovalStatus.DEPOSIT_PENDING) {
+            throw new CoreApiException(NOT_PENDING_FOR_DEPOSIT_ERROR);
+        }
+
+        findMember.setDepositDate(depositDate);
+        findMember.setApprovalStatus(ApprovalStatus.DEPOSIT_COMPLETED);
+        findMember.setStatus(ActiveStatus.UPDATED);
+
+        return findMember.getId();
+    }
+
+    @Transactional
+    public long approve(final long memberId) {
+        MemberEntity findMember = memberRepository.findById(memberId)
+                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+        if (findMember.getApprovalStatus() != ApprovalStatus.DEPOSIT_COMPLETED || findMember.getDepositDate() == null) {
+            throw new CoreApiException(NOT_WAITING_FOR_APPROVE_ERROR);
+        }
+
+        findMember.setApprovalStatus(ApprovalStatus.APPROVED);
+        findMember.setStatus(ActiveStatus.UPDATED);
 
         return findMember.getId();
     }
@@ -37,12 +75,12 @@ public class MemberUpdater {
     @Transactional
     public long update(final long memberId, final UpdateMember updateMember, final UpdateAddress updateAddress) {
         MemberEntity findMember = memberRepository.findById(memberId)
-                .orElseThrow(() -> new CoreApiException(CoreErrorType.MEMBER_NOT_FOUND_ERROR));
+                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
         updateMemberInfo(findMember, updateMember);
 
         if (updateAddress != null) {
             AddressEntity findAddress = addressRepository.findById(findMember.getAddressId())
-                    .orElseThrow(() -> new CoreApiException(CoreErrorType.ADDRESS_NOT_FOUND_ERROR));
+                    .orElseThrow(() -> new CoreApiException(ADDRESS_NOT_FOUND_ERROR));
 
             updateAddressInfo(findAddress, updateAddress);
         }

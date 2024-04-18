@@ -10,8 +10,11 @@ public enum CoreErrorCode {
     MEME500,
     MEME501,
     MEME502,
+    MEME503,
+    MEME504,
+    MEME505,
 
-    // Match 관련 에러
+    // Match 관련 에러,
     MATE500,
     MATE501,
     MATE502

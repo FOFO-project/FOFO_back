@@ -1,6 +1,7 @@
 package com.fofo.core.controller;
 
 import com.fofo.core.controller.request.AppendMemberRequestDto;
+import com.fofo.core.controller.request.DepositRequestMemberDto;
 import com.fofo.core.controller.request.FindMembersConditionDto;
 import com.fofo.core.controller.request.UpdateMemberRequestDto;
 import com.fofo.core.controller.response.FindMemberResponseDto;
@@ -98,5 +99,33 @@ public class MemberController {
         long deleteMemberId = memberService.remove(memberId);
         return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(deleteMemberId)), HttpStatus.OK);
     }
+
+    @Operation(summary = "맴버 입금 확인 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "멤버 입금 확인 성공"),
+            @ApiResponse(responseCode = "400", description = "입금 대기 상태가 아님"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 멤버"),
+            @ApiResponse(responseCode = "409", description = "입금 날짜가 이미 존재함")
+    })
+    @PostMapping("/members/{memberId}/deposit")
+    public ResponseEntity<ApiResult<MemberResponseDto>> confirmMemberDeposit(
+            @PathVariable("memberId") final long memberId,
+            @Valid @RequestBody DepositRequestMemberDto request) {
+        long updateMemberId = memberService.confirmDeposit(memberId, request.depositDate());
+        return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(updateMemberId)), HttpStatus.OK);
+    }
+
+    @Operation(summary = "맴버 가입 확정 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "멤버 가입 확정 성공"),
+            @ApiResponse(responseCode = "400", description = "입금 완료 상태가 아님"),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 멤버")
+    })
+    @PostMapping("/members/{memberId}/approve")
+    public ResponseEntity<ApiResult<MemberResponseDto>> approveMember(@PathVariable("memberId") final long memberId) {
+        long updateMemberId = memberService.approve(memberId);
+        return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(updateMemberId)), HttpStatus.OK);
+    }
+
 
 }
