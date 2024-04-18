@@ -83,8 +83,7 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = false)
     private boolean smokingYn;
 
-    @Column(nullable = false)
-    private boolean filteringSmoker;
+    private Boolean filteringSmoker;
 
     @Column(nullable = false, length = 20)
     @Convert(converter = ReligionConverter.class)
