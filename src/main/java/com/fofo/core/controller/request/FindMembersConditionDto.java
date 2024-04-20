@@ -11,7 +11,6 @@ import com.fofo.core.domain.member.SmokingYn;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 public record FindMembersConditionDto(
         String kakaoId,
@@ -42,12 +41,8 @@ public record FindMembersConditionDto(
                 job,
                 university,
                 mbti,
-                Optional.ofNullable(smokingYn)
-                        .map(SmokingYn::isCodeValue)
-                        .orElse(null),
-                Optional.ofNullable(filteringSmoker)
-                        .map(FilteringSmoker::isCodeValue)
-                        .orElse(null),
+                smokingYn,
+                filteringSmoker,
                 religion,
                 filteringReligion,
                 approvalStatus

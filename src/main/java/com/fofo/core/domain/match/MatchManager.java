@@ -108,7 +108,7 @@ public class MatchManager {
                         Member::id,
                         member -> matchPossibleMembers.stream()
                                 .filter(targetMember -> !member.equals(targetMember)
-                                        && (member.filteringSmoker() && targetMember.smokingYn())
+                                        && (member.filteringSmoker().isCodeValue() && targetMember.smokingYn().isCodeValue())
                                         || (member.filteringReligion() != null && member.filteringReligion().equals(targetMember.religion()))
                                         || (member.filteringAgeRelation() != null && member.filteringAgeRelation().equals(getAgeRelation(member, targetMember))))
                                 .map(Member::id)

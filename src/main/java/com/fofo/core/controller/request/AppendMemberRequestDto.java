@@ -83,10 +83,8 @@ public record AppendMemberRequestDto(
                         job,
                         university,
                         mbti,
-                        smokingYn.isCodeValue(),
-                        Optional.ofNullable(filteringSmoker)
-                                .map(FilteringSmoker::isCodeValue)
-                                .orElse(null),
+                        smokingYn,
+                        filteringSmoker,
                         religion,
                         filteringReligion,
                         charmingPoint,

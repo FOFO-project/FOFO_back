@@ -1,5 +1,6 @@
 package com.fofo.core.domain.member;
 
+
 import java.time.LocalDate;
 
 public record FindMember(
@@ -12,8 +13,8 @@ public record FindMember(
         String job,
         String university,
         Mbti mbti,
-        Boolean smokingYn,
-        Boolean filteringSmoker,
+        SmokingYn smokingYn,
+        FilteringSmoker filteringSmoker,
         Religion religion,
         Religion filteringReligion,
         ApprovalStatus approvalStatus
@@ -24,23 +25,24 @@ public record FindMember(
             String name,
             Gender gender,
             LocalDate birthday,
-            AgeRelationType filteringConditionAgeRelation,
+            AgeRelationType filteringAgeRelation,
             String company,
             String job,
             String university,
             Mbti mbti,
-            Boolean smokingYn,
-            Boolean filteringSmoker,
+            SmokingYn smokingYn,
+            FilteringSmoker filteringSmoker,
             Religion religion,
             Religion filteringConditionReligion,
-            ApprovalStatus approvalStatus
+            ApprovalStatus approvalStatus,
+            MatchingStatus matchingStatus
     ) {
         return new FindMember(
                 kakaoId,
                 name,
                 gender,
                 birthday,
-                filteringConditionAgeRelation,
+                filteringAgeRelation,
                 company,
                 job,
                 university,

@@ -19,17 +19,17 @@ public enum FilteringSmoker {
     private final boolean codeValue;
 
     @JsonCreator
-    public static FilteringSmoker enumOfCode(final String name) {
+    public static FilteringSmoker enumOfName(final String name) {
         return Arrays.stream(FilteringSmoker.values())
                 .filter(v -> v.name().equals(name.toUpperCase()))
                 .findAny()
                 .orElseThrow(() -> new CoreApiException(ENUM_MAPPING_ERROR));
     }
 
-    public static FilteringSmoker enumOfCode(final boolean codeValue) {
+    public static FilteringSmoker enumOfCode(final Boolean codeValue) {
         return Arrays.stream(FilteringSmoker.values())
                 .filter(v -> v.isCodeValue() == codeValue)
                 .findAny()
-                .orElseThrow(() -> new CoreApiException(ENUM_MAPPING_ERROR));
+                .orElse(null);
     }
 }

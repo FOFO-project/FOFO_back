@@ -1,9 +1,11 @@
 package com.fofo.core.controller.request;
 
 import com.fofo.core.domain.member.AgeRelationType;
+import com.fofo.core.domain.member.FilteringSmoker;
 import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Religion;
+import com.fofo.core.domain.member.SmokingYn;
 import com.fofo.core.domain.member.UpdateAddress;
 import com.fofo.core.domain.member.UpdateMember;
 import com.fofo.core.support.util.AgeUtil;
@@ -43,10 +45,10 @@ public record UpdateMemberRequestDto(
         String university,
         @Schema(description = "mbti")
         Mbti mbti,
-        @Schema(description = "흡연 여부", example = "false")
-        Boolean smokingYn,
-        @Schema(description = "상대 흡연 조건", example = "false")
-        Boolean filteringSmoker,
+        @Schema(description = "흡연 여부", example = "Y")
+        SmokingYn smokingYn,
+        @Schema(description = "상대 흡연 조건", example = "Y")
+        FilteringSmoker filteringSmoker,
         @Schema(description = "종교")
         Religion religion,
         @Schema(description = "상대 종교 조건")

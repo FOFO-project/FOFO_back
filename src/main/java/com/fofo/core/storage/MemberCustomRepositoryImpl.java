@@ -3,10 +3,12 @@ package com.fofo.core.storage;
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.AgeRelationType;
 import com.fofo.core.domain.member.ApprovalStatus;
+import com.fofo.core.domain.member.FilteringSmoker;
 import com.fofo.core.domain.member.FindMember;
 import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Religion;
+import com.fofo.core.domain.member.SmokingYn;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -112,12 +114,12 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
         return Q_MEMBER.mbti.eq(mbti);
     }
 
-    private BooleanExpression eqSmokingYn(final Boolean smokingYn) {
+    private BooleanExpression eqSmokingYn(final SmokingYn smokingYn) {
         if (smokingYn == null) return null;
         return Q_MEMBER.smokingYn.eq(smokingYn);
     }
 
-    private BooleanExpression eqFilteringSmoker(final Boolean filteringSmoker) {
+    private BooleanExpression eqFilteringSmoker(final FilteringSmoker filteringSmoker) {
         if (filteringSmoker == null) return null;
         return Q_MEMBER.filteringSmoker.eq(filteringSmoker);
     }
