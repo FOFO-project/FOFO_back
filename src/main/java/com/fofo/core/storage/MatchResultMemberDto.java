@@ -1,9 +1,11 @@
 package com.fofo.core.storage;
 
 import com.fofo.core.domain.member.AgeRelationType;
+import com.fofo.core.domain.member.FilteringSmoker;
 import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Religion;
+import com.fofo.core.domain.member.SmokingYn;
 import com.querydsl.core.annotations.QueryProjection;
 
 import java.time.LocalDateTime;
@@ -21,8 +23,8 @@ public record MatchResultMemberDto (
     String job,
     String university,
     Mbti mbti,
-    boolean smokingYn,
-    boolean filteringSmoker,
+    SmokingYn smokingYn,
+    FilteringSmoker filteringSmoker,
     Religion religion,
     Religion filteringReligion,
     String charmingPoint,
@@ -33,7 +35,7 @@ public record MatchResultMemberDto (
     String imageUrl
 ){
     @QueryProjection
-    public MatchResultMemberDto(String kakaoId, MatchResultAddressDto address, String name, Gender gender, LocalDateTime birthday, Integer age, String phoneNumber, AgeRelationType filteringAgeRelation, String company, String job, String university, Mbti mbti, boolean smokingYn, boolean filteringSmoker, Religion religion, Religion filteringReligion, String charmingPoint, LocalDateTime depositDate, String note, Integer passCount, Integer chance, String imageUrl) {
+    public MatchResultMemberDto(String kakaoId, MatchResultAddressDto address, String name, Gender gender, LocalDateTime birthday, Integer age, String phoneNumber, AgeRelationType filteringAgeRelation, String company, String job, String university, Mbti mbti, SmokingYn smokingYn, FilteringSmoker filteringSmoker, Religion religion, Religion filteringReligion, String charmingPoint, LocalDateTime depositDate, String note, Integer passCount, Integer chance, String imageUrl) {
         this.kakaoId = kakaoId;
         this.address = address;
         this.name = name;

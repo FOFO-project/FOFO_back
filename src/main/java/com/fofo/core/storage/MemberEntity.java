@@ -3,14 +3,18 @@ package com.fofo.core.storage;
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.member.AgeRelationType;
 import com.fofo.core.domain.member.ApprovalStatus;
+import com.fofo.core.domain.member.FilteringSmoker;
 import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Religion;
+import com.fofo.core.domain.member.SmokingYn;
 import com.fofo.core.storage.converter.ActiveStatusConverter;
 import com.fofo.core.storage.converter.AgeRelationTypeConverter;
 import com.fofo.core.storage.converter.ApprovalStatusConverter;
+import com.fofo.core.storage.converter.FilteringSmokerConverter;
 import com.fofo.core.storage.converter.GenderConverter;
 import com.fofo.core.storage.converter.ReligionConverter;
+import com.fofo.core.storage.converter.SmokingYnConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -81,9 +85,11 @@ public class MemberEntity extends BaseEntity {
     private Mbti mbti;
 
     @Column(nullable = false)
-    private boolean smokingYn;
+    @Convert(converter = SmokingYnConverter.class)
+    private SmokingYn smokingYn;
 
-    private Boolean filteringSmoker;
+    @Convert(converter = FilteringSmokerConverter.class)
+    private FilteringSmoker filteringSmoker;
 
     @Column(nullable = false, length = 20)
     @Convert(converter = ReligionConverter.class)
@@ -130,8 +136,8 @@ public class MemberEntity extends BaseEntity {
             final String job,
             final String university,
             final Mbti mbti,
-            final Boolean smokingYn,
-            final Boolean filteringSmoker,
+            final SmokingYn smokingYn,
+            final FilteringSmoker filteringSmoker,
             final Religion religion,
             final Religion filteringReligion,
             final String charmingPoint,
@@ -178,8 +184,8 @@ public class MemberEntity extends BaseEntity {
             final String job,
             final String university,
             final Mbti mbti,
-            final Boolean smokingYn,
-            final Boolean filteringSmoker,
+            final SmokingYn smokingYn,
+            final FilteringSmoker filteringSmoker,
             final Religion religion,
             final Religion filteringConditionReligion,
             final String charmingPoint,
