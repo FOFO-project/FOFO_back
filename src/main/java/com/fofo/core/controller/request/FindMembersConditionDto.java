@@ -1,5 +1,6 @@
 package com.fofo.core.controller.request;
 
+import com.fofo.core.domain.match.MatchingStatus;
 import com.fofo.core.domain.member.AgeRelationType;
 import com.fofo.core.domain.member.ApprovalStatus;
 import com.fofo.core.domain.member.FilteringSmoker;
@@ -27,12 +28,16 @@ public record FindMembersConditionDto(
         FilteringSmoker filteringSmoker,
         Religion religion,
         Religion filteringReligion,
-        ApprovalStatus approvalStatus
+        ApprovalStatus approvalStatus,
+        String zipcode,
+        String sido,
+        String sigungu,
+        String eupmyundong,
+        MatchingStatus matchingStatus
 ) {
 
     public FindMember toFindMember() {
-        return FindMember.of(
-                kakaoId,
+        return FindMember.of(kakaoId,
                 name,
                 gender,
                 yearOfBirthday,
@@ -45,7 +50,11 @@ public record FindMembersConditionDto(
                 filteringSmoker,
                 religion,
                 filteringReligion,
-                approvalStatus
-                );
+                approvalStatus,
+                zipcode,
+                sido,
+                sigungu,
+                eupmyundong,
+                matchingStatus);
     }
 }
