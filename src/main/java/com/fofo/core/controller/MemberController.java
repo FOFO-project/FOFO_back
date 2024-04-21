@@ -3,9 +3,11 @@ package com.fofo.core.controller;
 import com.fofo.core.controller.request.AppendMemberRequestDto;
 import com.fofo.core.controller.request.DepositRequestMemberDto;
 import com.fofo.core.controller.request.FindMembersConditionDto;
+import com.fofo.core.controller.request.MembersRequestDto;
 import com.fofo.core.controller.request.UpdateMemberRequestDto;
 import com.fofo.core.controller.response.FindMemberResponseDto;
 import com.fofo.core.controller.response.MemberResponseDto;
+import com.fofo.core.controller.response.MembersResponseDto;
 import com.fofo.core.domain.member.MemberService;
 import com.fofo.core.support.response.ApiResult;
 import com.fofo.core.support.response.PageInfo;
@@ -89,15 +91,14 @@ public class MemberController {
         return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(updateMemberId)), HttpStatus.OK);
     }
 
-    @Operation(summary = "맴버 삭제 API")
+    @Operation(summary = "맴버 삭제 API(다건 처리)")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "멤버 삭제(가입 거절) 성공"),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 멤버")
+            @ApiResponse(responseCode = "200", description = "멤버 삭제(가입 거절) 성공")
     })
-    @DeleteMapping("/members/{memberId}")
-    public ResponseEntity<ApiResult<MemberResponseDto>> removeMember(@PathVariable("memberId") final long memberId) {
-        long deleteMemberId = memberService.remove(memberId);
-        return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(deleteMemberId)), HttpStatus.OK);
+    @DeleteMapping("/members")
+    public ResponseEntity<ApiResult<MembersResponseDto>> removeMember(@RequestBody final MembersRequestDto request) {
+        List<Long> failMemberIds = memberService.remove(request.memberIds());
+        return new ResponseEntity<>(ApiResult.success(new MembersResponseDto(failMemberIds)), HttpStatus.OK);
     }
 
     @Operation(summary = "맴버 입금 확인 API")
@@ -115,17 +116,16 @@ public class MemberController {
         return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(updateMemberId)), HttpStatus.OK);
     }
 
-    @Operation(summary = "맴버 가입 확정 API")
+    @Operation(summary = "맴버 가입 확정 API(다건 처리)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "멤버 가입 확정 성공"),
             @ApiResponse(responseCode = "400", description = "입금 완료 상태가 아님"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 멤버")
     })
-    @PostMapping("/members/{memberId}/approve")
-    public ResponseEntity<ApiResult<MemberResponseDto>> approveMember(@PathVariable("memberId") final long memberId) {
-        long updateMemberId = memberService.approve(memberId);
-        return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(updateMemberId)), HttpStatus.OK);
+    @PostMapping("/members/approve")
+    public ResponseEntity<ApiResult<MembersResponseDto>> approveMember(@RequestBody final MembersRequestDto request) {
+        List<Long> failMemberIds = memberService.approve(request.memberIds());
+        return new ResponseEntity<>(ApiResult.success(new MembersResponseDto(failMemberIds)), HttpStatus.OK);
     }
-
 
 }
