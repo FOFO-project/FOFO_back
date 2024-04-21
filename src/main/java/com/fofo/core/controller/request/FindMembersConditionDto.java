@@ -1,5 +1,6 @@
 package com.fofo.core.controller.request;
 
+import com.fofo.core.domain.match.MatchingStatus;
 import com.fofo.core.domain.member.AgeRelationType;
 import com.fofo.core.domain.member.ApprovalStatus;
 import com.fofo.core.domain.member.FilteringSmoker;
@@ -11,7 +12,6 @@ import com.fofo.core.domain.member.SmokingYn;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 public record FindMembersConditionDto(
         String kakaoId,
@@ -28,12 +28,16 @@ public record FindMembersConditionDto(
         FilteringSmoker filteringSmoker,
         Religion religion,
         Religion filteringReligion,
-        ApprovalStatus approvalStatus
+        ApprovalStatus approvalStatus,
+        String zipcode,
+        String sido,
+        String sigungu,
+        String eupmyundong,
+        MatchingStatus matchingStatus
 ) {
 
     public FindMember toFindMember() {
-        return FindMember.of(
-                kakaoId,
+        return FindMember.of(kakaoId,
                 name,
                 gender,
                 yearOfBirthday,
@@ -42,15 +46,15 @@ public record FindMembersConditionDto(
                 job,
                 university,
                 mbti,
-                Optional.ofNullable(smokingYn)
-                        .map(SmokingYn::isCodeValue)
-                        .orElse(null),
-                Optional.ofNullable(filteringSmoker)
-                        .map(FilteringSmoker::isCodeValue)
-                        .orElse(null),
+                smokingYn,
+                filteringSmoker,
                 religion,
                 filteringReligion,
-                approvalStatus
-                );
+                approvalStatus,
+                zipcode,
+                sido,
+                sigungu,
+                eupmyundong,
+                matchingStatus);
     }
 }

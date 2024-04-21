@@ -1,14 +1,18 @@
 package com.fofo.core.storage;
 
 import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.domain.match.MatchingStatus;
 import com.fofo.core.domain.member.AgeRelationType;
 import com.fofo.core.domain.member.ApprovalStatus;
+import com.fofo.core.domain.member.FilteringSmoker;
 import com.fofo.core.domain.member.FindMember;
 import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Religion;
+import com.fofo.core.domain.member.SmokingYn;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.micrometer.common.util.StringUtils;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +26,7 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
 
     private static final QMemberEntity Q_MEMBER = QMemberEntity.memberEntity;
     private static final QAddressEntity Q_ADDRESS = QAddressEntity.addressEntity;
+    private static final QMemberMatchEntity Q_MEMBER_MATCH = QMemberMatchEntity.memberMatchEntity;
 
     private final JPAQueryFactory jpaQueryFactory;
 
@@ -42,8 +47,8 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     public List<Tuple> findMembersWithCondition(final FindMember findMember, final Pageable pageable) {
         return jpaQueryFactory.select(Q_MEMBER, Q_ADDRESS)
                 .from(Q_MEMBER)
-                // fetch join 사용 -> 조회의 주체가 되는 Entity 이외에 fetch Join 이 걸린 연관 entity 도 함께 select 하여 모두 영속화
-                .leftJoin(Q_ADDRESS).on(Q_MEMBER.addressId.eq(Q_ADDRESS.id)).fetchJoin()
+                .leftJoin(Q_ADDRESS)
+                .on(Q_MEMBER.addressId.eq(Q_ADDRESS.id))
                 .where(
                         containKakaoId(findMember.kakaoId()),
                         containName(findMember.name()),
@@ -59,6 +64,11 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
                         eqReligion(findMember.religion()),
                         eqFilteringReligion(findMember.filteringReligion()),
                         eqApprovalStatus(findMember.approvalStatus()),
+                        containZipcode(findMember.zipcode()),
+                        containSido(findMember.sido()),
+                        containSigungu(findMember.sigungu()),
+                        containEupmyundong(findMember.eupmyundong()),
+                        eqMemberMatch(findMember.matchingStatus()),
                         Q_MEMBER.status.ne(ActiveStatus.DELETED)
                 )
                 .orderBy(Q_MEMBER.depositDate.desc())
@@ -112,12 +122,12 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
         return Q_MEMBER.mbti.eq(mbti);
     }
 
-    private BooleanExpression eqSmokingYn(final Boolean smokingYn) {
+    private BooleanExpression eqSmokingYn(final SmokingYn smokingYn) {
         if (smokingYn == null) return null;
         return Q_MEMBER.smokingYn.eq(smokingYn);
     }
 
-    private BooleanExpression eqFilteringSmoker(final Boolean filteringSmoker) {
+    private BooleanExpression eqFilteringSmoker(final FilteringSmoker filteringSmoker) {
         if (filteringSmoker == null) return null;
         return Q_MEMBER.filteringSmoker.eq(filteringSmoker);
     }
@@ -135,5 +145,36 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     private BooleanExpression eqApprovalStatus(final ApprovalStatus approvalStatus) {
         if (approvalStatus == null) return null;
         return Q_MEMBER.approvalStatus.eq(approvalStatus);
+    }
+
+    private BooleanExpression containZipcode(final String zipcode) {
+        if (StringUtils.isEmpty(zipcode)) return null;
+        return Q_ADDRESS.zipCode.contains(zipcode);
+    }
+
+    private BooleanExpression containSido(final String sido) {
+        if (StringUtils.isEmpty(sido)) return null;
+        return Q_ADDRESS.sido.contains(sido);
+    }
+
+    private BooleanExpression containSigungu(final String sigungu) {
+        if (StringUtils.isEmpty(sigungu)) return null;
+        return Q_ADDRESS.sigungu.contains(sigungu);
+    }
+
+    private BooleanExpression containEupmyundong(final String eupmyundong) {
+        if (StringUtils.isEmpty(eupmyundong)) return null;
+        return Q_ADDRESS.eupmyundong.contains(eupmyundong);
+    }
+
+    private BooleanExpression eqMemberMatch(final MatchingStatus matchingStatus) {
+        if (matchingStatus == null) return null;
+        return JPAExpressions.selectOne()
+                .from(Q_MEMBER_MATCH)
+                .where(
+                        (Q_MEMBER_MATCH.manMemberId.eq(Q_MEMBER.id).or(Q_MEMBER_MATCH.womanMemberId.eq(Q_MEMBER.id)))
+                        .and(Q_MEMBER_MATCH.matchingStatus.eq(matchingStatus))
+                )
+                .exists();
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -32,15 +33,15 @@ public class MemberService {
         return memberUpdater.update(memberId, updateMember, updateAddress);
     }
 
-    public long remove(final long memberId) {
-        return memberUpdater.remove(memberId);
+    public List<Long> remove(final List<Long> memberIds) {
+        return memberUpdater.remove(memberIds);
     }
 
     public long confirmDeposit(final long memberId, final LocalDateTime depositDate) {
         return memberUpdater.confirmDeposit(memberId, depositDate);
     }
 
-    public long approve(final long memberId) {
-        return memberUpdater.approve(memberId);
+    public List<Long> approve(final List<Long> memberIds) {
+        return memberUpdater.approve(memberIds);
     }
 }

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static com.fofo.core.support.error.CoreErrorType.ADDRESS_NOT_FOUND_ERROR;
@@ -28,7 +29,20 @@ public class MemberUpdater {
     private final AddressRepository addressRepository;
 
     @Transactional
-    public long remove(final long memberId) {
+    public List<Long> remove(final List<Long> memberIds) {
+        return memberIds.stream()
+                .filter(memberId -> {
+                    try {
+                        remove(memberId);
+                        return false; // 성공적으로 제거된 경우, 실패 목록에 포함시키지 않음
+                    } catch (CoreApiException e) {
+                        return true; // 제거에 실패한 경우, 실패 목록에 포함
+                    }
+                })
+                .toList(); // 실패한 멤버 ID 들을 리스트로 수집
+    }
+
+    private long remove(final long memberId) {
         MemberEntity findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
         findMember.setStatus(ActiveStatus.DELETED);
@@ -59,7 +73,20 @@ public class MemberUpdater {
     }
 
     @Transactional
-    public long approve(final long memberId) {
+    public List<Long> approve(final List<Long> memberIds) {
+        return memberIds.stream()
+                .filter(memberId -> {
+                    try {
+                        approve(memberId);
+                        return false; // 성공적으로 승인된 경우, 실패 목록에 포함시키지 않음
+                    } catch (CoreApiException e) {
+                        return true; // 제거에 실패한 경우, 실패 목록에 포함
+                    }
+                })
+                .toList(); // 실패한 멤버 ID 들을 리스트로 수집
+    }
+
+    private long approve(final long memberId) {
         MemberEntity findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
         if (findMember.getApprovalStatus() != ApprovalStatus.DEPOSIT_COMPLETED || findMember.getDepositDate() == null) {

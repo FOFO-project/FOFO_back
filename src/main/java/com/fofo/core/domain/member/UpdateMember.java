@@ -3,6 +3,7 @@ package com.fofo.core.domain.member;
 import com.fofo.core.domain.ActiveStatus;
 
 import java.time.LocalDateTime;
+import java.util.logging.Filter;
 
 public record UpdateMember(
         String name,
@@ -15,8 +16,8 @@ public record UpdateMember(
         String job,
         String university,
         Mbti mbti,
-        Boolean smokingYn,
-        Boolean filteringSmoker,
+        SmokingYn smokingYn,
+        FilteringSmoker filteringSmoker,
         Religion religion,
         Religion filteringReligion,
         String charmingPoint,
@@ -33,8 +34,8 @@ public record UpdateMember(
                                   final String job,
                                   final String university,
                                   final Mbti mbti,
-                                  final boolean smokingYn,
-                                  final boolean filteringSmoker,
+                                  final SmokingYn smokingYn,
+                                  final FilteringSmoker filteringSmoker,
                                   final Religion religion,
                                   final Religion filteringReligion,
                                   final String charmingPoint,
