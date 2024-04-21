@@ -1,6 +1,5 @@
 package com.fofo.core.domain.member;
 
-import com.fofo.core.support.error.CoreApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,16 +34,7 @@ public class MemberService {
     }
 
     public List<Long> remove(final List<Long> memberIds) {
-        return memberIds.stream()
-                .filter(memberId -> {
-                    try {
-                        memberUpdater.remove(memberId);
-                        return false; // 성공적으로 제거된 경우, 실패 목록에 포함시키지 않음
-                    } catch (CoreApiException e) {
-                        return true; // 제거에 실패한 경우, 실패 목록에 포함
-                    }
-                })
-                .toList(); // 실패한 멤버 ID 들을 리스트로 수집
+        return memberUpdater.remove(memberIds);
     }
 
     public long confirmDeposit(final long memberId, final LocalDateTime depositDate) {
@@ -52,15 +42,6 @@ public class MemberService {
     }
 
     public List<Long> approve(final List<Long> memberIds) {
-        return memberIds.stream()
-                .filter(memberId -> {
-                    try {
-                        memberUpdater.approve(memberId);
-                        return false; // 성공적으로 승인된 경우, 실패 목록에 포함시키지 않음
-                    } catch (CoreApiException e) {
-                        return true; // 제거에 실패한 경우, 실패 목록에 포함
-                    }
-                })
-                .toList(); // 실패한 멤버 ID 들을 리스트로 수집
+        return memberUpdater.approve(memberIds);
     }
 }
