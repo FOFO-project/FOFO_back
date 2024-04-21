@@ -103,17 +103,12 @@ public class MemberController {
 
     @Operation(summary = "맴버 입금 확인 API")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "멤버 입금 확인 성공"),
-            @ApiResponse(responseCode = "400", description = "입금 대기 상태가 아님"),
-            @ApiResponse(responseCode = "404", description = "존재하지 않는 멤버"),
-            @ApiResponse(responseCode = "409", description = "입금 날짜가 이미 존재함")
+            @ApiResponse(responseCode = "200", description = "멤버 입금 확인 성공")
     })
-    @PostMapping("/members/{memberId}/deposit")
-    public ResponseEntity<ApiResult<MemberResponseDto>> confirmMemberDeposit(
-            @PathVariable("memberId") final long memberId,
-            @Valid @RequestBody DepositRequestMemberDto request) {
-        long updateMemberId = memberService.confirmDeposit(memberId, request.depositDate());
-        return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(updateMemberId)), HttpStatus.OK);
+    @PostMapping("/members/deposit-check")
+    public ResponseEntity<ApiResult<MembersResponseDto>> confirmMemberDeposit(@RequestBody DepositRequestMemberDto request) {
+        List<Long> failMemberIds = memberService.confirmDeposit(request.memberIds(), request.depositDate());
+        return new ResponseEntity<>(ApiResult.success(new MembersResponseDto(failMemberIds)), HttpStatus.OK);
     }
 
     @Operation(summary = "맴버 가입 확정 API(다건 처리)")

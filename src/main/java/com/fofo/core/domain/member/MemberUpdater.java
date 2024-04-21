@@ -42,7 +42,7 @@ public class MemberUpdater {
                 .toList(); // 실패한 멤버 ID 들을 리스트로 수집
     }
 
-    private long remove(final long memberId) {
+    private void remove(final long memberId) {
         MemberEntity findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
         findMember.setStatus(ActiveStatus.DELETED);
@@ -50,12 +50,23 @@ public class MemberUpdater {
         AddressEntity findAddress = addressRepository.findById(findMember.getAddressId())
                 .orElseThrow(() -> new CoreApiException(ADDRESS_NOT_FOUND_ERROR));
         findAddress.setStatus(ActiveStatus.DELETED);
-
-        return findMember.getId();
     }
 
     @Transactional
-    public long confirmDeposit(final long memberId, final LocalDateTime depositDate) {
+    public List<Long> confirmDeposit(final List<Long> memberIds, final LocalDateTime depositDate) {
+        return memberIds.stream()
+                .filter(memberId -> {
+                    try {
+                        confirmDeposit(memberId, depositDate);
+                        return false; // 입금확인이 승인된 경우, 실패 목록에 포함시키지 않음
+                    } catch (CoreApiException e) {
+                        return true; // 입금확인에 실패한 경우, 실패 목록에 포함
+                    }
+                })
+                .toList(); // 실패한 멤버 ID 들을 리스트로 수집
+    }
+
+    private void confirmDeposit(final long memberId, final LocalDateTime depositDate) {
         MemberEntity findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
         if (findMember.getDepositDate() != null) {
@@ -68,8 +79,6 @@ public class MemberUpdater {
         findMember.setDepositDate(depositDate);
         findMember.setApprovalStatus(ApprovalStatus.DEPOSIT_COMPLETED);
         findMember.setStatus(ActiveStatus.UPDATED);
-
-        return findMember.getId();
     }
 
     @Transactional
@@ -86,7 +95,7 @@ public class MemberUpdater {
                 .toList(); // 실패한 멤버 ID 들을 리스트로 수집
     }
 
-    private long approve(final long memberId) {
+    private void approve(final long memberId) {
         MemberEntity findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
         if (findMember.getApprovalStatus() != ApprovalStatus.DEPOSIT_COMPLETED || findMember.getDepositDate() == null) {
@@ -95,8 +104,6 @@ public class MemberUpdater {
 
         findMember.setApprovalStatus(ApprovalStatus.APPROVED);
         findMember.setStatus(ActiveStatus.UPDATED);
-
-        return findMember.getId();
     }
 
     @Transactional
