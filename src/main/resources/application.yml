@@ -47,7 +47,7 @@ logging.level:
 ---
 spring.config.activate.on-profile: prod
 server:
-  port: 443
+  port: 8080
   ssl:
     key-store: ${KEY_STORE_PATH}
     key-store-type: PKCS12
