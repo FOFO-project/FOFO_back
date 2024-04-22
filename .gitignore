@@ -77,3 +77,6 @@ Temporary Items
 
 ### .env File ###
 .env
+
+### ssl key Store ###
+/src/main/resources/ssl/

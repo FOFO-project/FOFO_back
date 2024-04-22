@@ -37,8 +37,8 @@ public class MemberService {
         return memberUpdater.remove(memberIds);
     }
 
-    public long confirmDeposit(final long memberId, final LocalDateTime depositDate) {
-        return memberUpdater.confirmDeposit(memberId, depositDate);
+    public List<Long> confirmDeposit(final List<Long> memberIds, final LocalDateTime depositDate) {
+        return memberUpdater.confirmDeposit(memberIds, depositDate);
     }
 
     public List<Long> approve(final List<Long> memberIds) {
