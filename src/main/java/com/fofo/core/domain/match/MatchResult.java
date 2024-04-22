@@ -8,6 +8,8 @@ public record MatchResult(
         Long id,
         MemberWithAddress man,
         MemberWithAddress woman,
+        MatchAgreement manAgreement,
+        MatchAgreement womanAgreement,
         MatchingStatus matchingStatus,
         LocalDateTime createdTime,
         LocalDateTime updatedTime
@@ -16,6 +18,8 @@ public record MatchResult(
             Long id,
             MemberWithAddress manMemberWithAddress,
             MemberWithAddress womanMemberWithAddress,
+            MatchAgreement manAgreement,
+            MatchAgreement womanAgreement,
             MatchingStatus matchingStatus,
             LocalDateTime createdTime,
             LocalDateTime updatedTime) {
@@ -23,6 +27,8 @@ public record MatchResult(
                 id,
                 manMemberWithAddress,
                 womanMemberWithAddress,
+                manAgreement,
+                womanAgreement,
                 matchingStatus,
                 createdTime,
                 updatedTime);

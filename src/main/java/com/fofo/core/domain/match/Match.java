@@ -11,6 +11,8 @@ public record Match(
         // 이후 member + address 합쳐진 domain으로 변경 예정
         Member man,
         Member woman,
+        MatchAgreement manAgreement,
+        MatchAgreement womanAgreement,
         MatchingStatus matchingStatus,
         ActiveStatus status,
         LocalDateTime createdTime,
@@ -26,6 +28,8 @@ public record Match(
                 null,
                 man,
                 woman,
+                null,
+                null,
                 matchingStatus,
                 status,
                 null,
@@ -37,6 +41,8 @@ public record Match(
         return MemberMatchEntity.of(
                 man.id(),
                 woman.id(),
+                manAgreement,
+                womanAgreement,
                 matchingStatus,
                 status
         );

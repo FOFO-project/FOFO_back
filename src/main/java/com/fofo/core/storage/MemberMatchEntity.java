@@ -1,8 +1,10 @@
 package com.fofo.core.storage;
 
 import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.domain.match.MatchAgreement;
 import com.fofo.core.domain.match.MatchingStatus;
 import com.fofo.core.storage.converter.ActiveStatusConverter;
+import com.fofo.core.storage.converter.MatchAgreementConverter;
 import com.fofo.core.storage.converter.MatchingStatusConverter;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -32,6 +34,14 @@ public class MemberMatchEntity extends BaseEntity {
     @Column(nullable = false)
     private Long womanMemberId;
 
+    @Column
+    @Convert(converter = MatchAgreementConverter.class)
+    private MatchAgreement manAgreement;
+
+    @Column
+    @Convert(converter = MatchAgreementConverter.class)
+    private MatchAgreement womanAgreement;
+
     @Setter
     @Column(nullable = false)
     @Convert(converter = MatchingStatusConverter.class)
@@ -45,11 +55,15 @@ public class MemberMatchEntity extends BaseEntity {
     private MemberMatchEntity(
             final Long manMemberId,
             final Long womanMemberId,
+            final MatchAgreement manAgreement,
+            final MatchAgreement womanAgreement,
             final MatchingStatus matchingStatus,
             final ActiveStatus status
     ){
         this.manMemberId = manMemberId;
         this.womanMemberId = womanMemberId;
+        this.manAgreement = manAgreement;
+        this.womanAgreement = womanAgreement;
         this.matchingStatus = matchingStatus;
         this.status = status;
     }
@@ -57,11 +71,15 @@ public class MemberMatchEntity extends BaseEntity {
     public static MemberMatchEntity of(
             final Long manMemberId,
             final Long womanMemberId,
+            final MatchAgreement manAgreement,
+            final MatchAgreement womanAgreement,
             final MatchingStatus matchingStatus,
             final ActiveStatus status) {
         return new MemberMatchEntity(
                 manMemberId,
                 womanMemberId,
+                manAgreement,
+                womanAgreement,
                 matchingStatus,
                 status
         );
