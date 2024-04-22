@@ -1,6 +1,5 @@
 package com.fofo.core.storage.converter;
 
-import com.fofo.core.domain.member.ApprovalStatus;
 import com.fofo.core.domain.member.Religion;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
@@ -13,11 +12,13 @@ public class ReligionConverter implements AttributeConverter<Religion, String> {
 
     @Override
     public String convertToDatabaseColumn(final Religion attribute) {
+        if (attribute == null) return null;
         return attribute.codeValue();
     }
 
     @Override
     public Religion convertToEntityAttribute(final String code) {
+        if (code == null) return null;
         return Religion.enumOfCode(code);
     }
 }
