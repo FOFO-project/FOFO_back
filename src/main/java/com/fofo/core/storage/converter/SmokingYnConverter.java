@@ -8,8 +8,8 @@ import jakarta.persistence.Converter;
 public class SmokingYnConverter implements AttributeConverter<SmokingYn, Boolean> {
 
     @Override
-    public Boolean convertToDatabaseColumn(final SmokingYn smokingYnConverter) {
-        return smokingYnConverter.isCodeValue();
+    public Boolean convertToDatabaseColumn(final SmokingYn attribute) {
+        return attribute.isCodeValue();
     }
 
     @Override

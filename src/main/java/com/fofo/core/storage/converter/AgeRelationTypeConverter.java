@@ -1,7 +1,6 @@
 package com.fofo.core.storage.converter;
 
 import com.fofo.core.domain.member.AgeRelationType;
-import com.fofo.core.domain.member.ApprovalStatus;
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
 
@@ -13,11 +12,13 @@ public class AgeRelationTypeConverter implements AttributeConverter<AgeRelationT
 
     @Override
     public String convertToDatabaseColumn(final AgeRelationType attribute) {
-        return attribute.codeValue();
+        if (attribute == null) return null;
+        return attribute.getCodeValue();
     }
 
     @Override
     public AgeRelationType convertToEntityAttribute(final String code) {
+        if (code == null) return null;
         return AgeRelationType.enumOfCode(code);
     }
 }

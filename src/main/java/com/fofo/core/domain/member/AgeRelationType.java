@@ -2,12 +2,14 @@ package com.fofo.core.domain.member;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fofo.core.support.error.CoreApiException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 
 import static com.fofo.core.support.error.CoreErrorType.ENUM_MAPPING_ERROR;
 
+@Getter
 @RequiredArgsConstructor
 public enum AgeRelationType {
     OLDER("1"),
@@ -16,10 +18,6 @@ public enum AgeRelationType {
     ;
 
     private final String codeValue;
-
-    public String codeValue() {
-        return codeValue;
-    }
 
     @JsonCreator
     public static AgeRelationType enumOfName(final String name) {
@@ -31,7 +29,7 @@ public enum AgeRelationType {
 
     public static AgeRelationType enumOfCode(final String codeValue) {
         return Arrays.stream(AgeRelationType.values())
-                .filter(v -> v.codeValue().equals(codeValue))
+                .filter(v -> v.getCodeValue().equals(codeValue))
                 .findAny()
                 .orElseThrow(() -> new CoreApiException(ENUM_MAPPING_ERROR));
     }

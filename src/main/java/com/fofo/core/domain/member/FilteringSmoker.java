@@ -30,6 +30,6 @@ public enum FilteringSmoker {
         return Arrays.stream(FilteringSmoker.values())
                 .filter(v -> v.isCodeValue() == codeValue)
                 .findAny()
-                .orElse(null);
+                .orElseThrow(() -> new CoreApiException(ENUM_MAPPING_ERROR));
     }
 }
