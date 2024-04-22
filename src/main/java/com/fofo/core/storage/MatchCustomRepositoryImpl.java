@@ -28,7 +28,7 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     private final QAddressEntity womanAddress = new QAddressEntity("womanAddress");
 
     @Override
-    public Optional<MemberEntity> findMatchPossibleMemberById(Long id) {
+    public Optional<MemberEntity> findMatchPossibleMemberById(final Long id) {
         return Optional.ofNullable(jpaQueryFactory.select(member)
                 .from(member)
                 .leftJoin(match).on(member.id.eq(match.manMemberId).or(member.id.eq(match.womanMemberId)))
@@ -63,7 +63,7 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
 
 
     @Override
-    public Pair<List<Tuple>, Long> findMatchResultList(final Pageable pageable) {
+    public Pair<List<Tuple>, Long> findMatchResultList(final Pageable pageable, final MatchingStatus matchingStatus) {
         List<Tuple> matchResultTupleList = jpaQueryFactory
                 .select(match, manMember, womanMember, manAddress, womanAddress)
                 .from(match)
@@ -73,6 +73,7 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                 .leftJoin(womanAddress).on(womanMember.addressId.eq(womanAddress.id))
                 .where(
                         match.status.ne(ActiveStatus.DELETED),
+                        eqMatchingStatus(matchingStatus),
                         manMember.status.ne(ActiveStatus.DELETED),
                         womanMember.status.ne(ActiveStatus.DELETED)
                 )
@@ -87,12 +88,17 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                 .join(womanMember).on(match.womanMemberId.eq(womanMember.id))
                 .where(
                         match.status.ne(ActiveStatus.DELETED),
+                        eqMatchingStatus(matchingStatus),
                         manMember.status.ne(ActiveStatus.DELETED),
                         womanMember.status.ne(ActiveStatus.DELETED)
                 )
                 .fetchOne();
 
         return Pair.of(matchResultTupleList, count);
+    }
+
+    private BooleanExpression eqMatchingStatus(final MatchingStatus matchingStatus) {
+        return matchingStatus != null ? match.matchingStatus.eq(matchingStatus) : null;
     }
 
 }
