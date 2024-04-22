@@ -54,6 +54,7 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
                         containName(findMember.name()),
                         eqGender(findMember.gender()),
                         eqYearOfBirth(findMember.yearOfBirthday()),
+                        eqHeight(findMember.height()),
                         eqFilteringConditionAgeRelation(findMember.filteringAgeRelation()),
                         containCompany(findMember.company()),
                         containJob(findMember.job()),
@@ -95,6 +96,11 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     private BooleanExpression eqYearOfBirth(final LocalDate yearOfBirth) {
         if (yearOfBirth == null) return null;
         return Q_MEMBER.birthday.year().eq(yearOfBirth.getYear());
+    }
+
+    private BooleanExpression eqHeight(final Integer height) {
+        if (height == null) return null;
+        return Q_MEMBER.height.eq(height);
     }
 
     private BooleanExpression eqFilteringConditionAgeRelation(final AgeRelationType filteringConditionAgeRelation) {

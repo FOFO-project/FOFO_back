@@ -19,6 +19,7 @@ public record FindMembersConditionDto(
         Gender gender,
         @DateTimeFormat(pattern = "yyyy")
         LocalDate yearOfBirthday,
+        Integer height,
         AgeRelationType filteringAgeRelation,
         String company,
         String job,
@@ -41,6 +42,7 @@ public record FindMembersConditionDto(
                 name,
                 gender,
                 yearOfBirthday,
+                height,
                 filteringAgeRelation,
                 company,
                 job,

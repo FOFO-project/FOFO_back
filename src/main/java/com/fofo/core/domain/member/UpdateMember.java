@@ -3,13 +3,13 @@ package com.fofo.core.domain.member;
 import com.fofo.core.domain.ActiveStatus;
 
 import java.time.LocalDateTime;
-import java.util.logging.Filter;
 
 public record UpdateMember(
         String name,
         Gender gender,
         LocalDateTime birthday,
         Integer age,
+        Integer height,
         AgeRelationType filteringAgeRelation,
         String phoneNumber,
         String company,
@@ -27,7 +27,8 @@ public record UpdateMember(
     public static UpdateMember of(final String name,
                                   final Gender gender,
                                   final LocalDateTime birthday,
-                                  final int age,
+                                  final Integer age,
+                                  final Integer height,
                                   final AgeRelationType filteringAgeRelation,
                                   final String phoneNumber,
                                   final String company,
@@ -44,6 +45,7 @@ public record UpdateMember(
                 gender,
                 birthday,
                 age,
+                height,
                 filteringAgeRelation,
                 phoneNumber,
                 company,

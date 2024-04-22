@@ -64,6 +64,9 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = false)
     private Integer age;
 
+    @Column(nullable = false)
+    private Integer height;
+
     @Column(nullable = false, length = 30)
     private String phoneNumber;
 
@@ -130,6 +133,7 @@ public class MemberEntity extends BaseEntity {
             final Gender gender,
             final LocalDateTime birthday,
             final Integer age,
+            final Integer height,
             final String phoneNumber,
             final AgeRelationType filteringAgeRelation,
             final String company,
@@ -153,6 +157,7 @@ public class MemberEntity extends BaseEntity {
         this.gender = gender;
         this.birthday = birthday;
         this.age = age;
+        this.height = height;
         this.phoneNumber = phoneNumber;
         this.filteringAgeRelation = filteringAgeRelation;
         this.company = company;
@@ -178,6 +183,7 @@ public class MemberEntity extends BaseEntity {
             final Gender gender,
             final LocalDateTime birthday,
             final Integer age,
+            final Integer height,
             final String phoneNumber,
             final AgeRelationType filteringConditionAgeRelation,
             final String company,
@@ -202,6 +208,7 @@ public class MemberEntity extends BaseEntity {
                 gender,
                 birthday,
                 age,
+                height,
                 phoneNumber,
                 filteringConditionAgeRelation,
                 company,
