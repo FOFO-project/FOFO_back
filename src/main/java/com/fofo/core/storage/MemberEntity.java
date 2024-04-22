@@ -228,6 +228,4 @@ public class MemberEntity extends BaseEntity {
                 status);
     }
 
-    public void setChance() {
-    }
 }

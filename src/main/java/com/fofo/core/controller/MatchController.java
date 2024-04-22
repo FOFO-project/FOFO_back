@@ -8,6 +8,7 @@ import com.fofo.core.controller.response.MatchResponseDto;
 import com.fofo.core.controller.response.MatchResultResponseDto;
 import com.fofo.core.domain.match.MatchResult;
 import com.fofo.core.domain.match.MatchService;
+import com.fofo.core.domain.match.MatchingStatus;
 import com.fofo.core.support.response.ApiResult;
 import com.fofo.core.support.response.PageInfo;
 import com.fofo.core.support.response.PageResult;
@@ -41,12 +42,13 @@ public class MatchController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "매치 결과")
     })
-    @GetMapping("/match-result")
+    @GetMapping("/match/result")
     public ResponseEntity<ApiResult<PageResult<List<MatchResultResponseDto>>>> getMatchResult(
             @RequestParam(value="pageNumber", required = false, defaultValue = "0") int pageNumber,
-            @Positive @RequestParam(value="pageSize", required = false, defaultValue = "20") int pageSize)
+            @Positive @RequestParam(value="pageSize", required = false, defaultValue = "20") int pageSize,
+            @RequestParam(value = "matchingStatus", required = false) MatchingStatus matchingStatus)
     {
-        Page<MatchResult> matchPage = matchService.getMatchResult(pageNumber, pageSize);
+        Page<MatchResult> matchPage = matchService.getMatchResult(pageNumber, pageSize, matchingStatus);
         PageInfo pageInfo = new PageInfo(pageNumber, pageSize, (int) matchPage.getTotalElements(), matchPage.getTotalPages());
         List<MatchResultResponseDto> response = matchPage.getContent().stream()
                 .map(MatchResultResponseDto::from)

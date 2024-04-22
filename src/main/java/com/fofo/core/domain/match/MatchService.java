@@ -20,9 +20,9 @@ public class MatchService {
     private final MatchRemover matchRemover;
     private final MatchManager matchManager;
 
-    // 모든 매치 결과 조회
-    public Page<MatchResult> getMatchResult(final int page, final int size) {
-        return matchFinder.findMatches(page, size);
+    // 매치 결과 조회
+    public Page<MatchResult> getMatchResult(final int page, final int size, final MatchingStatus matchingStatus) {
+        return matchFinder.findMatches(page, size, matchingStatus);
     }
 
     @Transactional

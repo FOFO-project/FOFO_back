@@ -36,9 +36,9 @@ public class MatchFinder {
                 .toList();
     }
 
-    public Page<MatchResult> findMatches(final int page, final int size) {
+    public Page<MatchResult> findMatches(final int page, final int size, final MatchingStatus matchingStatus) {
         PageRequest pageRequest = PageRequest.of(page, size);
-        Pair<List<Tuple>, Long> pair = matchRepository.findMatchResultList(pageRequest);
+        Pair<List<Tuple>, Long> pair = matchRepository.findMatchResultList(pageRequest, matchingStatus);
         List<MatchResult> matchResultList = pair.getLeft().stream()
                 .map(tuple -> {
                     MemberMatchEntity matchEntity = Objects.requireNonNull(tuple.get(0, MemberMatchEntity.class));
@@ -50,6 +50,8 @@ public class MatchFinder {
                             matchEntity.getId(),
                             MemberWithAddress.of(Member.from(manEntity), Address.from(manAddressEntity)),
                             MemberWithAddress.of(Member.from(womanEntity), Address.from(womanAddressEntity)),
+                            matchEntity.getManAgreement(),
+                            matchEntity.getWomanAgreement(),
                             matchEntity.getMatchingStatus(),
                             matchEntity.getCreatedTime(),
                             matchEntity.getUpdatedTime()

@@ -36,6 +36,8 @@ public class MatchAppender {
         matchRepository.save(MemberMatchEntity.of(
                 manMemberEntity.getId(),
                 womanMemberEntity.getId(),
+                null,
+                null,
                 MatchingStatus.MATCHING_PENDING,
                 ActiveStatus.CREATED
         ));
