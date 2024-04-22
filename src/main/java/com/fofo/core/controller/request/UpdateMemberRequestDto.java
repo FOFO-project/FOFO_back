@@ -12,6 +12,7 @@ import com.fofo.core.support.util.AgeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -29,6 +30,9 @@ public record UpdateMemberRequestDto(
         @Schema(description = "생년월일", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
         @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         LocalDateTime birthday,
+        @Schema(description = "키", example = "180")
+        @Positive
+        Integer height,
         @Schema(description = "연령 관계")
         AgeRelationType filteringAgeRelation,
         @Schema(description = "휴대전화번호", example = "01012345678")
@@ -65,6 +69,7 @@ public record UpdateMemberRequestDto(
                         gender,
                         birthday,
                         AgeUtil.toKoreanAge(birthday),
+                        height,
                         filteringAgeRelation,
                         phoneNumber,
                         company,

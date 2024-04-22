@@ -16,11 +16,11 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Schema(description = "멤버 등록 요청")
 public record AppendMemberRequestDto(
@@ -38,6 +38,9 @@ public record AppendMemberRequestDto(
         @Schema(description = "생년월일", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
         @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         LocalDateTime birthday,
+        @Schema(description = "키", example = "180")
+        @Positive
+        int height,
         @Schema(description = "휴대전화번호", example = "01012345678")
         @NotEmpty @Pattern(regexp = "^01([0|1|6|7|8|9])(-)?([0-9]{3,4})(-)?([0-9]{4})$")
         String phoneNumber,
@@ -77,6 +80,7 @@ public record AppendMemberRequestDto(
                         gender,
                         birthday,
                         AgeUtil.toKoreanAge(birthday),
+                        height,
                         phoneNumber,
                         filteringAgeRelation,
                         company,
