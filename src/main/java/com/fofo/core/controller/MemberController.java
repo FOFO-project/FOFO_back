@@ -101,7 +101,7 @@ public class MemberController {
         return new ResponseEntity<>(ApiResult.success(new MembersResponseDto(failMemberIds)), HttpStatus.OK);
     }
 
-    @Operation(summary = "맴버 입금 확인 API")
+    @Operation(summary = "맴버 입금 확인 API(다건 처리)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "멤버 입금 확인 성공")
     })
