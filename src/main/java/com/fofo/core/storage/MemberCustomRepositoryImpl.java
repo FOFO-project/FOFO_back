@@ -72,7 +72,8 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
                         eqMemberMatch(findMember.matchingStatus()),
                         Q_MEMBER.status.ne(ActiveStatus.DELETED)
                 )
-                .orderBy(Q_MEMBER.depositDate.desc())
+                .orderBy(Q_MEMBER.depositDate.asc(),
+                        Q_MEMBER.createdTime.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
