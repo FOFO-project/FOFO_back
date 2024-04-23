@@ -34,10 +34,12 @@ public class MemberMatchEntity extends BaseEntity {
     @Column(nullable = false)
     private Long womanMemberId;
 
+    @Setter
     @Column
     @Convert(converter = MatchAgreementConverter.class)
     private MatchAgreement manAgreement;
 
+    @Setter
     @Column
     @Convert(converter = MatchAgreementConverter.class)
     private MatchAgreement womanAgreement;
