@@ -51,7 +51,7 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                         member.status.ne(ActiveStatus.DELETED), //멤버 삭제되지 않은 상태
                         matchPossible()
                 )
-                .orderBy(member.depositDate.desc())
+                .orderBy(member.depositDate.asc())
                 .fetch();
     }
 
