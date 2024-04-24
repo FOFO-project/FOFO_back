@@ -76,6 +76,8 @@ public class MatchManager {
                     result.add(Match.of(
                             memberPair.getLeft(),
                             memberPair.getRight(),
+                            MatchAgreement.N,
+                            MatchAgreement.N,
                             MatchingStatus.MATCHING_PENDING,
                             ActiveStatus.CREATED
                     ));
