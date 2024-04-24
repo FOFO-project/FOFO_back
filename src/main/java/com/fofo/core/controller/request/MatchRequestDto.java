@@ -11,11 +11,11 @@ public record MatchRequestDto(
         Long id,
         @Schema(description = "남자 멤버 ID", example = "1")
         Long manId,
-        @Schema(description = "남자 동의 여부", example = "false")
+        @Schema(description = "남자 동의 여부", example = "N")
         MatchAgreement manAgreement,
         @Schema(description = "여자 멤버 ID", example = "2")
         Long womanId,
-        @Schema(description = "여자 동의 여부", example = "true")
+        @Schema(description = "여자 동의 여부", example = "N")
         MatchAgreement womanAgreement,
         @NotNull
         @Schema(description = "현재 매치 상태", example = "20")
