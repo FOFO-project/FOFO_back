@@ -28,6 +28,7 @@ public class ApiControllerAdvice {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiResult<?>> handleHttpMessageNotReadableException(final HttpMessageNotReadableException e) {
+        log.error("HttpMessageNotReadableException : {}", e.getMessage(), e);
         return handleCoreApiException(new CoreApiException(CoreErrorType.INVALID_JSON_ERROR));
     }
 

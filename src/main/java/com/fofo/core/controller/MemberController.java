@@ -107,7 +107,7 @@ public class MemberController {
     })
     @PostMapping("/members/deposit-check")
     public ResponseEntity<ApiResult<MembersResponseDto>> confirmMemberDeposit(@RequestBody DepositRequestMemberDto request) {
-        List<Long> failMemberIds = memberService.confirmDeposit(request.memberIds(), request.depositDate());
+        List<Long> failMemberIds = memberService.confirmDeposit(request.memberIds());
         return new ResponseEntity<>(ApiResult.success(new MembersResponseDto(failMemberIds)), HttpStatus.OK);
     }
 
