@@ -6,6 +6,7 @@ import com.fofo.core.domain.member.AgeRelationType;
 import com.fofo.core.domain.member.ApprovalStatus;
 import com.fofo.core.domain.member.FilteringSmoker;
 import com.fofo.core.domain.member.Gender;
+import com.fofo.core.domain.member.MatchableYn;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Member;
 import com.fofo.core.domain.member.Religion;
@@ -93,6 +94,7 @@ public record AppendMemberRequestDto(
                         filteringReligion,
                         charmingPoint,
                         ApprovalStatus.DEPOSIT_PENDING,
+                        MatchableYn.Y,
                         ActiveStatus.CREATED
                 );
         }

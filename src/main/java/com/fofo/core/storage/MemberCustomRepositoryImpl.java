@@ -7,6 +7,7 @@ import com.fofo.core.domain.member.ApprovalStatus;
 import com.fofo.core.domain.member.FilteringSmoker;
 import com.fofo.core.domain.member.FindMember;
 import com.fofo.core.domain.member.Gender;
+import com.fofo.core.domain.member.MatchableYn;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Religion;
 import com.fofo.core.domain.member.SmokingYn;
@@ -65,6 +66,7 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
                         eqReligion(findMember.religion()),
                         eqFilteringReligion(findMember.filteringReligion()),
                         eqApprovalStatus(findMember.approvalStatus()),
+                        eqMatchableYn(findMember.matchableYn()),
                         containZipcode(findMember.zipcode()),
                         containSido(findMember.sido()),
                         containSigungu(findMember.sigungu()),
@@ -152,6 +154,11 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     private BooleanExpression eqApprovalStatus(final ApprovalStatus approvalStatus) {
         if (approvalStatus == null) return null;
         return Q_MEMBER.approvalStatus.eq(approvalStatus);
+    }
+
+    private BooleanExpression eqMatchableYn(final MatchableYn matchableYn) {
+        if (matchableYn == null) return null;
+        return Q_MEMBER.matchableYn.eq(matchableYn);
     }
 
     private BooleanExpression containZipcode(final String zipcode) {
