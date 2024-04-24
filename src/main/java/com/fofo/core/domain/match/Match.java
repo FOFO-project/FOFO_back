@@ -21,6 +21,8 @@ public record Match(
     public static Match of(
             final Member man,
             final Member woman,
+            final MatchAgreement manAgreement,
+            final MatchAgreement womanAgreement,
             final MatchingStatus matchingStatus,
             final ActiveStatus status
     ) {
@@ -28,8 +30,8 @@ public record Match(
                 null,
                 man,
                 woman,
-                null,
-                null,
+                manAgreement,
+                womanAgreement,
                 matchingStatus,
                 status,
                 null,
