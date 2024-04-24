@@ -53,11 +53,11 @@ public class MemberUpdater {
     }
 
     @Transactional
-    public List<Long> confirmDeposit(final List<Long> memberIds, final LocalDateTime depositDate) {
+    public List<Long> confirmDeposit(final List<Long> memberIds) {
         return memberIds.stream()
                 .filter(memberId -> {
                     try {
-                        confirmDeposit(memberId, depositDate);
+                        confirmDeposit(memberId, LocalDateTime.now());
                         return false; // 입금확인이 승인된 경우, 실패 목록에 포함시키지 않음
                     } catch (CoreApiException e) {
                         return true; // 입금확인에 실패한 경우, 실패 목록에 포함

@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -37,8 +36,8 @@ public class MemberService {
         return memberUpdater.remove(memberIds);
     }
 
-    public List<Long> confirmDeposit(final List<Long> memberIds, final LocalDateTime depositDate) {
-        return memberUpdater.confirmDeposit(memberIds, depositDate);
+    public List<Long> confirmDeposit(final List<Long> memberIds) {
+        return memberUpdater.confirmDeposit(memberIds);
     }
 
     public List<Long> approve(final List<Long> memberIds) {
