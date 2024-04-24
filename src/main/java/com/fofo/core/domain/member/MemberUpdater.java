@@ -43,21 +43,21 @@ public class MemberUpdater {
     }
 
     private void remove(final long memberId) {
-        MemberEntity findMember = memberRepository.findById(memberId)
+        MemberEntity findMember = memberRepository.findByIdAndStatusNot(memberId, ActiveStatus.DELETED)
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
         findMember.setStatus(ActiveStatus.DELETED);
 
-        AddressEntity findAddress = addressRepository.findById(findMember.getAddressId())
+        AddressEntity findAddress = addressRepository.findByIdAndStatusNot(findMember.getAddressId(), ActiveStatus.DELETED)
                 .orElseThrow(() -> new CoreApiException(ADDRESS_NOT_FOUND_ERROR));
         findAddress.setStatus(ActiveStatus.DELETED);
     }
 
     @Transactional
-    public List<Long> confirmDeposit(final List<Long> memberIds, final LocalDateTime depositDate) {
+    public List<Long> confirmDeposit(final List<Long> memberIds) {
         return memberIds.stream()
                 .filter(memberId -> {
                     try {
-                        confirmDeposit(memberId, depositDate);
+                        confirmDeposit(memberId, LocalDateTime.now());
                         return false; // 입금확인이 승인된 경우, 실패 목록에 포함시키지 않음
                     } catch (CoreApiException e) {
                         return true; // 입금확인에 실패한 경우, 실패 목록에 포함
@@ -67,7 +67,7 @@ public class MemberUpdater {
     }
 
     private void confirmDeposit(final long memberId, final LocalDateTime depositDate) {
-        MemberEntity findMember = memberRepository.findById(memberId)
+        MemberEntity findMember = memberRepository.findByIdAndStatusNot(memberId, ActiveStatus.DELETED)
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
         if (findMember.getDepositDate() != null) {
             throw new CoreApiException(DEPOSIT_DATE_EXISTS_ERROR);
@@ -96,7 +96,7 @@ public class MemberUpdater {
     }
 
     private void approve(final long memberId) {
-        MemberEntity findMember = memberRepository.findById(memberId)
+        MemberEntity findMember = memberRepository.findByIdAndStatusNot(memberId, ActiveStatus.DELETED)
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
         if (findMember.getApprovalStatus() != ApprovalStatus.DEPOSIT_COMPLETED || findMember.getDepositDate() == null) {
             throw new CoreApiException(NOT_WAITING_FOR_APPROVE_ERROR);
@@ -108,12 +108,12 @@ public class MemberUpdater {
 
     @Transactional
     public long update(final long memberId, final UpdateMember updateMember, final UpdateAddress updateAddress) {
-        MemberEntity findMember = memberRepository.findById(memberId)
+        MemberEntity findMember = memberRepository.findByIdAndStatusNot(memberId, ActiveStatus.DELETED)
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
         updateMemberInfo(findMember, updateMember);
 
         if (updateAddress != null) {
-            AddressEntity findAddress = addressRepository.findById(findMember.getAddressId())
+            AddressEntity findAddress = addressRepository.findByIdAndStatusNot(findMember.getAddressId(), ActiveStatus.DELETED)
                     .orElseThrow(() -> new CoreApiException(ADDRESS_NOT_FOUND_ERROR));
 
             updateAddressInfo(findAddress, updateAddress);

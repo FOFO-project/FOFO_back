@@ -13,7 +13,7 @@ public class MatchingStatusConverter implements AttributeConverter<MatchingStatu
 
     @Override
     public String convertToDatabaseColumn(final MatchingStatus attribute) {
-        return attribute.codeValue();
+        return attribute.getCodeValue();
     }
 
     @Override
