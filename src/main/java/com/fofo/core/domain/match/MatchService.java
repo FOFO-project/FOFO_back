@@ -49,12 +49,20 @@ public class MatchService {
     public void goNextMatchStep(final List<MatchRequestDto> matchRequestDtoList) {
         for(MatchRequestDto matchRequestDto : matchRequestDtoList){
             MatchingStatus nextMatchingStatus = matchManager.getNextMatchingStatus(matchRequestDto.matchingStatus());
-            if(MatchingStatus.MATCHING_PROGRESSING.equals(nextMatchingStatus)){
+
+            if(nextMatchingStatus == MatchingStatus.MATCHING_PROGRESSING
+                    && matchRequestDto.manAgreement() != null
+                    && matchRequestDto.womanAgreement() != null
+            ){
+                nextMatchingStatus = MatchingStatus.MATCHING_COMPLETED;
+            }
+
+            if(MatchingStatus.MATCHING_PROGRESSING == nextMatchingStatus){
                 matchUpdater.updateMatchProgressing(
                         matchRequestDto.id(),
                         nextMatchingStatus
                 );
-            } else if(MatchingStatus.MATCHING_COMPLETED.equals(nextMatchingStatus)){
+            } else if(MatchingStatus.MATCHING_COMPLETED == nextMatchingStatus){
                 // 남자, 여자 동의 상태를 보고 판단
                 matchUpdater.updateMatchCompleted(
                         matchRequestDto.id(),

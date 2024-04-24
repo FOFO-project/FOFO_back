@@ -5,6 +5,7 @@ import com.fofo.core.domain.member.MatchableYn;
 import com.fofo.core.storage.MatchRepository;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberMatchEntity;
+import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
 import com.fofo.core.support.error.CoreErrorType;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.fofo.core.support.error.CoreErrorType.MEMBER_NOT_FOUND_ERROR;
+
 @Component
 @RequiredArgsConstructor
 public class MatchAppender {
     private final MatchRepository matchRepository;
+    private final MemberRepository memberRepository;
 
     @Transactional
     public void appendMatches(final List<Match> matchList) {
@@ -24,6 +28,18 @@ public class MatchAppender {
                 .map(Match::toEntity)
                 .toList()
         );
+        matchList.forEach(match -> {
+            MemberEntity manMember = memberRepository.findByIdAndStatusNot(match.man().id(), ActiveStatus.DELETED)
+                    .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+            MemberEntity womanMember = memberRepository.findByIdAndStatusNot(match.woman().id(), ActiveStatus.DELETED)
+                    .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+
+            manMember.setMatchableYn(MatchableYn.Y);
+            memberRepository.save(manMember);
+            womanMember.setMatchableYn(MatchableYn.Y);
+            memberRepository.save(womanMember);
+        });
+
     }
 
     @Transactional
@@ -37,7 +53,9 @@ public class MatchAppender {
         }
 
         manMemberEntity.setMatchableYn(MatchableYn.N);
+        memberRepository.save(manMemberEntity);
         womanMemberEntity.setMatchableYn(MatchableYn.N);
+        memberRepository.save(womanMemberEntity);
 
         matchRepository.save(MemberMatchEntity.of(
                 manMemberEntity.getId(),
