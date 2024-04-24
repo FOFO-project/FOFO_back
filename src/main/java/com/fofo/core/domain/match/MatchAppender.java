@@ -1,6 +1,7 @@
 package com.fofo.core.domain.match;
 
 import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.domain.member.MatchableYn;
 import com.fofo.core.storage.MatchRepository;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberMatchEntity;
@@ -17,6 +18,7 @@ import java.util.List;
 public class MatchAppender {
     private final MatchRepository matchRepository;
 
+    @Transactional
     public void appendMatches(final List<Match> matchList) {
         matchRepository.saveAll(matchList.stream()
                 .map(Match::toEntity)
@@ -33,6 +35,10 @@ public class MatchAppender {
         if(manMemberEntity.getGender().equals(womanMemberEntity.getGender())){
             throw new CoreApiException(CoreErrorType.MATCH_SAME_GENDER_ERROR);
         }
+
+        manMemberEntity.setMatchableYn(MatchableYn.N);
+        womanMemberEntity.setMatchableYn(MatchableYn.N);
+
         matchRepository.save(MemberMatchEntity.of(
                 manMemberEntity.getId(),
                 womanMemberEntity.getId(),
