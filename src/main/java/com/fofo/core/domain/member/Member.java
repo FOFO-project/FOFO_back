@@ -29,6 +29,7 @@ public record Member(
         Integer passCount,
         Integer chance,
         ApprovalStatus approvalStatus,
+        MatchableYn matchableYn,
         ActiveStatus status,
         LocalDateTime createdTime,
         LocalDateTime modifiedTime
@@ -53,6 +54,7 @@ public record Member(
             final Religion filteringReligion,
             final String charmingPoint,
             final ApprovalStatus approvalStatus,
+            final MatchableYn matchableYn,
             final ActiveStatus status
     ) {
         return new Member(
@@ -79,6 +81,7 @@ public record Member(
                 5,
                 2,
                 approvalStatus,
+                matchableYn,
                 status,
                 null,
                 null);
@@ -109,6 +112,7 @@ public record Member(
                 memberEntity.getPassCount(),
                 memberEntity.getChance(),
                 memberEntity.getApprovalStatus(),
+                memberEntity.getMatchableYn(),
                 memberEntity.getStatus(),
                 memberEntity.getCreatedTime(),
                 memberEntity.getUpdatedTime());
@@ -138,6 +142,7 @@ public record Member(
                 passCount,
                 chance,
                 approvalStatus,
+                matchableYn,
                 status);
     }
 }

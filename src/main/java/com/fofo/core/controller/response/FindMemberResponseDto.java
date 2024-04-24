@@ -5,6 +5,7 @@ import com.fofo.core.domain.member.AgeRelationType;
 import com.fofo.core.domain.member.ApprovalStatus;
 import com.fofo.core.domain.member.FilteringSmoker;
 import com.fofo.core.domain.member.Gender;
+import com.fofo.core.domain.member.MatchableYn;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Member;
 import com.fofo.core.domain.member.MemberWithAddress;
@@ -38,6 +39,7 @@ public record FindMemberResponseDto(
         int passCount,
         int chance,
         ApprovalStatus approvalStatus,
+        MatchableYn matchableYn,
         ActiveStatus status,
         LocalDateTime createdTime,
         LocalDateTime modifiedTime
@@ -69,6 +71,7 @@ public record FindMemberResponseDto(
                 member.passCount(),
                 member.chance(),
                 member.approvalStatus(),
+                member.matchableYn(),
                 member.status(),
                 member.createdTime(),
                 member.modifiedTime()

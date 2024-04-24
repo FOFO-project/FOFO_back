@@ -6,6 +6,7 @@ import com.fofo.core.domain.member.ApprovalStatus;
 import com.fofo.core.domain.member.FilteringSmoker;
 import com.fofo.core.domain.member.FindMember;
 import com.fofo.core.domain.member.Gender;
+import com.fofo.core.domain.member.MatchableYn;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Religion;
 import com.fofo.core.domain.member.SmokingYn;
@@ -30,6 +31,7 @@ public record FindMembersConditionDto(
         Religion religion,
         Religion filteringReligion,
         ApprovalStatus approvalStatus,
+        MatchableYn matchableYn,
         String zipcode,
         String sido,
         String sigungu,
@@ -53,6 +55,7 @@ public record FindMembersConditionDto(
                 religion,
                 filteringReligion,
                 approvalStatus,
+                matchableYn,
                 zipcode,
                 sido,
                 sigungu,

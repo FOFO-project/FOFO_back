@@ -5,6 +5,7 @@ import com.fofo.core.domain.member.AgeRelationType;
 import com.fofo.core.domain.member.ApprovalStatus;
 import com.fofo.core.domain.member.FilteringSmoker;
 import com.fofo.core.domain.member.Gender;
+import com.fofo.core.domain.member.MatchableYn;
 import com.fofo.core.domain.member.Mbti;
 import com.fofo.core.domain.member.Religion;
 import com.fofo.core.domain.member.SmokingYn;
@@ -13,6 +14,7 @@ import com.fofo.core.storage.converter.AgeRelationTypeConverter;
 import com.fofo.core.storage.converter.ApprovalStatusConverter;
 import com.fofo.core.storage.converter.FilteringSmokerConverter;
 import com.fofo.core.storage.converter.GenderConverter;
+import com.fofo.core.storage.converter.MatchableYnConverter;
 import com.fofo.core.storage.converter.ReligionConverter;
 import com.fofo.core.storage.converter.SmokingYnConverter;
 import jakarta.persistence.Column;
@@ -124,6 +126,10 @@ public class MemberEntity extends BaseEntity {
     private ApprovalStatus approvalStatus;
 
     @Column(nullable = false, length = 20)
+    @Convert(converter = MatchableYnConverter.class)
+    private MatchableYn matchableYn;
+
+    @Column(nullable = false, length = 20)
     @Convert(converter = ActiveStatusConverter.class)
     private ActiveStatus status;
 
@@ -150,6 +156,7 @@ public class MemberEntity extends BaseEntity {
             final Integer passCount,
             final Integer chance,
             final ApprovalStatus approvalStatus,
+            final MatchableYn matchableYn,
             final ActiveStatus status
     ) {
         this.kakaoId = kakaoId;
@@ -174,6 +181,7 @@ public class MemberEntity extends BaseEntity {
         this.passCount = passCount;
         this.chance = chance;
         this.approvalStatus = approvalStatus;
+        this.matchableYn = matchableYn;
         this.status = status;
     }
 
@@ -200,6 +208,7 @@ public class MemberEntity extends BaseEntity {
             final Integer passCount,
             final Integer chance,
             final ApprovalStatus approvalStatus,
+            final MatchableYn matchableYn,
             final ActiveStatus status
     ) {
         return new MemberEntity(
@@ -225,6 +234,7 @@ public class MemberEntity extends BaseEntity {
                 passCount,
                 chance,
                 approvalStatus,
+                matchableYn,
                 status);
     }
 
