@@ -34,9 +34,9 @@ public class MatchAppender {
             MemberEntity womanMember = memberRepository.findByIdAndStatusNot(match.woman().id(), ActiveStatus.DELETED)
                     .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
 
-            manMember.setMatchableYn(MatchableYn.Y);
+            manMember.setMatchableYn(MatchableYn.N);
             memberRepository.save(manMember);
-            womanMember.setMatchableYn(MatchableYn.Y);
+            womanMember.setMatchableYn(MatchableYn.N);
             memberRepository.save(womanMember);
         });
 
