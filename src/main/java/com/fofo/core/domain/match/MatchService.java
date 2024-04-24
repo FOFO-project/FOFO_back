@@ -56,7 +56,7 @@ public class MatchService {
                 );
             } else if(MatchingStatus.MATCHING_COMPLETED.equals(nextMatchingStatus)){
                 // 남자, 여자 동의 상태를 보고 판단
-                matchUpdater.updateMatchCOMPLETED(
+                matchUpdater.updateMatchCompleted(
                         matchRequestDto.id(),
                         matchRequestDto.manId(),
                         matchRequestDto.manAgreement(),

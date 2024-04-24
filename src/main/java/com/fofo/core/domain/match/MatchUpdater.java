@@ -1,6 +1,7 @@
 package com.fofo.core.domain.match;
 
 import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.domain.member.MatchableYn;
 import com.fofo.core.storage.MatchRepository;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberMatchEntity;
@@ -26,17 +27,16 @@ public class MatchUpdater {
         matchRepository.save(matchEntity);
     }
 
-    public void updateMatchCOMPLETED(final Long id,
+    public void updateMatchCompleted(final Long id,
                                      final Long manId,
                                      final MatchAgreement manAgreement,
                                      final Long womanId,
                                      final MatchAgreement womanAgreement,
                                      final MatchingStatus nextMatchingStatus) {
-
-        if(MatchAgreement.N.equals(manAgreement)){
+        if (MatchAgreement.N == manAgreement) {
             updateMemberPassCount(manId);
         }
-        if(MatchAgreement.N.equals(womanAgreement)){
+        if (MatchAgreement.N == womanAgreement) {
             updateMemberPassCount(womanId);
         }
 
@@ -46,6 +46,20 @@ public class MatchUpdater {
         matchEntity.setManAgreement(manAgreement);
         matchEntity.setWomanAgreement(womanAgreement);
         matchRepository.save(matchEntity);
+
+        if (isMatchContinuePossible(manAgreement, womanAgreement)) {
+            MemberEntity manMember = memberRepository.findByIdAndStatusNot(manId, ActiveStatus.DELETED)
+                    .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+            MemberEntity womanMember = memberRepository.findByIdAndStatusNot(womanId, ActiveStatus.DELETED)
+                    .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+
+            manMember.setMatchableYn(MatchableYn.Y);
+            womanMember.setMatchableYn(MatchableYn.Y);
+        }
+    }
+
+    private boolean isMatchContinuePossible(final MatchAgreement manAgreement, final MatchAgreement womanAgreement) {
+        return !(MatchAgreement.Y == manAgreement && MatchAgreement.Y == womanAgreement);
     }
 
     private void updateMemberPassCount(final Long memberId) {
