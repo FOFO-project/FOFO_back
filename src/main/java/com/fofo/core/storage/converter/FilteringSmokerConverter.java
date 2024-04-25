@@ -9,13 +9,11 @@ public class FilteringSmokerConverter implements AttributeConverter<FilteringSmo
 
     @Override
     public Boolean convertToDatabaseColumn(final FilteringSmoker attribute) {
-        if (attribute == null) return null;
         return attribute.isCodeValue();
     }
 
     @Override
     public FilteringSmoker convertToEntityAttribute(final Boolean code) {
-        if (code == null) return null;
         return FilteringSmoker.enumOfCode(code);
     }
 }
