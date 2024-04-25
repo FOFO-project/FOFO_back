@@ -1,5 +1,6 @@
 package com.fofo.core.domain.member;
 
+import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.storage.AddressEntity;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberRepository;
@@ -46,5 +47,10 @@ public class MemberFinder {
                 .toList();
 
         return new PageImpl<>(memberWithAddresses, pageable, memberWithAddresses.size());
+    }
+
+    public List<Member> findMatchableMembers() {
+        List<MemberEntity> memberEntityList = memberRepository.findAllByMatchableYnAndApprovalStatusAndStatusNot(MatchableYn.Y, ApprovalStatus.APPROVED, ActiveStatus.DELETED);
+        return memberEntityList.stream().map(Member::from).toList();
     }
 }

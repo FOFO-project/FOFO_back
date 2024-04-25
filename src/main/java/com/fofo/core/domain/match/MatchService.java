@@ -2,6 +2,7 @@ package com.fofo.core.domain.match;
 
 import com.fofo.core.controller.request.MatchRequestDto;
 import com.fofo.core.domain.member.Member;
+import com.fofo.core.domain.member.MemberFinder;
 import com.fofo.core.support.error.CoreApiException;
 import com.fofo.core.support.error.CoreErrorType;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import java.util.List;
 public class MatchService {
     private final MatchAppender matchAppender;
     private final MatchFinder matchFinder;
+    private final MemberFinder memberFinder;
     private final MatchUpdater matchUpdater;
     private final MatchRemover matchRemover;
     private final MatchManager matchManager;
@@ -28,7 +30,8 @@ public class MatchService {
     @Transactional
     public List<Long> autoMatch(final List<Long> memberIdList){
         // 매칭 가능한 멤버리스트 입금 순으로 찾기
-        List<Member> matchPossibleMembers = matchFinder.findMatchPossibleMembers();
+
+        List<Member> matchPossibleMembers = memberFinder.findMatchableMembers();
         // 매칭 선택된 멤버리스트 불러오기
         List<Member> selectedMembers = matchManager.getSelectedMembers(memberIdList, matchPossibleMembers);
         // 자동 매치
