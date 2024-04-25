@@ -112,7 +112,7 @@ public class MatchManager {
                                 .filter(targetMember -> !member.equals(targetMember)
                                         && (member.filteringSmoker().isCodeValue() && targetMember.smokingYn().isCodeValue())
                                         || (member.filteringReligion() != null && member.filteringReligion().equals(targetMember.religion()))
-                                        || (member.filteringAgeRelation() != null && member.filteringAgeRelation().equals(getAgeRelation(member, targetMember))))
+                                        || (member.filteringAgeRelation() != null && member.filteringAgeRelation().equals(getAgeRelation(targetMember, member))))
                                 .map(Member::id)
                                 .collect(Collectors.toSet())
                 ));
