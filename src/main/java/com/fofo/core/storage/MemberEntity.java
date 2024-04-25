@@ -93,6 +93,7 @@ public class MemberEntity extends BaseEntity {
     @Convert(converter = SmokingYnConverter.class)
     private SmokingYn smokingYn;
 
+    @Column(nullable = false)
     @Convert(converter = FilteringSmokerConverter.class)
     private FilteringSmoker filteringSmoker;
 

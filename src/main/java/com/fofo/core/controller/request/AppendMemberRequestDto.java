@@ -63,6 +63,7 @@ public record AppendMemberRequestDto(
         @NotNull
         SmokingYn smokingYn,
         @Schema(description = "절대 안되는 흡연 조건", example = "N")
+        @NotNull
         FilteringSmoker filteringSmoker,
         @Schema(description = "종교")
         @NotNull
