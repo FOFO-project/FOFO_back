@@ -10,6 +10,5 @@ import java.util.Optional;
 
 public interface MatchCustomRepository {
     Optional<MemberEntity> findMatchPossibleMemberById(Long id);
-    List<MemberEntity> findMatchPossibleMembers();
     Pair<List<Tuple>, Long> findMatchResultList(Pageable pageable, MatchingStatus matchingStatus);
 }

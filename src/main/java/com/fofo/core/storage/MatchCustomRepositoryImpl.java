@@ -41,26 +41,11 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                 .fetchOne());
     }
 
-    @Override
-    public List<MemberEntity> findMatchPossibleMembers() {
-        return jpaQueryFactory.select(member)
-                .from(member)
-                .leftJoin(match).on(member.id.eq(match.manMemberId).or(member.id.eq(match.womanMemberId)))
-                .where(
-                        member.approvalStatus.eq(ApprovalStatus.APPROVED), //멤버 승인상태
-                        member.status.ne(ActiveStatus.DELETED), //멤버 삭제되지 않은 상태
-                        matchPossible()
-                )
-                .orderBy(member.depositDate.asc())
-                .fetch();
-    }
-
     private BooleanExpression matchPossible() {
         return match.status.ne(ActiveStatus.DELETED).and(match.matchingStatus.eq(MatchingStatus.MATCHING_COMPLETED)) //매치 완료 상태
                 .or(match.status.eq(ActiveStatus.DELETED)) // 매치 삭제된 상태
                 .or(match.isNull()); //매치 진행 된 적 없는 상태
     }
-
 
     @Override
     public Pair<List<Tuple>, Long> findMatchResultList(final Pageable pageable, final MatchingStatus matchingStatus) {
