@@ -33,11 +33,20 @@ public class MatchUpdater {
                                      final Long womanId,
                                      final MatchAgreement womanAgreement,
                                      final MatchingStatus nextMatchingStatus) {
+        MemberEntity manMember = memberRepository.findByIdAndStatusNot(manId, ActiveStatus.DELETED)
+                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+        MemberEntity womanMember = memberRepository.findByIdAndStatusNot(womanId, ActiveStatus.DELETED)
+                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+
         if (MatchAgreement.N == manAgreement) {
-            updateMemberPassCount(manId);
+            manMember.usePassCount();
         }
         if (MatchAgreement.N == womanAgreement) {
-            updateMemberPassCount(womanId);
+            womanMember.usePassCount();
+        }
+        if (isMatchContinuePossible(manAgreement, womanAgreement)) {
+            manMember.setMatchableYn(MatchableYn.Y);
+            womanMember.setMatchableYn(MatchableYn.Y);
         }
 
         MemberMatchEntity matchEntity = matchRepository.findByIdAndStatusNot(id, ActiveStatus.DELETED)
@@ -45,40 +54,11 @@ public class MatchUpdater {
         matchEntity.setMatchingStatus(nextMatchingStatus);
         matchEntity.setManAgreement(manAgreement);
         matchEntity.setWomanAgreement(womanAgreement);
-        matchRepository.save(matchEntity);
-
-        if (isMatchContinuePossible(manAgreement, womanAgreement)) {
-            MemberEntity manMember = memberRepository.findByIdAndStatusNot(manId, ActiveStatus.DELETED)
-                    .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
-            MemberEntity womanMember = memberRepository.findByIdAndStatusNot(womanId, ActiveStatus.DELETED)
-                    .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
-
-            manMember.setMatchableYn(MatchableYn.Y);
-            memberRepository.save(manMember);
-            womanMember.setMatchableYn(MatchableYn.Y);
-            memberRepository.save(womanMember);
-        }
+        matchEntity.setStatus(ActiveStatus.UPDATED);
     }
 
     private boolean isMatchContinuePossible(final MatchAgreement manAgreement, final MatchAgreement womanAgreement) {
         return !(MatchAgreement.Y == manAgreement && MatchAgreement.Y == womanAgreement);
     }
 
-    private void updateMemberPassCount(final Long memberId) {
-        MemberEntity member = memberRepository.findByIdAndStatusNot(memberId, ActiveStatus.DELETED)
-                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
-        int nextChance = member.getChance();
-        int nextPassCount = member.getPassCount() - 1;
-        if (nextPassCount == 0){
-            if (member.getChance() == 1){
-                nextChance = 0;
-            } else {
-                nextChance--;
-                nextPassCount = 5;
-            }
-        }
-        member.setChance(nextChance);
-        member.setPassCount(nextPassCount);
-        memberRepository.save(member);
-    }
 }

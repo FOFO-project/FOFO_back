@@ -18,7 +18,7 @@ public record MatchRequestDto(
         @Schema(description = "여자 동의 여부", example = "N")
         MatchAgreement womanAgreement,
         @NotNull
-        @Schema(description = "현재 매치 상태", example = "MATCHING_PROGRESSING")
+        @Schema(description = "현재 매치 상태", example = "MATCHING_PENDING")
         MatchingStatus matchingStatus
 ) {
 }
