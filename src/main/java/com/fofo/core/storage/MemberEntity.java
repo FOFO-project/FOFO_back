@@ -254,7 +254,7 @@ public class MemberEntity extends BaseEntity {
 
     private void toDepositPendingStatus() {
         depositDate = null;
-        approvalStatus = ApprovalStatus.DEPOSIT_COMPLETED;
+        approvalStatus = ApprovalStatus.DEPOSIT_PENDING;
     }
 
 }
