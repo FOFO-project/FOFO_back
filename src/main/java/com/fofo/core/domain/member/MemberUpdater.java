@@ -103,6 +103,7 @@ public class MemberUpdater {
         }
 
         findMember.setApprovalStatus(ApprovalStatus.APPROVED);
+        findMember.setMatchableYn(MatchableYn.Y);
         findMember.setStatus(ActiveStatus.UPDATED);
     }
 

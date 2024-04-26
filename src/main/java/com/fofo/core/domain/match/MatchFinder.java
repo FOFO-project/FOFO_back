@@ -7,8 +7,6 @@ import com.fofo.core.storage.AddressEntity;
 import com.fofo.core.storage.MatchRepository;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberMatchEntity;
-import com.fofo.core.support.error.CoreApiException;
-import com.fofo.core.support.error.CoreErrorType;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
@@ -25,16 +23,6 @@ import java.util.Objects;
 public class MatchFinder {
 
     private final MatchRepository matchRepository;
-
-    public List<Member> findMatchPossibleMembers() {
-        List<MemberEntity> memberEntityList = matchRepository.findMatchPossibleMembers();
-        if (memberEntityList.isEmpty()){
-            throw new CoreApiException(CoreErrorType.MATCHABLE_MEMBER_NOT_FOUND);
-        }
-        return memberEntityList.stream()
-                .map(Member::from)
-                .toList();
-    }
 
     public Page<MatchResult> findMatches(final int page, final int size, final MatchingStatus matchingStatus) {
         PageRequest pageRequest = PageRequest.of(page, size);

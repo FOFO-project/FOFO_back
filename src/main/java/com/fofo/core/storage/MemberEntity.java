@@ -25,8 +25,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -39,9 +39,11 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "MEMBER", uniqueConstraints = {@UniqueConstraint(name = "KAKAO_ID_UNIQUE", columnNames = {"KAKAO_ID"})})
+@Table(name = "member", indexes = {
+        @Index(columnList = "kakaoId", unique = true),
+        @Index(columnList = "addressId")
+})
 public class MemberEntity extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_id")
@@ -134,6 +136,60 @@ public class MemberEntity extends BaseEntity {
     @Convert(converter = ActiveStatusConverter.class)
     private ActiveStatus status;
 
+    public static MemberEntity of(
+            final String kakaoId,
+            final String name,
+            final Gender gender,
+            final LocalDateTime birthday,
+            final Integer age,
+            final Integer height,
+            final String phoneNumber,
+            final AgeRelationType filteringConditionAgeRelation,
+            final String company,
+            final String job,
+            final String university,
+            final Mbti mbti,
+            final SmokingYn smokingYn,
+            final FilteringSmoker filteringSmoker,
+            final Religion religion,
+            final Religion filteringConditionReligion,
+            final String charmingPoint,
+            final LocalDateTime depositDate,
+            final String note,
+            final Integer passCount,
+            final Integer chance,
+            final ApprovalStatus approvalStatus,
+            final MatchableYn matchableYn,
+            final ActiveStatus status
+    ) {
+        return new MemberEntity(
+                kakaoId,
+                name,
+                gender,
+                birthday,
+                age,
+                height,
+                phoneNumber,
+                filteringConditionAgeRelation,
+                company,
+                job,
+                university,
+                mbti,
+                smokingYn,
+                filteringSmoker,
+                religion,
+                filteringConditionReligion,
+                charmingPoint,
+                depositDate,
+                note,
+                passCount,
+                chance,
+                approvalStatus,
+                matchableYn,
+                status);
+    }
+
+
     private MemberEntity(
             final String kakaoId,
             final String name,
@@ -186,57 +242,26 @@ public class MemberEntity extends BaseEntity {
         this.status = status;
     }
 
-    public static MemberEntity of(
-            final String kakaoId,
-            final String name,
-            final Gender gender,
-            final LocalDateTime birthday,
-            final Integer age,
-            final Integer height,
-            final String phoneNumber,
-            final AgeRelationType filteringConditionAgeRelation,
-            final String company,
-            final String job,
-            final String university,
-            final Mbti mbti,
-            final SmokingYn smokingYn,
-            final FilteringSmoker filteringSmoker,
-            final Religion religion,
-            final Religion filteringConditionReligion,
-            final String charmingPoint,
-            final LocalDateTime depositDate,
-            final String note,
-            final Integer passCount,
-            final Integer chance,
-            final ApprovalStatus approvalStatus,
-            final MatchableYn matchableYn,
-            final ActiveStatus status
-    ) {
-        return new MemberEntity(
-                kakaoId,
-                name,
-                gender,
-                birthday,
-                age,
-                height,
-                phoneNumber,
-                filteringConditionAgeRelation,
-                company,
-                job,
-                university,
-                mbti,
-                smokingYn,
-                filteringSmoker,
-                religion,
-                filteringConditionReligion,
-                charmingPoint,
-                depositDate,
-                note,
-                passCount,
-                chance,
-                approvalStatus,
-                matchableYn,
-                status);
+    public void decreaseChance() {
+        chance--;
+    }
+
+    public void usePassCount() {
+        passCount--;
+        if (passCount == 0) {
+            if (chance == 1) {
+                chance = 0;
+                toDepositPendingStatus();
+            } else {
+                chance--;
+                passCount = 5;
+            }
+        }
+    }
+
+    private void toDepositPendingStatus() {
+        depositDate = null;
+        approvalStatus = ApprovalStatus.DEPOSIT_PENDING;
     }
 
 }

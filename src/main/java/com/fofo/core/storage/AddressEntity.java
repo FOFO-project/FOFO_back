@@ -19,11 +19,9 @@ import org.springframework.data.geo.Point;
 @Setter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "Address")
+@Table(name = "address")
 public class AddressEntity extends BaseEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "address_id")
     private Long id;
 
