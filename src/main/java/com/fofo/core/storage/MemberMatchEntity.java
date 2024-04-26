@@ -12,6 +12,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -21,9 +22,11 @@ import lombok.Setter;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "MEMBER_MATCH")
+@Table(name ="member_match", indexes = {
+        @Index(columnList = "manMemberId"),
+        @Index(columnList = "womanMemberId")
+})
 public class MemberMatchEntity extends BaseEntity {
-
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "match_id")
     private Long id;
@@ -54,22 +57,6 @@ public class MemberMatchEntity extends BaseEntity {
     @Convert(converter = ActiveStatusConverter.class)
     private ActiveStatus status;
 
-    private MemberMatchEntity(
-            final Long manMemberId,
-            final Long womanMemberId,
-            final MatchAgreement manAgreement,
-            final MatchAgreement womanAgreement,
-            final MatchingStatus matchingStatus,
-            final ActiveStatus status
-    ){
-        this.manMemberId = manMemberId;
-        this.womanMemberId = womanMemberId;
-        this.manAgreement = manAgreement;
-        this.womanAgreement = womanAgreement;
-        this.matchingStatus = matchingStatus;
-        this.status = status;
-    }
-
     public static MemberMatchEntity of(
             final Long manMemberId,
             final Long womanMemberId,
@@ -85,5 +72,21 @@ public class MemberMatchEntity extends BaseEntity {
                 matchingStatus,
                 status
         );
+    }
+
+    private MemberMatchEntity(
+            final Long manMemberId,
+            final Long womanMemberId,
+            final MatchAgreement manAgreement,
+            final MatchAgreement womanAgreement,
+            final MatchingStatus matchingStatus,
+            final ActiveStatus status
+    ){
+        this.manMemberId = manMemberId;
+        this.womanMemberId = womanMemberId;
+        this.manAgreement = manAgreement;
+        this.womanAgreement = womanAgreement;
+        this.matchingStatus = matchingStatus;
+        this.status = status;
     }
 }
