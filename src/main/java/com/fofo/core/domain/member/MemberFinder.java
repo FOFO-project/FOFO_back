@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -50,7 +51,9 @@ public class MemberFinder {
     }
 
     public List<Member> findMatchableMembers() {
-        return memberRepository.findAllByMatchableYnAndStatusNot(MatchableYn.Y, ActiveStatus.DELETED).stream()
+        return memberRepository.findAllByMatchableYnAndStatusNot(MatchableYn.Y,
+                        ActiveStatus.DELETED,
+                        Pageable.unpaged(Sort.by(Sort.Direction.ASC, "depositDate"))).stream()
                 .map(Member::from)
                 .toList();
     }
