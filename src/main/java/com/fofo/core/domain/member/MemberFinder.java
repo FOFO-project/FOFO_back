@@ -50,7 +50,8 @@ public class MemberFinder {
     }
 
     public List<Member> findMatchableMembers() {
-        List<MemberEntity> memberEntityList = memberRepository.findAllByMatchableYnAndApprovalStatusAndStatusNot(MatchableYn.Y, ApprovalStatus.APPROVED, ActiveStatus.DELETED);
-        return memberEntityList.stream().map(Member::from).toList();
+        return memberRepository.findAllByMatchableYnAndStatusNot(MatchableYn.Y, ActiveStatus.DELETED).stream()
+                .map(Member::from)
+                .toList();
     }
 }

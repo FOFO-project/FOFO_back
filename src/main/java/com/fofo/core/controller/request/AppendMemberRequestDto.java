@@ -95,7 +95,7 @@ public record AppendMemberRequestDto(
                         filteringReligion,
                         charmingPoint,
                         ApprovalStatus.DEPOSIT_PENDING,
-                        MatchableYn.Y,
+                        MatchableYn.N,
                         ActiveStatus.CREATED
                 );
         }
