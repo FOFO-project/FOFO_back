@@ -239,6 +239,10 @@ public class MemberEntity extends BaseEntity {
         this.status = status;
     }
 
+    public void decreaseChance() {
+        chance--;
+    }
+
     public void usePassCount() {
         passCount--;
         if (passCount == 0) {
