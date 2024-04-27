@@ -43,4 +43,6 @@ public class MemberService {
     public List<Long> approve(final List<Long> memberIds) {
         return memberUpdater.approve(memberIds);
     }
+
+    public List<Long> updateMatchable(final List<Long> memberIds) { return memberUpdater.updateMatchable(memberIds);}
 }

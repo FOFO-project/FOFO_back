@@ -13,12 +13,13 @@ public enum CoreErrorCode {
     MEME503,
     MEME504,
     MEME505,
+    MEME506,
 
     // Match 관련 에러,
     MATE500,
     MATE501,
     MATE502,
     MATE503,
-    MATE504
+    MATE504,
     ;
 }
