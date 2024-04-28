@@ -1,9 +1,14 @@
 package com.fofo.core.domain.member;
 
+import com.fofo.core.support.error.CoreApiException;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.Arrays;
 
+import static com.fofo.core.support.error.CoreErrorType.ENUM_MAPPING_ERROR;
+
+@Getter
 @RequiredArgsConstructor
 public enum ApprovalStatus {
 
@@ -14,14 +19,10 @@ public enum ApprovalStatus {
 
     private final String codeValue;
 
-    public String codeValue() {
-        return codeValue;
-    }
-
     public static ApprovalStatus enumOfCode(final String codeValue) {
         return Arrays.stream(ApprovalStatus.values())
-                .filter(v -> v.codeValue().equals(codeValue))
+                .filter(v -> v.getCodeValue().equals(codeValue))
                 .findAny()
-                .orElseThrow(IllegalAccessError::new);
+                .orElseThrow(() -> new CoreApiException(ENUM_MAPPING_ERROR));
     }
 }

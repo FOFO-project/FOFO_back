@@ -1,8 +1,10 @@
 package com.fofo.core.domain.member;
 
 import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.domain.image.FileStore;
 import com.fofo.core.storage.AddressEntity;
 import com.fofo.core.storage.AddressRepository;
+import com.fofo.core.storage.ImageRepository;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
@@ -31,6 +33,8 @@ public class MemberUpdater {
     private static final Logger log = LoggerFactory.getLogger(MemberUpdater.class);
     private final MemberRepository memberRepository;
     private final AddressRepository addressRepository;
+    private final ImageRepository imageRepository;
+    private final FileStore fileStore;
 
     @Transactional
     public List<Long> remove(final List<Long> memberIds) {

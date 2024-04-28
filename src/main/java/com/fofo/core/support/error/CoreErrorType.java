@@ -26,7 +26,7 @@ public enum CoreErrorType {
     DEPOSIT_DATE_EXISTS_ERROR(HttpStatus.CONFLICT, CoreErrorCode.MEME504, "This member already has a deposit date.", LogLevel.ERROR),
     NOT_WAITING_FOR_APPROVE_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MEME505, "Approval status is not deposit complete status. Please check and try again.", LogLevel.ERROR),
 
-    //Match 관련 에러
+    // Match 관련 에러
     MATCH_ALREADY_COMPLETED_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MATE500, "Match is already COMPLETED.", LogLevel.ERROR),
     MATCH_UNCANCELABLE_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MATE501, "UnCancelable Match exists", LogLevel.ERROR),
     MATCHABLE_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, CoreErrorCode.MATE502, "Matchable member is not found", LogLevel.ERROR),
@@ -35,7 +35,10 @@ public enum CoreErrorType {
 
     //유틸 관련 에러
     AES_ENCRYPT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.UTLE500, "AES encrypt error has occured", LogLevel.ERROR),
-    AES_DECRYPT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.UTLE501, "AES decrypt error has occured", LogLevel.ERROR)
+    AES_DECRYPT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.UTLE501, "AES decrypt error has occured", LogLevel.ERROR),
+
+    // Image 관련 에러
+    IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, CoreErrorCode.IMGE500, "File Not found", LogLevel.ERROR)
     ;
 
     private final HttpStatus status;
@@ -45,4 +48,5 @@ public enum CoreErrorType {
     private final String message;
 
     private final LogLevel logLevel;
+
 }

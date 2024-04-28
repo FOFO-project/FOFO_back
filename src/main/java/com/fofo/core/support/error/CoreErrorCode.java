@@ -24,6 +24,8 @@ public enum CoreErrorCode {
 
     // 유틸 관련 에러
     UTLE500,
-    UTLE501
+    UTLE501,
+
+    IMGE500
     ;
 }
