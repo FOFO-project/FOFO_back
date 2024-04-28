@@ -59,8 +59,14 @@ public class MatchUpdater {
             if(MatchAgreement.N == womanAgreement) {
                 womanMember.usePassCount();
             }
-            manMember.setMatchableYn(MatchableYn.Y);
-            womanMember.setMatchableYn(MatchableYn.Y);
+
+            if(manMember.getChance() >  0) {
+                manMember.setMatchableYn(MatchableYn.Y);
+            }
+
+            if(womanMember.getChance() > 0) {
+                womanMember.setMatchableYn(MatchableYn.Y);
+            }
         }
 
         manMember.setStatus(ActiveStatus.UPDATED);
