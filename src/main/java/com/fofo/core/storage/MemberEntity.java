@@ -72,7 +72,7 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = false)
     private Integer height;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 50)
     private String phoneNumber;
 
     @Column(length = 10)
