@@ -30,7 +30,7 @@ public class AesUtil {
             byte[] keyByte = Base64.getDecoder().decode(aesKey);
             byte[] ivByte = Arrays.copyOfRange(keyByte, 0, 16);
 
-            Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
+            Cipher cipher = Cipher.getInstance("AES/CBC /PKCS5Padding");
 
             SecretKeySpec keySpec = new SecretKeySpec(keyByte, "AES");
             IvParameterSpec ivParamSpec = new IvParameterSpec(ivByte);
@@ -52,7 +52,7 @@ public class AesUtil {
             byte[] keyByte = Base64.getDecoder().decode(aesKey);
             byte[] ivByte = Arrays.copyOfRange(keyByte, 0, 16);
 
-            Cipher cipher = Cipher.getInstance("AES/CTR/NoPadding");
+            Cipher cipher = Cipher.getInstance("AES/CBC /PKCS5Padding");
             SecretKeySpec keySpec = new SecretKeySpec(keyByte, "AES");
             IvParameterSpec ivParamSpec = new IvParameterSpec(ivByte);
             cipher.init(Cipher.DECRYPT_MODE, keySpec, ivParamSpec);
