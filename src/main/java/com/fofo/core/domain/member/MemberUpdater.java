@@ -2,22 +2,17 @@ package com.fofo.core.domain.member;
 
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.image.FileStore;
-import com.fofo.core.domain.image.ImageType;
-import com.fofo.core.domain.image.UploadFile;
 import com.fofo.core.storage.AddressEntity;
 import com.fofo.core.storage.AddressRepository;
 import com.fofo.core.storage.ImageRepository;
 import com.fofo.core.storage.MemberEntity;
-import com.fofo.core.storage.MemberImageEntity;
 import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -91,21 +86,29 @@ public class MemberUpdater {
     }
 
     @Transactional
-    public long approve(final long memberId, String note, ImageType imageType, final MultipartFile imageFile) throws IOException {
+    public List<Long> approve(final List<Long> memberIds) {
+        return memberIds.stream()
+                .filter(memberId -> {
+                    try {
+                        approve(memberId);
+                        return false; // 성공적으로 승인된 경우, 실패 목록에 포함시키지 않음
+                    } catch (CoreApiException e) {
+                        return true; // 제거에 실패한 경우, 실패 목록에 포함
+                    }
+                })
+                .toList(); // 실패한 멤버 ID 들을 리스트로 수집
+    }
+
+    private void approve(final long memberId) {
         MemberEntity findMember = memberRepository.findByIdAndStatusNot(memberId, ActiveStatus.DELETED)
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
         if (findMember.getApprovalStatus() != ApprovalStatus.DEPOSIT_COMPLETED || findMember.getDepositDate() == null) {
             throw new CoreApiException(NOT_WAITING_FOR_APPROVE_ERROR);
         }
 
-        findMember.setNote(note);
         findMember.setApprovalStatus(ApprovalStatus.APPROVED);
         findMember.setMatchableYn(MatchableYn.Y);
         findMember.setStatus(ActiveStatus.UPDATED);
-
-        UploadFile uploadFile = fileStore.storeFile(imageFile, memberId);
-        MemberImageEntity imageEntity = MemberImageEntity.of(memberId, imageType, uploadFile.uploadFileName(), uploadFile.storeFileName(), ActiveStatus.CREATED);
-        return imageRepository.save(imageEntity).getId();
     }
 
     @Transactional
