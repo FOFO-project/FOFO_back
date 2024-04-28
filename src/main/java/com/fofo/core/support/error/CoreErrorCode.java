@@ -21,5 +21,9 @@ public enum CoreErrorCode {
     MATE502,
     MATE503,
     MATE504,
+
+    // 유틸 관련 에러
+    UTLE500,
+    UTLE501
     ;
 }

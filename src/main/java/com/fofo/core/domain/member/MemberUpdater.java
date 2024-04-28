@@ -133,7 +133,7 @@ public class MemberUpdater {
         Optional.ofNullable(updateMember.birthday()).ifPresent(findMember::setBirthday);
         Optional.ofNullable(updateMember.age()).ifPresent(findMember::setAge);
         Optional.ofNullable(updateMember.height()).ifPresent(findMember::setHeight);
-        Optional.ofNullable(updateMember.phoneNumber()).ifPresent(findMember::setPhoneNumber);
+        Optional.ofNullable(updateMember.phoneNumber()).ifPresent(findMember::setEncryptedPhoneNumber);
         Optional.ofNullable(updateMember.filteringAgeRelation()).ifPresent(findMember::setFilteringAgeRelation);
         Optional.ofNullable(updateMember.company()).ifPresent(findMember::setCompany);
         Optional.ofNullable(updateMember.job()).ifPresent(findMember::setJob);

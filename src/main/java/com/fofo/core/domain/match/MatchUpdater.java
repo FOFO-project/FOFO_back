@@ -24,7 +24,7 @@ public class MatchUpdater {
         MemberMatchEntity matchEntity = matchRepository.findByIdAndStatusNot(id, ActiveStatus.DELETED)
                 .orElseThrow(() -> new CoreApiException(CoreErrorType.MATCH_NOT_FOUND_ERROR));
         matchEntity.setMatchingStatus(nextMatchingStatus);
-        matchRepository.save(matchEntity);
+        matchEntity.setStatus(ActiveStatus.UPDATED);
     }
 
     public void updateMatchCompleted(final Long id,

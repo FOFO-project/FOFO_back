@@ -2,6 +2,7 @@ package com.fofo.core.domain.member;
 
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.storage.MemberEntity;
+import com.fofo.core.support.util.AesUtil;
 
 import java.time.LocalDateTime;
 
@@ -126,7 +127,7 @@ public record Member(
                 birthday,
                 age,
                 height,
-                phoneNumber,
+                AesUtil.encrypt(phoneNumber),
                 filteringAgeRelation,
                 company,
                 job,
