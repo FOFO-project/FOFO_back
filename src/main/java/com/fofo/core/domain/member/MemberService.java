@@ -1,13 +1,10 @@
 package com.fofo.core.domain.member;
 
-import com.fofo.core.domain.image.ImageType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -43,7 +40,7 @@ public class MemberService {
         return memberUpdater.confirmDeposit(memberIds);
     }
 
-    public long approve(final long memberId, String note, ImageType imageType, final MultipartFile imageFile) throws IOException {
-        return memberUpdater.approve(memberId, note, imageType, imageFile);
+    public List<Long> approve(final List<Long> memberIds) {
+        return memberUpdater.approve(memberIds);
     }
 }
