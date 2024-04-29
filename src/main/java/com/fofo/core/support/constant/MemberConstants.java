@@ -1,6 +1,6 @@
 package com.fofo.core.support.constant;
 
-public final class MemberConstants {
+public class MemberConstants {
 
     private MemberConstants() {}
 

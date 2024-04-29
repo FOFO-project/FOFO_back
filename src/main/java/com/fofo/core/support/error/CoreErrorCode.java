@@ -22,9 +22,9 @@ public enum CoreErrorCode {
     MATE503,
     MATE504,
 
-    // 유틸 관련 에러
-    UTLE500,
-    UTLE501,
+    // 암호화 관련 에러
+    ENCE500,
+    ENCE501,
 
     IMGE500
     ;

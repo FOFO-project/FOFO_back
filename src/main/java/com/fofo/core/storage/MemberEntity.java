@@ -17,7 +17,6 @@ import com.fofo.core.storage.converter.GenderConverter;
 import com.fofo.core.storage.converter.MatchableYnConverter;
 import com.fofo.core.storage.converter.ReligionConverter;
 import com.fofo.core.storage.converter.SmokingYnConverter;
-import com.fofo.core.support.util.AesUtil;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Entity;
@@ -271,9 +270,4 @@ public class MemberEntity extends BaseEntity {
         chance = DEFAULT_CHANCE;
         passCount = DEFAULT_PASS_COUNT;
     }
-
-    public void setEncryptedPhoneNumber(final String phoneNumber) {
-        this.phoneNumber = AesUtil.encrypt(phoneNumber);
-    }
-
 }
