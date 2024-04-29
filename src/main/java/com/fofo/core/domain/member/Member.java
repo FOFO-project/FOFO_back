@@ -6,6 +6,9 @@ import com.fofo.core.support.util.AesUtil;
 
 import java.time.LocalDateTime;
 
+import static com.fofo.core.support.constant.MemberConstants.DEFAULT_CHANCE;
+import static com.fofo.core.support.constant.MemberConstants.DEFAULT_PASS_COUNT;
+
 public record Member(
         Long id,
         String kakaoId,
@@ -79,8 +82,8 @@ public record Member(
                 charmingPoint,
                 null,
                 "",
-                5,
-                2,
+                DEFAULT_PASS_COUNT,
+                DEFAULT_CHANCE,
                 approvalStatus,
                 matchableYn,
                 status,
@@ -97,7 +100,7 @@ public record Member(
                 memberEntity.getBirthday(),
                 memberEntity.getAge(),
                 memberEntity.getHeight(),
-                memberEntity.getPhoneNumber(),
+                AesUtil.decrypt(memberEntity.getPhoneNumber()),
                 memberEntity.getFilteringAgeRelation(),
                 memberEntity.getCompany(),
                 memberEntity.getJob(),
