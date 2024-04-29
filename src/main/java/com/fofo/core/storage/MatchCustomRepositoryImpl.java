@@ -16,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     private final JPAQueryFactory jpaQueryFactory;
-    private final QMemberMatchEntity match = QMemberMatchEntity.memberMatchEntity;
+    private static final QMemberMatchEntity match = QMemberMatchEntity.memberMatchEntity;
     private final QMemberEntity manMember = new QMemberEntity("manMember");
     private final QMemberEntity womanMember = new QMemberEntity("womanMember");
     private final QAddressEntity manAddress = new QAddressEntity("manAddress");
@@ -58,7 +58,10 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
     }
 
     private BooleanExpression eqMatchingStatus(final MatchingStatus matchingStatus) {
-        return matchingStatus != null ? match.matchingStatus.eq(matchingStatus) : null;
+        if (matchingStatus == null){
+            return match.matchingStatus.eq(MatchingStatus.MATCHING_PENDING).or(match.matchingStatus.eq(MatchingStatus.MATCHING_PROGRESSING));
+        }
+        return match.matchingStatus.eq(matchingStatus);
     }
 
 }
