@@ -7,14 +7,12 @@ public record UpdateAddress(
         String sido,
         String sigungu,
         String eupmyundong,
-        GeoPoint location,
         ActiveStatus status
 ) {
     public static UpdateAddress of(final String zipcode,
                                    final String sido,
                                    final String sigungu,
-                                   final String eupmyundong,
-                                   final GeoPoint location) {
-        return new UpdateAddress(zipcode, sido, sigungu, eupmyundong, location, ActiveStatus.UPDATED);
+                                   final String eupmyundong) {
+        return new UpdateAddress(zipcode, sido, sigungu, eupmyundong, ActiveStatus.UPDATED);
     }
 }

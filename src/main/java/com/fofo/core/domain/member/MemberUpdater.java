@@ -12,9 +12,6 @@ import com.fofo.core.storage.MemberImageEntity;
 import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -35,7 +32,6 @@ import static com.fofo.core.support.error.CoreErrorType.NOT_WAITING_FOR_APPROVE_
 @RequiredArgsConstructor
 public class MemberUpdater {
 
-    private static final Logger log = LoggerFactory.getLogger(MemberUpdater.class);
     private final MemberRepository memberRepository;
     private final AddressRepository addressRepository;
     private final ImageRepository imageRepository;
@@ -165,7 +161,6 @@ public class MemberUpdater {
         Optional.ofNullable(updateAddress.sido()).ifPresent(findAddress::setSido);
         Optional.ofNullable(updateAddress.sigungu()).ifPresent(findAddress::setSigungu);
         Optional.ofNullable(updateAddress.eupmyundong()).ifPresent(findAddress::setEupmyundong);
-        Optional.ofNullable(updateAddress.location()).ifPresent(location -> findAddress.setLocation(new Point(location)));
         findAddress.setStatus(updateAddress.status());
     }
 

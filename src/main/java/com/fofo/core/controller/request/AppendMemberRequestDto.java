@@ -116,8 +116,7 @@ public record AppendMemberRequestDto(
                         null,
                         sido,
                         sigungu,
-                        eupmyundong,
-                        null
+                        eupmyundong
                 );
         }
 }
