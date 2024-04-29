@@ -41,7 +41,7 @@ public class AesUtil {
 
             return Base64.getEncoder().encodeToString(encrypted);
         } catch(Exception e){
-            log.error(e.getMessage());
+            log.error("Error on encrypt : ", e);
             throw new CoreApiException(CoreErrorType.AES_ENCRYPT_ERROR);
         }
     }
@@ -62,7 +62,7 @@ public class AesUtil {
 
             return new String(decrypted, StandardCharsets.UTF_8);
         } catch (Exception e){
-            log.error(e.getMessage());
+            log.error("Error on decrypt : ", e);
             throw new CoreApiException(CoreErrorType.AES_DECRYPT_ERROR);
         }
     }
