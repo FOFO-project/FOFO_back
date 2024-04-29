@@ -94,7 +94,6 @@ public record UpdateMemberRequestDto(
                 return UpdateAddress.of(address.zipcode(),
                         address.sido(),
                         address.sigungu(),
-                        address.eupmyundong(),
-                        address.location());
+                        address.eupmyundong());
         }
 }

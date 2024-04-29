@@ -12,7 +12,6 @@ import com.fofo.core.storage.MemberImageEntity;
 import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -161,7 +160,6 @@ public class MemberUpdater {
         Optional.ofNullable(updateAddress.sido()).ifPresent(findAddress::setSido);
         Optional.ofNullable(updateAddress.sigungu()).ifPresent(findAddress::setSigungu);
         Optional.ofNullable(updateAddress.eupmyundong()).ifPresent(findAddress::setEupmyundong);
-        Optional.ofNullable(updateAddress.location()).ifPresent(location -> findAddress.setLocation(new Point(location)));
         findAddress.setStatus(updateAddress.status());
     }
 }

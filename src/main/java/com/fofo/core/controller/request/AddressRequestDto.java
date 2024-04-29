@@ -1,6 +1,5 @@
 package com.fofo.core.controller.request;
 
-import com.fofo.core.domain.member.GeoPoint;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 
@@ -17,8 +16,6 @@ public record AddressRequestDto(
         String sigungu,
         @Schema(description = "읍면동", example = "등촌동")
         @Size(max = 20)
-        String eupmyundong,
-        @Schema(description = "위도,경도")
-        GeoPoint location
+        String eupmyundong
 ) {
 }

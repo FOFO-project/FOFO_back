@@ -2,10 +2,8 @@ package com.fofo.core.domain.member;
 
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.storage.AddressEntity;
-import org.springframework.data.geo.Point;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
 public record Address(
         Long id,
@@ -13,7 +11,6 @@ public record Address(
         String sido,
         String sigungu,
         String eupmyundong,
-        GeoPoint location,
         ActiveStatus status,
         LocalDateTime createdTime,
         LocalDateTime modifiedTime
@@ -22,9 +19,8 @@ public record Address(
             final String zipcode,
             final String sido,
             final String sigungu,
-            final String eupmyundong,
-            final GeoPoint location) {
-        return new Address(null, zipcode, sido, sigungu, eupmyundong, location, ActiveStatus.CREATED, null, null);
+            final String eupmyundong) {
+        return new Address(null, zipcode, sido, sigungu, eupmyundong, ActiveStatus.CREATED, null, null);
     }
 
     public static Address from(final AddressEntity addressEntity) {
@@ -34,20 +30,13 @@ public record Address(
                 addressEntity.getSido(),
                 addressEntity.getSigungu(),
                 addressEntity.getEupmyundong(),
-                new GeoPoint(addressEntity.getLocation()),
                 addressEntity.getStatus(),
                 addressEntity.getCreatedTime(),
                 addressEntity.getUpdatedTime());
     }
 
     public AddressEntity toEntity() {
-        Point location;
-        if (Objects.isNull(this.location)) {
-            location = null;
-        } else {
-            location = new Point(this.location);
-        }
-        return AddressEntity.of(zipcode, sido, sigungu, eupmyundong, location, status);
+        return AddressEntity.of(zipcode, sido, sigungu, eupmyundong, status);
     }
 
 }
