@@ -35,6 +35,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
 
+import static com.fofo.core.support.constant.MemberConstants.DEFAULT_CHANCE;
+import static com.fofo.core.support.constant.MemberConstants.DEFAULT_PASS_COUNT;
+
 @Getter
 @Setter
 @Entity
@@ -71,7 +74,7 @@ public class MemberEntity extends BaseEntity {
     @Column(nullable = false)
     private Integer height;
 
-    @Column(nullable = false, length = 30)
+    @Column(nullable = false, length = 50)
     private String phoneNumber;
 
     @Column(length = 10)
@@ -117,7 +120,7 @@ public class MemberEntity extends BaseEntity {
     private String note;
 
     @Setter
-    @Column(nullable = false, columnDefinition = "integer default 5")
+    @Column(nullable = false, columnDefinition = "integer default 4")
     private int passCount;
 
     @Setter
@@ -248,13 +251,14 @@ public class MemberEntity extends BaseEntity {
 
     public void usePassCount() {
         passCount--;
+        matchableYn = MatchableYn.Y;
         if (passCount == 0) {
             if (chance == 1) {
                 chance = 0;
                 toDepositPendingStatus();
             } else {
                 chance--;
-                passCount = 5;
+                passCount = DEFAULT_PASS_COUNT;
             }
         }
     }
@@ -263,6 +267,7 @@ public class MemberEntity extends BaseEntity {
         depositDate = null;
         approvalStatus = ApprovalStatus.DEPOSIT_PENDING;
         matchableYn = MatchableYn.N;
+        chance = DEFAULT_CHANCE;
+        passCount = DEFAULT_PASS_COUNT;
     }
-
 }

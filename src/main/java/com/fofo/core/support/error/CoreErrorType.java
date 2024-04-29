@@ -19,6 +19,7 @@ public enum CoreErrorType {
     DUPLICATE_MEMBER_ERROR(HttpStatus.CONFLICT, CoreErrorCode.MEME500, "Duplicate member error has occurred", LogLevel.ERROR),
     MEMBER_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, CoreErrorCode.MEME501, "Member Not found", LogLevel.ERROR),
     ADDRESS_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, CoreErrorCode.MEME502, "Address Not found", LogLevel.ERROR),
+    MEMBER_CANNOT_MATCHABLE_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MEME506, "Member cannot be matchable because of no chance or not approved status", LogLevel.ERROR),
 
     // Member 승인 상태 관련 에러
     NOT_PENDING_FOR_DEPOSIT_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MEME503, "Approval status is not deposit pending status. Please check and try again.", LogLevel.ERROR),
@@ -27,10 +28,14 @@ public enum CoreErrorType {
 
     // Match 관련 에러
     MATCH_ALREADY_COMPLETED_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MATE500, "Match is already COMPLETED.", LogLevel.ERROR),
-    MATCH_UNCANCELABLE_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MATE501, "UnCancelable Match exists", LogLevel.ERROR),
+    MATCH_NOT_CANCELABLE_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MATE501, "UnCancelable Match exists", LogLevel.ERROR),
     MATCHABLE_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, CoreErrorCode.MATE502, "Matchable member is not found", LogLevel.ERROR),
     MATCH_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, CoreErrorCode.MATE503, "Match Not found", LogLevel.ERROR),
     MATCH_SAME_GENDER_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MATE504, "Members of Match have same gender", LogLevel.ERROR),
+
+    //유틸 관련 에러
+    AES_ENCRYPT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.ENCE500, "AES encrypt error has occurred", LogLevel.ERROR),
+    AES_DECRYPT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.ENCE501, "AES decrypt error has occurred", LogLevel.ERROR),
 
     // Image 관련 에러
     IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, CoreErrorCode.IMGE500, "File Not found", LogLevel.ERROR)

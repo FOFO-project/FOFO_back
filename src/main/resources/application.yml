@@ -38,6 +38,8 @@ logging.level.org.hibernate.orm.jdbc.bind: trace
 
 file.dir: ${FILE_DIR}
 
+aes.key: ${AES_KEY}
+
 ---
 spring.config.activate.on-profile: dev
 server:
@@ -55,6 +57,8 @@ spring:
     hibernate:
       ddl-auto: update
 
+aes.key: ${AES_KEY}
+
 ---
 spring.config.activate.on-profile: prod
 server:
@@ -71,3 +75,5 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
+
+aes.key: ${AES_KEY}

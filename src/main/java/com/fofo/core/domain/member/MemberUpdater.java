@@ -12,6 +12,8 @@ import com.fofo.core.storage.MemberImageEntity;
 import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ import java.util.Optional;
 
 import static com.fofo.core.support.error.CoreErrorType.ADDRESS_NOT_FOUND_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.DEPOSIT_DATE_EXISTS_ERROR;
+import static com.fofo.core.support.error.CoreErrorType.MEMBER_CANNOT_MATCHABLE_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.MEMBER_NOT_FOUND_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.NOT_PENDING_FOR_DEPOSIT_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.NOT_WAITING_FOR_APPROVE_ERROR;
@@ -32,6 +35,7 @@ import static com.fofo.core.support.error.CoreErrorType.NOT_WAITING_FOR_APPROVE_
 @RequiredArgsConstructor
 public class MemberUpdater {
 
+    private static final Logger log = LoggerFactory.getLogger(MemberUpdater.class);
     private final MemberRepository memberRepository;
     private final AddressRepository addressRepository;
     private final ImageRepository imageRepository;
@@ -163,5 +167,32 @@ public class MemberUpdater {
         Optional.ofNullable(updateAddress.eupmyundong()).ifPresent(findAddress::setEupmyundong);
         Optional.ofNullable(updateAddress.location()).ifPresent(location -> findAddress.setLocation(new Point(location)));
         findAddress.setStatus(updateAddress.status());
+    }
+
+    @Transactional
+    public List<Long> updateMatchable(final List<Long> memberIds) {
+        return memberIds.stream()
+                .filter(memberId -> {
+                    try {
+                        updateMatchable(memberId);
+                        return false;
+                    } catch (CoreApiException e) {
+                        return true;
+                    }
+                })
+                .toList();
+    }
+
+    private void updateMatchable(Long memberId) {
+        MemberEntity findMember = memberRepository.findByIdAndStatusNot(memberId, ActiveStatus.DELETED)
+                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+        if(findMember.getMatchableYn() == MatchableYn.N
+                || findMember.getChance() < 1
+                || findMember.getApprovalStatus() != ApprovalStatus.APPROVED){
+            throw new CoreApiException(MEMBER_CANNOT_MATCHABLE_ERROR);
+        }
+
+        findMember.setMatchableYn(MatchableYn.Y);
+        findMember.setStatus(ActiveStatus.UPDATED);
     }
 }
