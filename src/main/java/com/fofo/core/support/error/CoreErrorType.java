@@ -19,7 +19,7 @@ public enum CoreErrorType {
     DUPLICATE_MEMBER_ERROR(HttpStatus.CONFLICT, CoreErrorCode.MEME500, "Duplicate member error has occurred", LogLevel.ERROR),
     MEMBER_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, CoreErrorCode.MEME501, "Member Not found", LogLevel.ERROR),
     ADDRESS_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, CoreErrorCode.MEME502, "Address Not found", LogLevel.ERROR),
-    MEMBER_NOT_MATCHABLE_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MEME506, "Member cannot be matchable because of no chance or not approved status", LogLevel.ERROR),
+    MEMBER_CANNOT_MATCHABLE_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MEME506, "Member cannot be matchable because of no chance or not approved status", LogLevel.ERROR),
 
     // Member 승인 상태 관련 에러
     NOT_PENDING_FOR_DEPOSIT_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MEME503, "Approval status is not deposit pending status. Please check and try again.", LogLevel.ERROR),

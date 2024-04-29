@@ -123,7 +123,7 @@ public class MemberController {
         return new ResponseEntity<>(ApiResult.success(new MembersResponseDto(failMemberIds)), HttpStatus.OK);
     }
 
-    @Operation(summary = "찬스 남은 멤버 매치 가능하도록 변경")
+    @Operation(summary = "찬스 남은 멤버 매칭가능변경 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "멤버 매치 가능 변경 성공")
     })

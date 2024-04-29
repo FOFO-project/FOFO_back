@@ -21,8 +21,8 @@ import java.util.Optional;
 
 import static com.fofo.core.support.error.CoreErrorType.ADDRESS_NOT_FOUND_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.DEPOSIT_DATE_EXISTS_ERROR;
+import static com.fofo.core.support.error.CoreErrorType.MEMBER_CANNOT_MATCHABLE_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.MEMBER_NOT_FOUND_ERROR;
-import static com.fofo.core.support.error.CoreErrorType.MEMBER_NOT_MATCHABLE_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.NOT_PENDING_FOR_DEPOSIT_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.NOT_WAITING_FOR_APPROVE_ERROR;
 
@@ -169,7 +169,6 @@ public class MemberUpdater {
                         updateMatchable(memberId);
                         return false;
                     } catch (CoreApiException e) {
-                        log.error(e.getMessage());
                         return true;
                     }
                 })
@@ -179,8 +178,10 @@ public class MemberUpdater {
     private void updateMatchable(Long memberId) {
         MemberEntity findMember = memberRepository.findByIdAndStatusNot(memberId, ActiveStatus.DELETED)
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
-        if(findMember.getChance() < 1 || findMember.getApprovalStatus() != ApprovalStatus.APPROVED){
-            throw new CoreApiException(MEMBER_NOT_MATCHABLE_ERROR);
+        if(findMember.getMatchableYn() == MatchableYn.N
+                || findMember.getChance() < 1
+                || findMember.getApprovalStatus() != ApprovalStatus.APPROVED){
+            throw new CoreApiException(MEMBER_CANNOT_MATCHABLE_ERROR);
         }
 
         findMember.setMatchableYn(MatchableYn.Y);

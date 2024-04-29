@@ -1,7 +1,6 @@
 package com.fofo.core.domain.match;
 
 import com.fofo.core.domain.ActiveStatus;
-import com.fofo.core.domain.member.MatchableYn;
 import com.fofo.core.storage.MatchRepository;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberMatchEntity;
@@ -58,14 +57,6 @@ public class MatchUpdater {
             }
             if(MatchAgreement.N == womanAgreement) {
                 womanMember.usePassCount();
-            }
-
-            if(manMember.getChance() >  0) {
-                manMember.setMatchableYn(MatchableYn.Y);
-            }
-
-            if(womanMember.getChance() > 0) {
-                womanMember.setMatchableYn(MatchableYn.Y);
             }
         }
 
