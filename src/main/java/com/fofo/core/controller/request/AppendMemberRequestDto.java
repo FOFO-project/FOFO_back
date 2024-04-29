@@ -13,30 +13,38 @@ import com.fofo.core.domain.member.Religion;
 import com.fofo.core.domain.member.SmokingYn;
 import com.fofo.core.support.util.AgeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Schema(description = "멤버 등록 요청")
 public record AppendMemberRequestDto(
         @Schema(description = "카카오톡 ID", example = "opr9982")
         @NotEmpty @Size(max = 20)
         String kakaoId,
-        @Valid @NotNull
-        AddressRequestDto address,
+        @Schema(description = "시도", example = "서울특별시")
+        @NotEmpty @Size(max = 20)
+        String sido,
+        @Schema(description = "시군구", example = "강서구")
+        @NotEmpty @Size(max = 20)
+        String sigungu,
+        @Schema(description = "읍면동", example = "등촌동")
+        @NotEmpty @Size(max = 20)
+        String eupmyundong,
         @Schema(description = "이름", example = "황성준")
         @NotEmpty @Size(max=10)
         String name,
         @Schema(description = "성별")
         @NotNull
         Gender gender,
-        @Schema(description = "생년월일", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX")
+        @Schema(description = "생년월일", pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX", example = "1997-11-16 00:00:00.000Z")
         @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         LocalDateTime birthday,
         @Schema(description = "키", example = "180")
@@ -72,7 +80,10 @@ public record AppendMemberRequestDto(
         Religion filteringReligion,
         @Schema(description = "어필 포인트", example = "저는 잘생겼습니다.")
         @Size(max=100)
-        String charmingPoint
+        String charmingPoint,
+        @NotEmpty
+        @Schema(description = "프로필 이미지 리스트")
+        List<MultipartFile> userProfileImages
 ) {
 
         public Member toMember() {
@@ -102,11 +113,11 @@ public record AppendMemberRequestDto(
 
         public Address toAddress() {
                 return Address.of(
-                        address.zipcode(),
-                        address.sido(),
-                        address.sigungu(),
-                        address.eupmyundong(),
-                        address.location()
+                        null,
+                        sido,
+                        sigungu,
+                        eupmyundong,
+                        null
                 );
         }
 }

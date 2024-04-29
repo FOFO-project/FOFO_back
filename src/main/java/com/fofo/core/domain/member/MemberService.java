@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -15,8 +17,8 @@ public class MemberService {
     private final MemberFinder memberFinder;
     private final MemberUpdater memberUpdater;
 
-    public long append(final Member member, final Address address) {
-        return memberAppender.append(member, address);
+    public long append(final Member member, final Address address, final List<MultipartFile> userProfileImages) throws IOException {
+        return memberAppender.append(member, address, userProfileImages);
     }
 
     public MemberWithAddress find(final long memberId) {
@@ -28,8 +30,8 @@ public class MemberService {
         return memberFinder.findAll(findMember, pageRequest);
     }
 
-    public long update(final long memberId, final UpdateMember updateMember, final UpdateAddress updateAddress) {
-        return memberUpdater.update(memberId, updateMember, updateAddress);
+    public long update(final long memberId, final UpdateMember updateMember, final UpdateAddress updateAddress, final MultipartFile profileCardImage) throws IOException {
+        return memberUpdater.update(memberId, updateMember, updateAddress, profileCardImage);
     }
 
     public List<Long> remove(final List<Long> memberIds) {

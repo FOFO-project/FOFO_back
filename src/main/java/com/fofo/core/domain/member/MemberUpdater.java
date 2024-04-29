@@ -2,17 +2,22 @@ package com.fofo.core.domain.member;
 
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.domain.image.FileStore;
+import com.fofo.core.domain.image.ImageType;
+import com.fofo.core.domain.image.UploadFile;
 import com.fofo.core.storage.AddressEntity;
 import com.fofo.core.storage.AddressRepository;
 import com.fofo.core.storage.ImageRepository;
 import com.fofo.core.storage.MemberEntity;
+import com.fofo.core.storage.MemberImageEntity;
 import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -112,7 +117,7 @@ public class MemberUpdater {
     }
 
     @Transactional
-    public long update(final long memberId, final UpdateMember updateMember, final UpdateAddress updateAddress) {
+    public long update(final long memberId, final UpdateMember updateMember, final UpdateAddress updateAddress, final MultipartFile cardImage) throws IOException {
         MemberEntity findMember = memberRepository.findByIdAndStatusNot(memberId, ActiveStatus.DELETED)
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
         updateMemberInfo(findMember, updateMember);
@@ -120,9 +125,12 @@ public class MemberUpdater {
         if (updateAddress != null) {
             AddressEntity findAddress = addressRepository.findByIdAndStatusNot(findMember.getAddressId(), ActiveStatus.DELETED)
                     .orElseThrow(() -> new CoreApiException(ADDRESS_NOT_FOUND_ERROR));
-
             updateAddressInfo(findAddress, updateAddress);
         }
+
+        UploadFile uploadFile = fileStore.storeFile(cardImage, memberId);
+        MemberImageEntity imageEntity = MemberImageEntity.of(memberId, ImageType.PROFILE_CARD, uploadFile.uploadFileName(), uploadFile.storeFileName(), ActiveStatus.CREATED);
+        imageRepository.save(imageEntity);
 
         return memberId;
     }
