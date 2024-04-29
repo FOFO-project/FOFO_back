@@ -15,6 +15,7 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -62,7 +63,9 @@ public record UpdateMemberRequestDto(
         String charmingPoint,
         @Schema(description = "비고", example = "이 회원은 요주의 회원입니다.")
         @Size(max=100)
-        String note
+        String note,
+        @Schema(description = "카드 이미지")
+        MultipartFile profileCardImage
 ) {
         public UpdateMember toUpdateMember() {
                 return UpdateMember.of(name,

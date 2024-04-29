@@ -21,6 +21,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "맴버 API")
@@ -46,9 +48,9 @@ public class MemberController {
             @ApiResponse(responseCode = "201", description = "멤버 등록 성공"),
             @ApiResponse(responseCode = "409", description = "멤버 중복 등록 Conflict")
     })
-    @PostMapping("/member")
-    public ResponseEntity<ApiResult<MemberResponseDto>> appendMember(@RequestBody @Valid final AppendMemberRequestDto request) {
-        long appendMemberId = memberService.append(request.toMember(), request.toAddress());
+    @PostMapping(value = "/member", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ApiResult<MemberResponseDto>> appendMember(@ModelAttribute @Valid final AppendMemberRequestDto request) throws IOException {
+        long appendMemberId = memberService.append(request.toMember(), request.toAddress(), request.userProfileImages());
         return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(appendMemberId)), HttpStatus.CREATED);
     }
 
@@ -86,8 +88,8 @@ public class MemberController {
     @PatchMapping("/members/{memberId}")
     public ResponseEntity<ApiResult<MemberResponseDto>> updateMember(
             @PathVariable("memberId") final long memberId,
-            @RequestBody @Valid final UpdateMemberRequestDto request) {
-        long updateMemberId = memberService.update(memberId, request.toUpdateMember(), request.toUpdateAddress());
+            @RequestBody @Valid final UpdateMemberRequestDto request) throws IOException {
+        long updateMemberId = memberService.update(memberId, request.toUpdateMember(), request.toUpdateAddress(), request.profileCardImage());
         return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(updateMemberId)), HttpStatus.OK);
     }
 
