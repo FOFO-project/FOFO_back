@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.fofo.core.support.error.CoreErrorType.MATCHABLE_MEMBER_NOT_FOUND;
 import static com.fofo.core.support.error.CoreErrorType.MEMBER_NOT_FOUND_ERROR;
 
 @Component
@@ -35,27 +36,26 @@ public class MatchAppender {
                     .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
 
             manMember.setMatchableYn(MatchableYn.N);
-            memberRepository.save(manMember);
             womanMember.setMatchableYn(MatchableYn.N);
-            memberRepository.save(womanMember);
         });
 
     }
 
     @Transactional
     public void appendMatch(final Long manMemberId, final Long womanMemberId) {
-        MemberEntity manMemberEntity = matchRepository.findMatchPossibleMemberById(manMemberId)
-                .orElseThrow(() -> new CoreApiException(CoreErrorType.MATCHABLE_MEMBER_NOT_FOUND));
-        MemberEntity womanMemberEntity = matchRepository.findMatchPossibleMemberById(womanMemberId)
-                .orElseThrow(() -> new CoreApiException(CoreErrorType.MATCHABLE_MEMBER_NOT_FOUND));
+        MemberEntity manMemberEntity = memberRepository.findByIdAndStatusNot(manMemberId, ActiveStatus.DELETED)
+                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+        MemberEntity womanMemberEntity = memberRepository.findByIdAndStatusNot(womanMemberId, ActiveStatus.DELETED)
+                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+        if(manMemberEntity.getMatchableYn() == MatchableYn.N || womanMemberEntity.getMatchableYn() == MatchableYn.N){
+            throw new CoreApiException(MATCHABLE_MEMBER_NOT_FOUND);
+        }
         if(manMemberEntity.getGender().equals(womanMemberEntity.getGender())){
             throw new CoreApiException(CoreErrorType.MATCH_SAME_GENDER_ERROR);
         }
 
         manMemberEntity.setMatchableYn(MatchableYn.N);
-        memberRepository.save(manMemberEntity);
         womanMemberEntity.setMatchableYn(MatchableYn.N);
-        memberRepository.save(womanMemberEntity);
 
         matchRepository.save(MemberMatchEntity.of(
                 manMemberEntity.getId(),

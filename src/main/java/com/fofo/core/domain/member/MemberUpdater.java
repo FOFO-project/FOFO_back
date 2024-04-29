@@ -12,6 +12,7 @@ import com.fofo.core.storage.MemberImageEntity;
 import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -161,5 +162,32 @@ public class MemberUpdater {
         Optional.ofNullable(updateAddress.sigungu()).ifPresent(findAddress::setSigungu);
         Optional.ofNullable(updateAddress.eupmyundong()).ifPresent(findAddress::setEupmyundong);
         findAddress.setStatus(updateAddress.status());
+    }
+
+    @Transactional
+    public List<Long> updateMatchable(final List<Long> memberIds) {
+        return memberIds.stream()
+                .filter(memberId -> {
+                    try {
+                        updateMatchable(memberId);
+                        return false;
+                    } catch (CoreApiException e) {
+                        return true;
+                    }
+                })
+                .toList();
+    }
+
+    private void updateMatchable(Long memberId) {
+        MemberEntity findMember = memberRepository.findByIdAndStatusNot(memberId, ActiveStatus.DELETED)
+                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
+        if(findMember.getMatchableYn() == MatchableYn.N
+                || findMember.getChance() < 1
+                || findMember.getApprovalStatus() != ApprovalStatus.APPROVED){
+            throw new CoreApiException(MEMBER_CANNOT_MATCHABLE_ERROR);
+        }
+
+        findMember.setMatchableYn(MatchableYn.Y);
+        findMember.setStatus(ActiveStatus.UPDATED);
     }
 }

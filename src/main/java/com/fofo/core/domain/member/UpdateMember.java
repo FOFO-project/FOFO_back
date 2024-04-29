@@ -1,6 +1,7 @@
 package com.fofo.core.domain.member;
 
 import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.support.util.AesUtil;
 
 import java.time.LocalDateTime;
 
@@ -47,7 +48,7 @@ public record UpdateMember(
                 age,
                 height,
                 filteringAgeRelation,
-                phoneNumber,
+                AesUtil.encrypt(phoneNumber),
                 company,
                 job,
                 university,

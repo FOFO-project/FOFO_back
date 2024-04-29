@@ -7,13 +7,13 @@ import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberMatchEntity;
 import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
-import com.fofo.core.support.error.CoreErrorType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
+import static com.fofo.core.support.error.CoreErrorType.MATCH_NOT_CANCELABLE_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.MEMBER_NOT_FOUND_ERROR;
 
 @Component
@@ -32,7 +32,7 @@ public class MatchRemover {
 
     private void updateCancel(MemberMatchEntity matchEntity) {
         if(!MatchingStatus.MATCHING_PENDING.equals(matchEntity.getMatchingStatus())){
-            throw new CoreApiException(CoreErrorType.MATCH_UNCANCELABLE_ERROR);
+            throw new CoreApiException(MATCH_NOT_CANCELABLE_ERROR);
         }
 
         matchEntity.setStatus(ActiveStatus.DELETED);

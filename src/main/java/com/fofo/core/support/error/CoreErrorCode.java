@@ -13,6 +13,7 @@ public enum CoreErrorCode {
     MEME503,
     MEME504,
     MEME505,
+    MEME506,
 
     // Match 관련 에러,
     MATE500,
@@ -20,6 +21,10 @@ public enum CoreErrorCode {
     MATE502,
     MATE503,
     MATE504,
+
+    // 암호화 관련 에러
+    ENCE500,
+    ENCE501,
 
     IMGE500
     ;
