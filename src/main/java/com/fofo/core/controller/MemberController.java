@@ -85,10 +85,10 @@ public class MemberController {
             @ApiResponse(responseCode = "200", description = "멤버 수정 성공"),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 멤버")
     })
-    @PatchMapping("/members/{memberId}")
+    @PatchMapping(value = "/members/{memberId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResult<MemberResponseDto>> updateMember(
             @PathVariable("memberId") final long memberId,
-            @RequestBody @Valid final UpdateMemberRequestDto request) throws IOException {
+            @ModelAttribute @Valid final UpdateMemberRequestDto request) throws IOException {
         long updateMemberId = memberService.update(memberId, request.toUpdateMember(), request.toUpdateAddress(), request.profileCardImage());
         return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(updateMemberId)), HttpStatus.OK);
     }
