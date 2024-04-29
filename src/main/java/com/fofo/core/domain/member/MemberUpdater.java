@@ -12,7 +12,6 @@ import com.fofo.core.storage.MemberImageEntity;
 import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.geo.Point;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,6 +23,7 @@ import java.util.Optional;
 
 import static com.fofo.core.support.error.CoreErrorType.ADDRESS_NOT_FOUND_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.DEPOSIT_DATE_EXISTS_ERROR;
+import static com.fofo.core.support.error.CoreErrorType.MEMBER_CANNOT_MATCHABLE_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.MEMBER_NOT_FOUND_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.NOT_PENDING_FOR_DEPOSIT_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.NOT_WAITING_FOR_APPROVE_ERROR;

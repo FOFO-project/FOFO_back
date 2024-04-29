@@ -80,3 +80,6 @@ Temporary Items
 
 ### ssl key Store ###
 /src/main/resources/ssl/
+
+## image file ###
+file/
