@@ -16,12 +16,12 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member_image", indexes = {@Index(columnList = "memberId")})
 public class MemberImageEntity extends BaseEntity {
 
-    @Getter
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "member_image_id")
@@ -34,11 +34,9 @@ public class MemberImageEntity extends BaseEntity {
     @Column(nullable = false)
     private ImageType type;
 
-    @Getter
     @Column(nullable = false)
     private String uploadFileName;
 
-    @Getter
     @Column(nullable = false)
     private String storeFileName;
 

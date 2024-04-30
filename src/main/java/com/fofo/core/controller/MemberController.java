@@ -8,6 +8,7 @@ import com.fofo.core.controller.request.UpdateMemberRequestDto;
 import com.fofo.core.controller.response.FindMemberResponseDto;
 import com.fofo.core.controller.response.MemberResponseDto;
 import com.fofo.core.controller.response.MembersResponseDto;
+import com.fofo.core.domain.member.FormService;
 import com.fofo.core.domain.member.MemberService;
 import com.fofo.core.support.response.ApiResult;
 import com.fofo.core.support.response.PageInfo;
@@ -42,6 +43,7 @@ import java.util.List;
 public class MemberController {
 
     private final MemberService memberService;
+    private final FormService formService;
 
     @Operation(summary = "맴버 등록 API")
     @ApiResponses(value = {
@@ -61,7 +63,7 @@ public class MemberController {
     })
     @GetMapping("/members/{memberId}")
     public ResponseEntity<ApiResult<FindMemberResponseDto>> findMember(@PathVariable("memberId") final long memberId) {
-        FindMemberResponseDto response = FindMemberResponseDto.from(memberService.find(memberId));
+        FindMemberResponseDto response = FindMemberResponseDto.from(formService.find(memberId));
         return new ResponseEntity<>(ApiResult.success(response), HttpStatus.OK);
     }
 
@@ -75,7 +77,7 @@ public class MemberController {
             @RequestParam(value = "pageNumber", required = false, defaultValue = "0") final int pageNumber,
             @Positive @RequestParam(value = "pageSize", required = false, defaultValue = "20") final int pageSize
     ) {
-        Page<FindMemberResponseDto> response = memberService.findAll(condition.toFindMember(), pageNumber, pageSize).map(FindMemberResponseDto::from);
+        Page<FindMemberResponseDto> response = formService.findAll(condition.toFindMember(), pageNumber, pageSize).map(FindMemberResponseDto::from);
         PageInfo pageInfo = new PageInfo(pageNumber, pageSize, (int) response.getTotalElements(), response.getTotalPages());
         return new ResponseEntity<>(ApiResult.success(PageResult.of(response.getContent(), pageInfo)), HttpStatus.OK);
     }
