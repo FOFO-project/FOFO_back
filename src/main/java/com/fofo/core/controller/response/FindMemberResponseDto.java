@@ -44,19 +44,19 @@ public record FindMemberResponseDto(
         ApprovalStatus approvalStatus,
         MatchableYn matchableYn,
         ActiveStatus status,
-        List<Long> userProfileImageId,
-        Long profileImageIds,
+        List<Long> userProfileImageIds,
+        Long profileImageId,
         LocalDateTime createdTime,
         LocalDateTime modifiedTime
 ) {
     public static FindMemberResponseDto from(final Form form) {
         Member member = form.memberWithAddress().member();
         List<Image> images = form.images();
-        List<Long> userProfileImageId = images.stream()
+        List<Long> userProfileImageIds = images.stream()
                 .filter(image -> ImageType.USER_PROFILE == image.type())
                 .map(Image::id)
                 .toList();
-        Long profileImageIds = images.stream()
+        Long profileImageId = images.stream()
                 .filter(image -> ImageType.PROFILE_CARD == image.type())
                 .map(Image::id)
                 .findAny()
@@ -89,8 +89,8 @@ public record FindMemberResponseDto(
                 member.approvalStatus(),
                 member.matchableYn(),
                 member.status(),
-                userProfileImageId,
-                profileImageIds,
+                userProfileImageIds,
+                profileImageId,
                 member.createdTime(),
                 member.modifiedTime()
         );
