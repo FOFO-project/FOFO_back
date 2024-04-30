@@ -48,7 +48,7 @@ public record AppendMemberRequestDto(
         @NotNull @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
         LocalDateTime birthday,
         @Schema(description = "키", example = "180")
-        @Positive
+        @NotNull @Positive
         int height,
         @Schema(description = "휴대전화번호", example = "01012345678")
         @NotEmpty @Pattern(regexp = "^01([0|1|6|7|8|9])(-)?([0-9]{3,4})(-)?([0-9]{4})$")
