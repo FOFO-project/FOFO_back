@@ -157,7 +157,6 @@ public class MemberUpdater {
     }
 
     private void updateAddressInfo(final AddressEntity findAddress, final UpdateAddress updateAddress) {
-        Optional.ofNullable(updateAddress.zipcode()).ifPresent(findAddress::setZipCode);
         Optional.ofNullable(updateAddress.sido()).ifPresent(findAddress::setSido);
         Optional.ofNullable(updateAddress.sigungu()).ifPresent(findAddress::setSigungu);
         Optional.ofNullable(updateAddress.eupmyundong()).ifPresent(findAddress::setEupmyundong);
