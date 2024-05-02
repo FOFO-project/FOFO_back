@@ -4,7 +4,9 @@ name: Java CI with Gradle
 # 워크 플로우가 언제 실행 될지를 정한다.
 on:
   push:
-    branches:  ["main"]
+    branches:
+      - 'main'
+      - 'develop'
 
 # 워크플로우에서 할 작업 정의한다.
 jobs:
@@ -25,7 +27,7 @@ jobs:
 
       # Gradle 빌드 엑션을 이용해서 프로젝트 빌드
       - name: Build with Gradle
-        uses: gradle/gradle-build-action@v3
+        uses: gradle/actions/setup-gradle@v3
         with:
           arguments: build
 
@@ -36,10 +38,11 @@ jobs:
           name: core-api
           path: build/libs/*.jar
 
-  # 배포 **
-  deploy:
+  # 배포
+  deploy-dev:
     needs: build
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/develop'
 
     # 빌드한 artifact 다운로드
     steps:
@@ -49,23 +52,55 @@ jobs:
           name: core-api
           path: build/libs/
 
-      # EC2에 배포
-      - name: Deploy to server
+      # 개발 서버에 배포
+      - name: Deploy to dev server
         uses: appleboy/scp-action@master
         with:
-          host: ${{secrets.HOST}}
-          username: ${{secrets.USERNAME}}
+          host: ${{secrets.DEV_HOST}}
+          username: ${{secrets.DEV_USERNAME}}
           key: ${{secrets.SSH_KEY}}
           source: "build/libs/*.jar"
-          target: "/home/${{secrets.USERNAME}}/appdata/core-api"
-          strip_components: 2
+          target: "/home/${{secrets.DEV_USERNAME}}/appdata/core-api"
+          strip_components: 1
 
       - name: Restart Process
         uses: appleboy/ssh-action@master
         with:
-          host: ${{secrets.HOST}}
-          username: ${{secrets.USERNAME}}
+          host: ${{secrets.DEV_HOST}}
+          username: ${{secrets.DEV_USERNAME}}
           key: ${{secrets.SSH_KEY}}
           script: |
-            cd /home/${{secrets.USERNAME}}/appdata/core-api/scripts
-            sh restart.sh
+            sh /home/${{secrets.DEV_USERNAME}}/appdata/core-api/scripts/restart.sh
+
+  deploy-prod:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    # 빌드한 artifact 다운로드
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: core-api
+          path: build/libs/
+
+      # 운영 서버에 배포
+      - name: Deploy to prod server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{secrets.PROD_HOST}}
+          username: ${{secrets.PROD_USERNAME}}
+          key: ${{secrets.SSH_KEY}}
+          source: "build/libs/*.jar"
+          target: "/home/${{secrets.PROD_USERNAME}}/appdata/core-api"
+          strip_components: 1
+
+      - name: Restart Process
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{secrets.PROD_HOST}}
+          username: ${{secrets.PROD_USERNAME}}
+          key: ${{secrets.SSH_KEY}}
+          script: |
+            sh /home/${{secrets.PROD_USERNAME}}/appdata/core-api/scripts/restart.sh
