@@ -10,7 +10,6 @@ import com.fofo.core.domain.member.UpdateAddress;
 import com.fofo.core.domain.member.UpdateMember;
 import com.fofo.core.support.util.AgeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -21,8 +20,15 @@ import java.time.LocalDateTime;
 
 @Schema(description = "멤버 수정 요청")
 public record UpdateMemberRequestDto(
-        @Valid
-        AddressRequestDto address,
+        @Schema(description = "시도", example = "서울특별시")
+        @Size(max = 20)
+        String sido,
+        @Schema(description = "시군구", example = "강서구")
+        @Size(max = 20)
+        String sigungu,
+        @Schema(description = "읍면동", example = "등촌동")
+        @Size(max = 20)
+        String eupmyundong,
         @Schema(description = "이름", example = "황성준")
         @Size(max=10)
         String name,
@@ -88,12 +94,6 @@ public record UpdateMemberRequestDto(
         }
 
         public UpdateAddress toUpdateAddress() {
-                if (address == null) {
-                        return null;
-                }
-                return UpdateAddress.of(address.zipcode(),
-                        address.sido(),
-                        address.sigungu(),
-                        address.eupmyundong());
+                return UpdateAddress.of(sido, sigungu, eupmyundong);
         }
 }
