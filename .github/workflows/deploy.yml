@@ -61,7 +61,7 @@ jobs:
           key: ${{secrets.SSH_KEY}}
           source: "build/libs/*.jar"
           target: "/home/${{secrets.DEV_USERNAME}}/appdata/core-api"
-          strip_components: 1
+          strip_components: 2
 
       - name: Restart Process
         uses: appleboy/ssh-action@master
@@ -94,7 +94,7 @@ jobs:
           key: ${{secrets.SSH_KEY}}
           source: "build/libs/*.jar"
           target: "/home/${{secrets.PROD_USERNAME}}/appdata/core-api"
-          strip_components: 1
+          strip_components: 2
 
       - name: Restart Process
         uses: appleboy/ssh-action@master
