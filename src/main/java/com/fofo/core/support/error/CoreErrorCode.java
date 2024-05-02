@@ -26,7 +26,6 @@ public enum CoreErrorCode {
     ENCE500,
     ENCE501,
 
-    IMGE500,
-    IMGE501
+    IMGE500
     ;
 }

@@ -1,6 +1,5 @@
 package com.fofo.core.domain.image;
 
-import com.fofo.core.support.error.CoreApiException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -11,8 +10,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import static com.fofo.core.support.error.CoreErrorType.IMAGE_MUST_NOT_BE_NULL;
 
 @Component
 @RequiredArgsConstructor
@@ -48,7 +45,7 @@ public class FileStore {
 
     public UploadFile storeFile(final MultipartFile multipartFile, final long memberId) throws IOException {
         if (multipartFile.isEmpty()) {
-            throw new CoreApiException(IMAGE_MUST_NOT_BE_NULL);
+            return null;
         }
 
         String originalFilename = multipartFile.getOriginalFilename();
