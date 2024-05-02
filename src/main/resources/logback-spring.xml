@@ -12,7 +12,7 @@
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${LOG_DIR}/core-api-%d{${LOG_DATE_FORMAT}}.log</fileNamePattern>
             <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
-            <maxHistory>90</maxHistory>
+            <maxHistory>${MAX_HISTORY}</maxHistory>
         </rollingPolicy>
         <encoder>
             <pattern>${LOG_PATTERN}</pattern>
