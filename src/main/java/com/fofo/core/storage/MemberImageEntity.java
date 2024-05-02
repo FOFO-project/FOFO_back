@@ -44,6 +44,14 @@ public class MemberImageEntity extends BaseEntity {
     @Convert(converter = ActiveStatusConverter.class)
     private ActiveStatus status;
 
+    public static MemberImageEntity of(final long memberId,
+                                       final ImageType type,
+                                       final String uploadFileName,
+                                       final String storeFileName,
+                                       final ActiveStatus status) {
+        return new MemberImageEntity(memberId, type, uploadFileName, storeFileName, status);
+    }
+
     private MemberImageEntity(final long memberId,
                               final ImageType type,
                               final String uploadFileName,
@@ -56,11 +64,10 @@ public class MemberImageEntity extends BaseEntity {
         this.status = status;
     }
 
-    public static MemberImageEntity of(final long memberId,
-                                       final ImageType type,
-                                       final String uploadFileName,
-                                       final String storeFileName,
-                                       final ActiveStatus status) {
-        return new MemberImageEntity(memberId, type, uploadFileName, storeFileName, status);
+    public void updateProfileCardImage(final String uploadFileName, final String storeFileName) {
+        this.uploadFileName = uploadFileName;
+        this.storeFileName = storeFileName;
+        this.status = ActiveStatus.UPDATED;
     }
+
 }
