@@ -52,13 +52,6 @@ public class MatchService {
         for(MatchRequestDto matchRequestDto : matchRequestDtoList){
             MatchingStatus nextMatchingStatus = matchManager.getNextMatchingStatus(matchRequestDto.matchingStatus());
 
-            if(nextMatchingStatus == MatchingStatus.MATCHING_PROGRESSING
-                    && matchRequestDto.manAgreement() != null
-                    && matchRequestDto.womanAgreement() != null
-            ){
-                nextMatchingStatus = MatchingStatus.MATCHING_COMPLETED;
-            }
-
             if(MatchingStatus.MATCHING_PROGRESSING == nextMatchingStatus){
                 matchUpdater.updateMatchProgressing(
                         matchRequestDto.id(),
