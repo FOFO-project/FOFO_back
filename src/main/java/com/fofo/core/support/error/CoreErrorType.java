@@ -38,8 +38,7 @@ public enum CoreErrorType {
     AES_DECRYPT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.ENCE501, "AES decrypt error has occurred", LogLevel.ERROR),
 
     // Image 관련 에러
-    IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, CoreErrorCode.IMGE500, "File Not found", LogLevel.ERROR),
-    IMAGE_MUST_NOT_BE_NULL(HttpStatus.BAD_REQUEST, CoreErrorCode.IMGE501, "File must not be null", LogLevel.ERROR)
+    IMAGE_NOT_FOUND(HttpStatus.NOT_FOUND, CoreErrorCode.IMGE500, "File Not found", LogLevel.ERROR)
     ;
 
     private final HttpStatus status;
