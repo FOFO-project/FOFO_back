@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration>
+<configuration scan="true" scanPeriod="60 seconds">
 
     <property name="LOG_DIR" value="${LOG_DIR}" />
-    <property name="LOG_DATE_FORMAT" value="yyyy-MM-dd" />
+    <property name="LOG_DATE_FORMAT" value="yyyyMMdd" />
     <property name="LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n" />
     <property name="MAX_FILE_SIZE" value="10MB" />
     <property name="MAX_HISTORY" value="30" />
