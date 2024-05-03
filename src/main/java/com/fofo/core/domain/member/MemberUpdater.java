@@ -128,17 +128,19 @@ public class MemberUpdater {
             updateAddressInfo(findAddress, updateAddress);
         }
 
-        UploadFile uploadFile = fileStore.storeFile(cardImage, memberId);
-        MemberImageEntity findImage = imageRepository.findByMemberIdAndStatusNot(memberId, ActiveStatus.DELETED).stream()
-                .filter(v -> v.getType() == ImageType.PROFILE_CARD)
-                .findAny()
-                .orElse(null);
+        if (!cardImage.isEmpty()) {
+            UploadFile uploadFile = fileStore.storeFile(cardImage, memberId);
+            MemberImageEntity findImage = imageRepository.findByMemberIdAndStatusNot(memberId, ActiveStatus.DELETED).stream()
+                    .filter(v -> v.getType() == ImageType.PROFILE_CARD)
+                    .findAny()
+                    .orElse(null);
 
-        if (findImage == null) {
-            MemberImageEntity saveImage = MemberImageEntity.of(memberId, ImageType.PROFILE_CARD, uploadFile.uploadFileName(), uploadFile.storeFileName(), ActiveStatus.CREATED);
-            imageRepository.save(saveImage);
-        } else {
-            findImage.updateProfileCardImage(uploadFile.uploadFileName(), uploadFile.storeFileName());
+            if (findImage == null) {
+                MemberImageEntity saveImage = MemberImageEntity.of(memberId, ImageType.PROFILE_CARD, uploadFile.uploadFileName(), uploadFile.storeFileName(), ActiveStatus.CREATED);
+                imageRepository.save(saveImage);
+            } else {
+                findImage.updateProfileCardImage(uploadFile.uploadFileName(), uploadFile.storeFileName());
+            }
         }
 
         return memberId;
