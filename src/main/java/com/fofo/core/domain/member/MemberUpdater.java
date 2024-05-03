@@ -128,7 +128,7 @@ public class MemberUpdater {
             updateAddressInfo(findAddress, updateAddress);
         }
 
-        if (!cardImage.isEmpty()) {
+        if ((cardImage != null) && (!cardImage.isEmpty())) {
             UploadFile uploadFile = fileStore.storeFile(cardImage, memberId);
             MemberImageEntity findImage = imageRepository.findByMemberIdAndStatusNot(memberId, ActiveStatus.DELETED).stream()
                     .filter(v -> v.getType() == ImageType.PROFILE_CARD)
