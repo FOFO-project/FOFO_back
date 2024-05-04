@@ -37,7 +37,7 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                         manMember.status.ne(ActiveStatus.DELETED),
                         womanMember.status.ne(ActiveStatus.DELETED)
                 )
-                .orderBy(match.createdTime.desc())
+                .orderBy(match.updatedTime.desc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
