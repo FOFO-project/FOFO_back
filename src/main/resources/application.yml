@@ -16,6 +16,9 @@ springdoc:
   default-consumes-media-type: application/json;charset=UTF-8
   default-produces-media-type: application/json;charset=UTF-8
 
+file.dir: ${FILE_DIR}
+aes.key: ${AES_KEY}
+
 ---
 spring.config.activate.on-profile: local
 spring:
@@ -35,12 +38,6 @@ spring:
         show_sql: true
         format_sql: true
 
-logging.level.org.hibernate.orm.jdbc.bind: trace
-
-file.dir: ${FILE_DIR}
-
-aes.key: ${AES_KEY}
-
 ---
 spring.config.activate.on-profile: dev
 server:
@@ -58,8 +55,6 @@ spring:
     hibernate:
       ddl-auto: update
 
-aes.key: ${AES_KEY}
-
 ---
 spring.config.activate.on-profile: prod
 server:
@@ -76,5 +71,3 @@ spring:
   jpa:
     hibernate:
       ddl-auto: none
-
-aes.key: ${AES_KEY}
