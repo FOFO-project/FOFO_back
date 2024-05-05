@@ -13,6 +13,7 @@ public class MemberService {
 
     private final MemberAppender memberAppender;
     private final MemberUpdater memberUpdater;
+    private final MemberRemover memberRemover;
 
     public long append(final Member member, final Address address, final List<MultipartFile> userProfileImages) throws IOException {
         return memberAppender.append(member, address, userProfileImages);
@@ -23,7 +24,7 @@ public class MemberService {
     }
 
     public List<Long> remove(final List<Long> memberIds) {
-        return memberUpdater.remove(memberIds);
+        return memberRemover.remove(memberIds);
     }
 
     public List<Long> confirmDeposit(final List<Long> memberIds) {

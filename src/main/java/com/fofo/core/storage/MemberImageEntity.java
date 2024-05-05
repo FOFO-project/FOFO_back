@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Entity
@@ -40,6 +41,7 @@ public class MemberImageEntity extends BaseEntity {
     @Column(nullable = false)
     private String storeFileName;
 
+    @Setter
     @Column(nullable = false, length = 20)
     @Convert(converter = ActiveStatusConverter.class)
     private ActiveStatus status;

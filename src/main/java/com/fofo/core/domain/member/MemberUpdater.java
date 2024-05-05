@@ -38,30 +38,6 @@ public class MemberUpdater {
     private final FileStore fileStore;
 
     @Transactional
-    public List<Long> remove(final List<Long> memberIds) {
-        return memberIds.stream()
-                .filter(memberId -> {
-                    try {
-                        remove(memberId);
-                        return false; // 성공적으로 제거된 경우, 실패 목록에 포함시키지 않음
-                    } catch (CoreApiException e) {
-                        return true; // 제거에 실패한 경우, 실패 목록에 포함
-                    }
-                })
-                .toList(); // 실패한 멤버 ID 들을 리스트로 수집
-    }
-
-    private void remove(final long memberId) {
-        MemberEntity findMember = memberRepository.findByIdAndStatusNot(memberId, ActiveStatus.DELETED)
-                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
-        findMember.setStatus(ActiveStatus.DELETED);
-
-        AddressEntity findAddress = addressRepository.findByIdAndStatusNot(findMember.getAddressId(), ActiveStatus.DELETED)
-                .orElseThrow(() -> new CoreApiException(ADDRESS_NOT_FOUND_ERROR));
-        findAddress.setStatus(ActiveStatus.DELETED);
-    }
-
-    @Transactional
     public List<Long> confirmDeposit(final List<Long> memberIds) {
         return memberIds.stream()
                 .filter(memberId -> {
@@ -129,16 +105,21 @@ public class MemberUpdater {
         }
 
         if ((cardImage != null) && (!cardImage.isEmpty())) {
-            UploadFile uploadFile = fileStore.storeFile(cardImage, memberId);
             MemberImageEntity findImage = imageRepository.findByMemberIdAndStatusNot(memberId, ActiveStatus.DELETED).stream()
                     .filter(v -> v.getType() == ImageType.PROFILE_CARD)
                     .findAny()
                     .orElse(null);
 
             if (findImage == null) {
+                UploadFile uploadFile = fileStore.storeFile(cardImage, memberId);
                 MemberImageEntity saveImage = MemberImageEntity.of(memberId, ImageType.PROFILE_CARD, uploadFile.uploadFileName(), uploadFile.storeFileName(), ActiveStatus.CREATED);
                 imageRepository.save(saveImage);
             } else {
+                // 기존 프로필 카드 파일 삭제
+                fileStore.deleteFile(findImage.getStoreFileName());
+                // 신규 프로필 카드 이미지 저장
+                UploadFile uploadFile = fileStore.storeFile(cardImage, memberId);
+                // DB 업데이트
                 findImage.updateProfileCardImage(uploadFile.uploadFileName(), uploadFile.storeFileName());
             }
         }
