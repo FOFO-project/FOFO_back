@@ -38,30 +38,6 @@ public class MemberUpdater {
     private final FileStore fileStore;
 
     @Transactional
-    public List<Long> remove(final List<Long> memberIds) {
-        return memberIds.stream()
-                .filter(memberId -> {
-                    try {
-                        remove(memberId);
-                        return false; // 성공적으로 제거된 경우, 실패 목록에 포함시키지 않음
-                    } catch (CoreApiException e) {
-                        return true; // 제거에 실패한 경우, 실패 목록에 포함
-                    }
-                })
-                .toList(); // 실패한 멤버 ID 들을 리스트로 수집
-    }
-
-    private void remove(final long memberId) {
-        MemberEntity findMember = memberRepository.findByIdAndStatusNot(memberId, ActiveStatus.DELETED)
-                .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
-        findMember.setStatus(ActiveStatus.DELETED);
-
-        AddressEntity findAddress = addressRepository.findByIdAndStatusNot(findMember.getAddressId(), ActiveStatus.DELETED)
-                .orElseThrow(() -> new CoreApiException(ADDRESS_NOT_FOUND_ERROR));
-        findAddress.setStatus(ActiveStatus.DELETED);
-    }
-
-    @Transactional
     public List<Long> confirmDeposit(final List<Long> memberIds) {
         return memberIds.stream()
                 .filter(memberId -> {
