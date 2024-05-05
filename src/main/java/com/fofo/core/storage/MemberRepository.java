@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<MemberEntity, Long>, MemberCustomRepository {
 
-    Optional<MemberEntity> findByKakaoId(String kakaoId);
+    Optional<MemberEntity> findByKakaoIdAndStatusNot(String kakaoId, ActiveStatus status);
 
     Optional<MemberEntity> findByIdAndStatusNot(Long id, ActiveStatus status);
 
