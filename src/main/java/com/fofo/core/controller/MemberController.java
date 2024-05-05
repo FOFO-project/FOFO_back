@@ -20,6 +20,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -38,6 +39,7 @@ import java.io.IOException;
 import java.util.List;
 
 @Tag(name = "맴버 API")
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 public class MemberController {
@@ -52,6 +54,7 @@ public class MemberController {
     })
     @PostMapping(value = "/member", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ApiResult<MemberResponseDto>> appendMember(@ModelAttribute @Valid final AppendMemberRequestDto request) throws IOException {
+        log.info("request: {}", request);
         long appendMemberId = memberService.append(request.toMember(), request.toAddress(), request.userProfileImages());
         return new ResponseEntity<>(ApiResult.success(new MemberResponseDto(appendMemberId)), HttpStatus.CREATED);
     }
