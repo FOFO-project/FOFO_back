@@ -15,7 +15,6 @@ import com.fofo.core.support.util.AgeUtil;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -35,9 +34,6 @@ public record AppendMemberRequestDto(
         @Schema(description = "시군구", example = "강서구")
         @NotEmpty @Size(max = 20)
         String sigungu,
-        @Schema(description = "읍면동", example = "등촌동")
-        @NotEmpty @Size(max = 20)
-        String eupmyundong,
         @Schema(description = "이름", example = "황성준")
         @NotEmpty @Size(max=10)
         String name,
@@ -50,9 +46,6 @@ public record AppendMemberRequestDto(
         @Schema(description = "키", example = "180")
         @NotNull @Positive
         int height,
-        @Schema(description = "휴대전화번호", example = "01012345678")
-        @NotEmpty @Pattern(regexp = "^01([0|1|6|7|8|9])(-)?([0-9]{3,4})(-)?([0-9]{4})$")
-        String phoneNumber,
         @Schema(description = "절대 안되는 연령 관계")
         AgeRelationType filteringAgeRelation,
         @Schema(description = "회사", example = "한화시스템")
@@ -94,7 +87,6 @@ public record AppendMemberRequestDto(
                         birthday,
                         AgeUtil.toKoreanAge(birthday),
                         height,
-                        phoneNumber,
                         filteringAgeRelation,
                         company,
                         job,
@@ -115,8 +107,7 @@ public record AppendMemberRequestDto(
                 return Address.of(
                         null,
                         sido,
-                        sigungu,
-                        eupmyundong
+                        sigungu
                 );
         }
 }
