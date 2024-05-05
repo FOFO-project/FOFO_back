@@ -34,6 +34,7 @@ public class ApiControllerAdvice {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResult<?>> handleMethodArgumentNotValidException(final MethodArgumentNotValidException e) {
+        log.error("HttpMessageNotReadableException : {}", e.getMessage(), e);
         BindingResult bindingResult = e.getBindingResult();
         StringBuilder stringBuilder = new StringBuilder();
         for (FieldError fieldError : bindingResult.getFieldErrors()) {
