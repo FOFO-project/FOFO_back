@@ -1,6 +1,7 @@
 package com.fofo.core.domain.match;
 
 import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.domain.member.MatchableYn;
 import com.fofo.core.storage.MatchRepository;
 import com.fofo.core.storage.MemberEntity;
 import com.fofo.core.storage.MemberMatchEntity;
@@ -48,16 +49,18 @@ public class MatchUpdater {
         MemberEntity womanMember = memberRepository.findByIdAndStatusNot(womanId, ActiveStatus.DELETED)
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
 
-        if (MatchAgreement.Y == manAgreement && MatchAgreement.Y == womanAgreement) {
+        if (MatchAgreement.Y == manAgreement && MatchAgreement.Y == womanAgreement) {  // 둘다 동의한 경우
             manMember.decreaseChance();
             womanMember.decreaseChance();
-        } else {
-            if (MatchAgreement.N == manAgreement) {
-                manMember.usePassCount();
-            }
-            if(MatchAgreement.N == womanAgreement) {
-                womanMember.usePassCount();
-            }
+        } else if (MatchAgreement.N == manAgreement && MatchAgreement.Y == womanAgreement) { // 남자만 거절한 경우
+            manMember.usePassCount();
+            womanMember.setMatchableYn(MatchableYn.Y);
+        } else if (MatchAgreement.Y == manAgreement && MatchAgreement.N == womanAgreement) { // 여자만 거절한 경우
+            womanMember.usePassCount();
+            manMember.setMatchableYn(MatchableYn.Y);
+        } else { // 둘다 거절한 경우
+            manMember.usePassCount();
+            womanMember.usePassCount();
         }
 
         manMember.setStatus(ActiveStatus.UPDATED);
