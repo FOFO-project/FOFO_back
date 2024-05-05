@@ -10,6 +10,7 @@ server:
     threads:
       max: 50
       min-spare: 25
+    connection-timeout: 10000
 springdoc:
   api-docs:
     path: /api-docs
