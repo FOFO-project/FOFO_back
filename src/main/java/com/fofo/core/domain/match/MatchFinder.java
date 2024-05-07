@@ -1,11 +1,16 @@
 package com.fofo.core.domain.match;
 
+import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.domain.image.Image;
 import com.fofo.core.domain.member.Address;
+import com.fofo.core.domain.member.Form;
 import com.fofo.core.domain.member.Member;
 import com.fofo.core.domain.member.MemberWithAddress;
 import com.fofo.core.storage.AddressEntity;
+import com.fofo.core.storage.ImageRepository;
 import com.fofo.core.storage.MatchRepository;
 import com.fofo.core.storage.MemberEntity;
+import com.fofo.core.storage.MemberImageEntity;
 import com.fofo.core.storage.MemberMatchEntity;
 import com.querydsl.core.Tuple;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +28,7 @@ import java.util.Objects;
 public class MatchFinder {
 
     private final MatchRepository matchRepository;
+    private final ImageRepository imageRepository;
 
     public Page<MatchResult> findMatches(final int page, final int size, final MatchingStatus matchingStatus) {
         PageRequest pageRequest = PageRequest.of(page, size);
@@ -34,10 +40,20 @@ public class MatchFinder {
                     MemberEntity womanEntity = Objects.requireNonNull(tuple.get(2, MemberEntity.class));
                     AddressEntity manAddressEntity = Objects.requireNonNull(tuple.get(3, AddressEntity.class));
                     AddressEntity womanAddressEntity = Objects.requireNonNull(tuple.get(4, AddressEntity.class));
+
+                    List<MemberImageEntity> manImageEntities = imageRepository.findByMemberIdAndStatusNot(manEntity.getId(), ActiveStatus.DELETED);
+                    List<MemberImageEntity> womanImageEntities = imageRepository.findByMemberIdAndStatusNot(womanEntity.getId(), ActiveStatus.DELETED);
+
                     return MatchResult.of(
                             matchEntity.getId(),
-                            MemberWithAddress.of(Member.from(manEntity), Address.from(manAddressEntity)),
-                            MemberWithAddress.of(Member.from(womanEntity), Address.from(womanAddressEntity)),
+                            Form.of(
+                                    MemberWithAddress.of(Member.from(manEntity), Address.from(manAddressEntity)),
+                                    manImageEntities.stream().map(Image::from).toList()
+                            ),
+                            Form.of(
+                                    MemberWithAddress.of(Member.from(womanEntity), Address.from(womanAddressEntity)),
+                                    womanImageEntities.stream().map(Image::from).toList()
+                            ),
                             matchEntity.getManAgreement(),
                             matchEntity.getWomanAgreement(),
                             matchEntity.getMatchingStatus(),
