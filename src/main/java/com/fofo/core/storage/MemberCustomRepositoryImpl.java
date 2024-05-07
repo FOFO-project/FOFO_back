@@ -44,41 +44,84 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
                 .fetchOne();
     }
 
+    public Long countMembersWithCondition(final FindMember findMember) {
+        return jpaQueryFactory.select(Q_MEMBER.count())
+                .from(Q_MEMBER)
+                .leftJoin(Q_ADDRESS)
+                .on(Q_MEMBER.addressId.eq(Q_ADDRESS.id), Q_MEMBER.status.ne(ActiveStatus.DELETED))
+                .where(getPredicates(findMember))
+                .fetchOne();
+    }
+
     @Override
     public List<Tuple> findMembersWithCondition(final FindMember findMember, final Pageable pageable) {
         return jpaQueryFactory.select(Q_MEMBER, Q_ADDRESS)
                 .from(Q_MEMBER)
                 .leftJoin(Q_ADDRESS)
                 .on(Q_MEMBER.addressId.eq(Q_ADDRESS.id))
-                .where(
-                        containKakaoId(findMember.kakaoId()),
-                        containName(findMember.name()),
-                        eqGender(findMember.gender()),
-                        eqYearOfBirth(findMember.yearOfBirthday()),
-                        eqHeight(findMember.height()),
-                        eqFilteringConditionAgeRelation(findMember.filteringAgeRelation()),
-                        containCompany(findMember.company()),
-                        containJob(findMember.job()),
-                        containUniversity(findMember.university()),
-                        eqMbti(findMember.mbti()),
-                        eqSmokingYn(findMember.smokingYn()),
-                        eqFilteringSmoker(findMember.filteringSmoker()),
-                        eqReligion(findMember.religion()),
-                        eqFilteringReligion(findMember.filteringReligion()),
-                        eqApprovalStatus(findMember.approvalStatus()),
-                        eqMatchableYn(findMember.matchableYn()),
-                        containZipcode(findMember.zipcode()),
-                        containSido(findMember.sido()),
-                        containSigungu(findMember.sigungu()),
-                        containEupmyundong(findMember.eupmyundong()),
-                        eqMemberMatch(findMember.matchingStatus()),
-                        Q_MEMBER.status.ne(ActiveStatus.DELETED)
-                )
+                .where(getPredicates(findMember), Q_MEMBER.status.ne(ActiveStatus.DELETED))
                 .orderBy(Q_MEMBER.depositDate.asc(),
                         Q_MEMBER.createdTime.asc())
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
+    }
+
+    private BooleanExpression getPredicates(final FindMember findMember) {
+        BooleanExpression expression;
+
+        // 카카오 ID 포함 여부
+        expression = containKakaoId(findMember.kakaoId());
+        // 이름 포함 여부
+        expression = combineExpression(expression, containName(findMember.name()));
+        // 성별 일치 여부
+        expression = combineExpression(expression, eqGender(findMember.gender()));
+        // 생년월일 일치 여부
+        expression = combineExpression(expression, eqYearOfBirth(findMember.yearOfBirthday()));
+        // 키 일치 여부
+        expression = combineExpression(expression, eqHeight(findMember.height()));
+        // 연령 필터링 조건 일치 여부
+        expression = combineExpression(expression, eqFilteringAgeRelation(findMember.filteringAgeRelation()));
+        // 회사명 포함 여부
+        expression = combineExpression(expression, containCompany(findMember.company()));
+        // 직업 포함 여부
+        expression = combineExpression(expression, containJob(findMember.job()));
+        // 대학교 포함 여부
+        expression = combineExpression(expression, containUniversity(findMember.university()));
+        // MBTI 일치 여부
+        expression = combineExpression(expression, eqMbti(findMember.mbti()));
+        // 흡연 여부 일치 여부
+        expression = combineExpression(expression, eqSmokingYn(findMember.smokingYn()));
+        // 흡연 필터링 조건 일치 여부
+        expression = combineExpression(expression, eqFilteringSmoker(findMember.filteringSmoker()));
+        // 종교 일치 여부
+        expression = combineExpression(expression, eqReligion(findMember.religion()));
+        // 종교 필터링 조건 일치 여부
+        expression = combineExpression(expression, eqFilteringReligion(findMember.filteringReligion()));
+        // 승인 상태 일치 여부
+        expression = combineExpression(expression, eqApprovalStatus(findMember.approvalStatus()));
+        // 매칭 가능 여부 일치 여부
+        expression = combineExpression(expression, eqMatchableYn(findMember.matchableYn()));
+        // 시도 포함 여부
+        expression = combineExpression(expression, containSido(findMember.sido()));
+        // 시군구 포함 여부
+        expression = combineExpression(expression, containSigungu(findMember.sigungu()));
+        // 읍면동 포함 여부
+        expression = combineExpression(expression, containEupmyundong(findMember.eupmyundong()));
+        // 매칭 상태 일치 여부
+        expression = combineExpression(expression, eqMemberMatch(findMember.matchingStatus()));
+
+        return expression;
+    }
+
+    private BooleanExpression combineExpression(BooleanExpression expression, BooleanExpression newExpression) {
+        if (newExpression == null) {
+            return expression;
+        }
+        if (expression == null) {
+            return newExpression;
+        }
+        return expression.and(newExpression);
     }
 
     private BooleanExpression containKakaoId(final String kakaoId) {
@@ -106,7 +149,7 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
         return Q_MEMBER.height.eq(height);
     }
 
-    private BooleanExpression eqFilteringConditionAgeRelation(final AgeRelationType filteringConditionAgeRelation) {
+    private BooleanExpression eqFilteringAgeRelation(final AgeRelationType filteringConditionAgeRelation) {
         if (filteringConditionAgeRelation == null) return null;
         return Q_MEMBER.filteringAgeRelation.eq(filteringConditionAgeRelation);
     }
@@ -159,11 +202,6 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     private BooleanExpression eqMatchableYn(final MatchableYn matchableYn) {
         if (matchableYn == null) return null;
         return Q_MEMBER.matchableYn.eq(matchableYn);
-    }
-
-    private BooleanExpression containZipcode(final String zipcode) {
-        if (StringUtils.isEmpty(zipcode)) return null;
-        return Q_ADDRESS.zipCode.contains(zipcode);
     }
 
     private BooleanExpression containSido(final String sido) {
