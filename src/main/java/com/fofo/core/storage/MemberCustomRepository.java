@@ -12,4 +12,6 @@ public interface MemberCustomRepository {
 
     List<Tuple> findMembersWithCondition(FindMember findMember, Pageable pageable);
 
+    Long countMembersWithCondition(FindMember findMember);
+
 }

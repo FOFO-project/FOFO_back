@@ -71,6 +71,8 @@ public class FormFinder {
                 })
                 .toList();
 
-        return new PageImpl<>(form, pageable, memberWithAddresses.size());
+        long totalElements = memberRepository.countMembersWithCondition(findMember);
+
+        return new PageImpl<>(form, pageable, totalElements);
     }
 }
