@@ -20,8 +20,12 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Component;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -33,6 +37,18 @@ public class MatchFinder {
     public Page<MatchResult> findMatches(final int page, final int size, final MatchingStatus matchingStatus) {
         PageRequest pageRequest = PageRequest.of(page, size);
         Pair<List<Tuple>, Long> pair = matchRepository.findMatchResultList(pageRequest, matchingStatus);
+
+        Set<Long> memberIdSet = new HashSet<>();
+        for (Tuple tuple : pair.getLeft()){
+            MemberMatchEntity matchEntity = Objects.requireNonNull(tuple.get(0, MemberMatchEntity.class));
+            memberIdSet.add(matchEntity.getManMemberId());
+            memberIdSet.add(matchEntity.getWomanMemberId());
+        }
+        List<Long> memberIds = memberIdSet.stream().toList();
+        List<MemberImageEntity> imageEntities = imageRepository.findByMemberIdInAndStatusNot(memberIds, ActiveStatus.DELETED);
+        Map<Long, List<MemberImageEntity>> memberImagesMap = imageEntities.stream()
+                .collect(Collectors.groupingBy(MemberImageEntity::getMemberId));
+
         List<MatchResult> matchResultList = pair.getLeft().stream()
                 .map(tuple -> {
                     MemberMatchEntity matchEntity = Objects.requireNonNull(tuple.get(0, MemberMatchEntity.class));
@@ -41,18 +57,19 @@ public class MatchFinder {
                     AddressEntity manAddressEntity = Objects.requireNonNull(tuple.get(3, AddressEntity.class));
                     AddressEntity womanAddressEntity = Objects.requireNonNull(tuple.get(4, AddressEntity.class));
 
-                    List<MemberImageEntity> manImageEntities = imageRepository.findByMemberIdAndStatusNot(manEntity.getId(), ActiveStatus.DELETED);
-                    List<MemberImageEntity> womanImageEntities = imageRepository.findByMemberIdAndStatusNot(womanEntity.getId(), ActiveStatus.DELETED);
-
                     return MatchResult.of(
                             matchEntity.getId(),
                             Form.of(
                                     MemberWithAddress.of(Member.from(manEntity), Address.from(manAddressEntity)),
-                                    manImageEntities.stream().map(Image::from).toList()
+                                    memberImagesMap.get(manEntity.getId()).stream()
+                                            .map(Image::from)
+                                            .toList()
                             ),
                             Form.of(
                                     MemberWithAddress.of(Member.from(womanEntity), Address.from(womanAddressEntity)),
-                                    womanImageEntities.stream().map(Image::from).toList()
+                                    memberImagesMap.get(womanEntity.getId()).stream()
+                                            .map(Image::from)
+                                            .toList()
                             ),
                             matchEntity.getManAgreement(),
                             matchEntity.getWomanAgreement(),
