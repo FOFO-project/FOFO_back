@@ -1,13 +1,13 @@
 package com.fofo.core.domain.match;
 
-import com.fofo.core.domain.member.Form;
+import com.fofo.core.domain.member.MemberWithAddress;
 
 import java.time.LocalDateTime;
 
 public record MatchResult(
         Long id,
-        Form manForm,
-        Form womanForm,
+        MemberWithAddress man,
+        MemberWithAddress woman,
         MatchAgreement manAgreement,
         MatchAgreement womanAgreement,
         MatchingStatus matchingStatus,
@@ -16,8 +16,8 @@ public record MatchResult(
 ) {
     public static MatchResult of(
             Long id,
-            Form manForm,
-            Form womanForm,
+            MemberWithAddress manMemberWithAddress,
+            MemberWithAddress womanMemberWithAddress,
             MatchAgreement manAgreement,
             MatchAgreement womanAgreement,
             MatchingStatus matchingStatus,
@@ -25,8 +25,8 @@ public record MatchResult(
             LocalDateTime updatedTime) {
         return new MatchResult(
                 id,
-                manForm,
-                womanForm,
+                manMemberWithAddress,
+                womanMemberWithAddress,
                 manAgreement,
                 womanAgreement,
                 matchingStatus,
