@@ -6,6 +6,7 @@ import com.fofo.core.domain.member.Gender;
 import com.fofo.core.domain.member.Member;
 import com.fofo.core.support.error.CoreApiException;
 import com.fofo.core.support.error.CoreErrorType;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
 
@@ -19,21 +20,31 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class MatchManager {
 
-    public List<Match> autoMatchByFilteringCondition(
+    MatchFinder matchFinder;
+
+    public List<MatchWithMember> autoMatchByFilteringCondition(
             final List<Member> selectedMembers,
             final List<Member> matchPossibleMembers
     ) {
+        // 매치 완료 및 취소 조회
+        Set<MatchMemberIdPair> filteringMatchMemberIdSet = matchFinder.getCompletedOrCanceledMatches().stream()
+                .map(match -> MatchMemberIdPair.of(match.manId(), match.womanId()))
+                .collect(Collectors.toSet());
+
         return getMatchList(
                 selectedMembers,
                 getShuffledList(matchPossibleMembers),
                 getFilteredMemberIdMap(matchPossibleMembers),
                 getMatchingYnMap(matchPossibleMembers)
-        );
+        ).stream()
+                .filter(m -> !filteringMatchMemberIdSet.contains(MatchMemberIdPair.of(m.man().id(), m.woman().id())))
+                .toList();
     }
 
-    public List<Long> findUnmatchedMemberIdList(List<Member> selectedMembers, List<Match> matchList) {
+    public List<Long> findUnmatchedMemberIdList(List<Member> selectedMembers, List<MatchWithMember> matchList) {
         return selectedMembers.stream()
                 .filter(member -> matchList.stream()
                         .allMatch(match -> !Objects.equals(member.id(), match.man().id())
@@ -42,7 +53,7 @@ public class MatchManager {
 
                 )
                 .map(Member::id)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public MatchingStatus getNextMatchingStatus(final MatchingStatus matchingStatus) {
@@ -53,13 +64,13 @@ public class MatchManager {
         };
     }
 
-    private List<Match> getMatchList(
+    private List<MatchWithMember> getMatchList(
             List<Member> selectedMembers,
             List<Member> matchPossibleMembers,
             Map<Long, Set<Long>> filterMap,
             Map<Long, Boolean> matchingYnMap)
     {
-        List<Match> result = new ArrayList<>();
+        List<MatchWithMember> result = new ArrayList<>();
         for (Member member : selectedMembers){
             if(matchingYnMap.get(member.id())) continue;
             for (Member targetMember : matchPossibleMembers){
@@ -73,7 +84,7 @@ public class MatchManager {
                 if (!filterMap.get(member.id()).contains(targetMember.id())
                         && !filterMap.get(targetMember.id()).contains(member.id())
                 ){
-                    result.add(Match.of(
+                    result.add(MatchWithMember.of(
                             memberPair.getLeft(),
                             memberPair.getRight(),
                             MatchAgreement.N,
