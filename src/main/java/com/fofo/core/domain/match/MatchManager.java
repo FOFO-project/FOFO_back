@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MatchManager {
 
-    MatchFinder matchFinder;
+    private final MatchFinder matchFinder;
 
     public List<MatchWithMember> autoMatchByFilteringCondition(
             final List<Member> selectedMembers,
@@ -87,8 +87,8 @@ public class MatchManager {
                     result.add(MatchWithMember.of(
                             memberPair.getLeft(),
                             memberPair.getRight(),
-                            MatchAgreement.N,
-                            MatchAgreement.N,
+                            null,
+                            null,
                             MatchingStatus.MATCHING_PENDING,
                             ActiveStatus.CREATED
                     ));
