@@ -24,9 +24,9 @@ public class MatchAppender {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void appendMatches(final List<Match> matchList) {
+    public void appendMatches(final List<MatchWithMember> matchList) {
         matchRepository.saveAll(matchList.stream()
-                .map(Match::toEntity)
+                .map(MatchWithMember::toEntity)
                 .toList()
         );
         matchList.forEach(match -> {
@@ -60,8 +60,8 @@ public class MatchAppender {
         matchRepository.save(MemberMatchEntity.of(
                 manMemberEntity.getId(),
                 womanMemberEntity.getId(),
-                MatchAgreement.N,
-                MatchAgreement.N,
+                null,
+                null,
                 MatchingStatus.MATCHING_PENDING,
                 ActiveStatus.CREATED
         ));
