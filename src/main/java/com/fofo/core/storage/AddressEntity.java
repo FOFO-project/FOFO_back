@@ -33,9 +33,6 @@ public class AddressEntity extends BaseEntity {
     @Column(length = 20)
     private String sigungu;
 
-    @Column(length = 20)
-    private String eupmyundong;
-
     @Column(nullable = false, length = 20)
     @Convert(converter = ActiveStatusConverter.class)
     private ActiveStatus status;
@@ -43,21 +40,18 @@ public class AddressEntity extends BaseEntity {
     private AddressEntity(final String zipCode,
                             final String sido,
                             final String sigungu,
-                            final String eupmyundong,
                             final ActiveStatus status) {
         this.zipCode = zipCode;
         this.sido = sido;
         this.sigungu = sigungu;
-        this.eupmyundong = eupmyundong;
         this.status = status;
     }
 
     public static AddressEntity of(final String zipcode,
                                    final String sido,
                                    final String sigungu,
-                                   final String eupmyundong,
                                    final ActiveStatus status) {
-        return new AddressEntity(zipcode, sido, sigungu, eupmyundong, status);
+        return new AddressEntity(zipcode, sido, sigungu, status);
     }
 
 }

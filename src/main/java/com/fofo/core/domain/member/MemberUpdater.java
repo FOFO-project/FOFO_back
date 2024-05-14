@@ -136,7 +136,6 @@ public class MemberUpdater {
         Optional.ofNullable(updateMember.birthday()).ifPresent(findMember::setBirthday);
         Optional.ofNullable(updateMember.age()).ifPresent(findMember::setAge);
         Optional.ofNullable(updateMember.height()).ifPresent(findMember::setHeight);
-        Optional.ofNullable(updateMember.phoneNumber()).ifPresent(findMember::setPhoneNumber);
         Optional.ofNullable(updateMember.filteringAgeRelation()).ifPresent(findMember::setFilteringAgeRelation);
         Optional.ofNullable(updateMember.company()).ifPresent(findMember::setCompany);
         Optional.ofNullable(updateMember.job()).ifPresent(findMember::setJob);
@@ -154,7 +153,6 @@ public class MemberUpdater {
     private void updateAddressInfo(final AddressEntity findAddress, final UpdateAddress updateAddress) {
         Optional.ofNullable(updateAddress.sido()).ifPresent(findAddress::setSido);
         Optional.ofNullable(updateAddress.sigungu()).ifPresent(findAddress::setSigungu);
-        Optional.ofNullable(updateAddress.eupmyundong()).ifPresent(findAddress::setEupmyundong);
         findAddress.setStatus(updateAddress.status());
     }
 
