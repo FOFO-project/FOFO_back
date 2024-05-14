@@ -47,9 +47,11 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     public Long countMembersWithCondition(final FindMember findMember) {
         return jpaQueryFactory.select(Q_MEMBER.count())
                 .from(Q_MEMBER)
-                .leftJoin(Q_ADDRESS)
-                .on(Q_MEMBER.addressId.eq(Q_ADDRESS.id), Q_MEMBER.status.ne(ActiveStatus.DELETED))
-                .where(getPredicates(findMember))
+                .leftJoin(Q_ADDRESS).on(Q_MEMBER.addressId.eq(Q_ADDRESS.id))
+                .where(
+                        getPredicates(findMember),
+                        Q_MEMBER.status.ne(ActiveStatus.DELETED)
+                )
                 .fetchOne();
     }
 
@@ -106,8 +108,6 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
         expression = combineExpression(expression, containSido(findMember.sido()));
         // 시군구 포함 여부
         expression = combineExpression(expression, containSigungu(findMember.sigungu()));
-        // 읍면동 포함 여부
-        expression = combineExpression(expression, containEupmyundong(findMember.eupmyundong()));
         // 매칭 상태 일치 여부
         expression = combineExpression(expression, eqMemberMatch(findMember.matchingStatus()));
 
@@ -212,11 +212,6 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     private BooleanExpression containSigungu(final String sigungu) {
         if (StringUtils.isEmpty(sigungu)) return null;
         return Q_ADDRESS.sigungu.contains(sigungu);
-    }
-
-    private BooleanExpression containEupmyundong(final String eupmyundong) {
-        if (StringUtils.isEmpty(eupmyundong)) return null;
-        return Q_ADDRESS.eupmyundong.contains(eupmyundong);
     }
 
     private BooleanExpression eqMemberMatch(final MatchingStatus matchingStatus) {
