@@ -43,7 +43,7 @@ import static com.fofo.core.support.constant.MemberConstants.DEFAULT_PASS_COUNT;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member", indexes = {
-        @Index(columnList = "kakaoId", unique = true),
+        @Index(columnList = "kakaoId"),
         @Index(columnList = "addressId")
 })
 public class MemberEntity extends BaseEntity {
