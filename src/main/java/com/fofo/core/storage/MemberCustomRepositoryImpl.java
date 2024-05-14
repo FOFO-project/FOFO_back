@@ -47,9 +47,11 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     public Long countMembersWithCondition(final FindMember findMember) {
         return jpaQueryFactory.select(Q_MEMBER.count())
                 .from(Q_MEMBER)
-                .leftJoin(Q_ADDRESS)
-                .on(Q_MEMBER.addressId.eq(Q_ADDRESS.id), Q_MEMBER.status.ne(ActiveStatus.DELETED))
-                .where(getPredicates(findMember))
+                .leftJoin(Q_ADDRESS).on(Q_MEMBER.addressId.eq(Q_ADDRESS.id))
+                .where(
+                        getPredicates(findMember),
+                        Q_MEMBER.status.ne(ActiveStatus.DELETED)
+                )
                 .fetchOne();
     }
 
