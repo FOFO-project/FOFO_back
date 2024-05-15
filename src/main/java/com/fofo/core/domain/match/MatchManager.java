@@ -87,8 +87,8 @@ public class MatchManager {
                     result.add(MatchWithMember.of(
                             memberPair.getLeft(),
                             memberPair.getRight(),
-                            null,
-                            null,
+                            MatchAgreement.N,
+                            MatchAgreement.N,
                             MatchingStatus.MATCHING_PENDING,
                             ActiveStatus.CREATED
                     ));
