@@ -50,4 +50,9 @@ public class MatchFinder {
         return new PageImpl<>(matchResultList, pageRequest, count == null? 0 : count);
     }
 
+    public List<Match> getCompletedOrCanceledMatches() {
+        return matchRepository.findCompletedOrCanceledMatchList().stream()
+                .map(Match::from)
+                .toList();
+    }
 }
