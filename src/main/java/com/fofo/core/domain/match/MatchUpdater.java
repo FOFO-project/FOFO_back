@@ -67,4 +67,13 @@ public class MatchUpdater {
         womanMember.setStatus(ActiveStatus.UPDATED);
     }
 
+    public void updateMatchAgreements(final Long id, final MatchAgreement manAgreement, final MatchAgreement womanAgreement) {
+        MemberMatchEntity findMatch = matchRepository.findByIdAndStatusNot(id, ActiveStatus.DELETED)
+                .orElseThrow(() -> new CoreApiException(CoreErrorType.MATCH_NOT_FOUND_ERROR));
+
+        findMatch.setManAgreement(manAgreement);
+        findMatch.setWomanAgreement(womanAgreement);
+        findMatch.setStatus(ActiveStatus.UPDATED);
+    }
+
 }

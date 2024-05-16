@@ -108,4 +108,11 @@ public class MatchController {
         matchService.goNextMatchStep(matchRequestDtoList);
         return new ResponseEntity<>(ApiResult.success(), HttpStatus.OK);
     }
+
+    @Operation(summary = "매칭 임시저장")
+    @PostMapping("/match/temporary-save")
+    public ResponseEntity<ApiResult<?>> matchTemporarySave(@Valid @RequestBody List<MatchRequestDto> matchRequestDtoList){
+        matchService.matchTemporarySave(matchRequestDtoList);
+        return new ResponseEntity<>(ApiResult.success(), HttpStatus.OK);
+    }
 }

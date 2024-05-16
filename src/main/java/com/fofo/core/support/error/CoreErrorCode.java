@@ -21,6 +21,7 @@ public enum CoreErrorCode {
     MATE502,
     MATE503,
     MATE504,
+    MATE505,
 
     // 암호화 관련 에러
     ENCE500,
