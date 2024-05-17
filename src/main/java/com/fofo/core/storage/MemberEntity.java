@@ -263,7 +263,7 @@ public class MemberEntity extends BaseEntity {
         }
     }
 
-    private void toDepositPendingStatus() {
+    public void toDepositPendingStatus() {
         depositDate = null;
         approvalStatus = ApprovalStatus.DEPOSIT_PENDING;
         matchableYn = MatchableYn.N;

@@ -32,6 +32,7 @@ public enum CoreErrorType {
     MATCHABLE_MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, CoreErrorCode.MATE502, "Matchable member is not found", LogLevel.ERROR),
     MATCH_NOT_FOUND_ERROR(HttpStatus.NOT_FOUND, CoreErrorCode.MATE503, "Match Not found", LogLevel.ERROR),
     MATCH_SAME_GENDER_ERROR(HttpStatus.BAD_REQUEST, CoreErrorCode.MATE504, "Members of Match have same gender", LogLevel.ERROR),
+    REMATCH_NOT_POSSIBLE(HttpStatus.BAD_REQUEST, CoreErrorCode.MATE505, "Match is not completed or match members are already matchable", LogLevel.ERROR),
 
     //유틸 관련 에러
     AES_ENCRYPT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, CoreErrorCode.ENCE500, "AES encrypt error has occurred", LogLevel.ERROR),
