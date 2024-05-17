@@ -10,7 +10,6 @@ public record AddressResponseDto(
         String zipcode,
         String sido,
         String sigungu,
-        String eupmyundong,
         ActiveStatus status,
         LocalDateTime createdTime,
         LocalDateTime modifiedTime
@@ -21,7 +20,6 @@ public record AddressResponseDto(
                 address.zipcode(),
                 address.sido(),
                 address.sigungu(),
-                address.eupmyundong(),
                 address.status(),
                 address.createdTime(),
                 address.modifiedTime()

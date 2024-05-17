@@ -106,8 +106,6 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
         expression = combineExpression(expression, containSido(findMember.sido()));
         // 시군구 포함 여부
         expression = combineExpression(expression, containSigungu(findMember.sigungu()));
-        // 읍면동 포함 여부
-        expression = combineExpression(expression, containEupmyundong(findMember.eupmyundong()));
         // 매칭 상태 일치 여부
         expression = combineExpression(expression, eqMemberMatch(findMember.matchingStatus()));
 
@@ -212,11 +210,6 @@ public class MemberCustomRepositoryImpl implements MemberCustomRepository {
     private BooleanExpression containSigungu(final String sigungu) {
         if (StringUtils.isEmpty(sigungu)) return null;
         return Q_ADDRESS.sigungu.contains(sigungu);
-    }
-
-    private BooleanExpression containEupmyundong(final String eupmyundong) {
-        if (StringUtils.isEmpty(eupmyundong)) return null;
-        return Q_ADDRESS.eupmyundong.contains(eupmyundong);
     }
 
     private BooleanExpression eqMemberMatch(final MatchingStatus matchingStatus) {
