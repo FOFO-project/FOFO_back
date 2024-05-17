@@ -43,9 +43,7 @@ public class MatchRemover {
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
 
         manMember.setMatchableYn(MatchableYn.Y);
-        memberRepository.save(manMember);
         womanMember.setMatchableYn(MatchableYn.Y);
-        memberRepository.save(womanMember);
     }
 
 }

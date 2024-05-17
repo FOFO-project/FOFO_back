@@ -85,4 +85,7 @@ public class MatchService {
 
     }
 
+    public List<Long> failmeeting(final List<Long> matchIds) {
+        return matchUpdater.updateFailedMatchMembers(matchIds);
+    }
 }

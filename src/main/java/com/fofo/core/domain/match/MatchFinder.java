@@ -55,4 +55,13 @@ public class MatchFinder {
                 .map(Match::from)
                 .toList();
     }
+
+    public List<Pair<MemberMatchEntity, Pair<MemberEntity, MemberEntity>>> findFailedMembersIn(List<Long> matchIds) {
+        return matchRepository.findFailedMembersIn(matchIds).stream()
+                .map(tuple ->Pair.of(
+                        tuple.get(0, MemberMatchEntity.class),
+                        Pair.of(tuple.get(1, MemberEntity.class), tuple.get(2, MemberEntity.class)))
+                )
+                .toList();
+    }
 }

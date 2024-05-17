@@ -4,6 +4,8 @@ import com.fofo.core.controller.request.AutoMatchRequestDto;
 import com.fofo.core.controller.request.ManualMatchRequestDto;
 import com.fofo.core.controller.request.MatchCancelRequestDto;
 import com.fofo.core.controller.request.MatchRequestDto;
+import com.fofo.core.controller.request.MatchesRequestDto;
+import com.fofo.core.controller.response.FailMatchIdsResponseDto;
 import com.fofo.core.controller.response.MatchResponseDto;
 import com.fofo.core.controller.response.MatchResultResponseDto;
 import com.fofo.core.domain.match.MatchResult;
@@ -114,5 +116,16 @@ public class MatchController {
     public ResponseEntity<ApiResult<?>> matchTemporarySave(@Valid @RequestBody List<MatchRequestDto> matchRequestDtoList){
         matchService.matchTemporarySave(matchRequestDtoList);
         return new ResponseEntity<>(ApiResult.success(), HttpStatus.OK);
+    }
+
+    @Operation(summary = "성사실패 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "매치완료 멤버 되돌리기 성공"),
+            @ApiResponse(responseCode = "400", description = "다시 매칭될 수없는 멤버 존재")
+    })
+    @PostMapping("/match/meeting/fail")
+    public ResponseEntity<ApiResult<FailMatchIdsResponseDto>> failmeeting(@RequestBody final MatchesRequestDto request){
+        List<Long> failMatchIds = matchService.failmeeting(request.matchIdList());
+        return new ResponseEntity<>(ApiResult.success(new FailMatchIdsResponseDto(failMatchIds)), HttpStatus.OK);
     }
 }

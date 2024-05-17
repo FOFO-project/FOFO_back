@@ -9,14 +9,21 @@ import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
 import com.fofo.core.support.error.CoreErrorType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static com.fofo.core.support.error.CoreErrorType.MEMBER_NOT_FOUND_ERROR;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class MatchUpdater {
 
+    private final MatchFinder matchFinder;
     private final MatchRepository matchRepository;
     private final MemberRepository memberRepository;
 
@@ -76,4 +83,45 @@ public class MatchUpdater {
         findMatch.setStatus(ActiveStatus.UPDATED);
     }
 
+    @Transactional
+    public List<Long> updateFailedMatchMembers(List<Long> matchIds) {
+        return matchFinder.findFailedMembersIn(matchIds).stream()
+            .filter(this::updateFailedMatchMember)
+            .map(pair -> pair.getLeft().getId())
+            .toList();
+    }
+
+    private boolean updateFailedMatchMember(Pair<MemberMatchEntity, Pair<MemberEntity, MemberEntity>> matchMemberPair) {
+        try {
+            checkFailedMatch(matchMemberPair.getLeft());
+            revertFailedMatchMember(matchMemberPair.getRight().getLeft());
+            revertFailedMatchMember(matchMemberPair.getRight().getRight());
+            return false;
+        } catch (CoreApiException e){
+            log.info("fail to update failed match's Member", e);
+            return true;
+        }
+    }
+
+    private void checkFailedMatch(MemberMatchEntity matchEntity) {
+        if (matchEntity.getMatchingStatus() != MatchingStatus.MATCHING_COMPLETED) {
+            throw new CoreApiException(CoreErrorType.REMATCH_NOT_POSSIBLE);
+        }
+    }
+
+    private void revertFailedMatchMember(MemberEntity memberEntity) {
+        if (memberEntity == null || memberEntity.getStatus() == ActiveStatus.DELETED) {
+            throw new CoreApiException(MEMBER_NOT_FOUND_ERROR);
+        }
+
+        if (memberEntity.getMatchableYn() == MatchableYn.Y) {
+            throw new CoreApiException(CoreErrorType.REMATCH_NOT_POSSIBLE);
+        }
+
+        if (memberEntity.getChance() > 0) {
+            memberEntity.setMatchableYn(MatchableYn.Y);
+        } else {
+            memberEntity.toDepositPendingStatus();
+        }
+    }
 }

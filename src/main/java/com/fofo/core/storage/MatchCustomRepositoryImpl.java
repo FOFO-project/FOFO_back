@@ -5,6 +5,7 @@ import com.fofo.core.domain.match.MatchingStatus;
 import com.querydsl.core.Tuple;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,8 @@ import java.util.List;
 @Repository
 @RequiredArgsConstructor
 public class MatchCustomRepositoryImpl implements MatchCustomRepository{
+
+    private final EntityManager entityManager;
     private final JPAQueryFactory jpaQueryFactory;
     private static final QMemberMatchEntity match = QMemberMatchEntity.memberMatchEntity;
     private final QMemberEntity manMember = new QMemberEntity("manMember");
@@ -67,6 +70,21 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
                                 .or(isCanceled())
                 )
                 .fetch();
+    }
+
+    @Override
+    public List<Tuple> findFailedMembersIn(List<Long> matchIds) {
+        List<Tuple> tuples = jpaQueryFactory.select(match, manMember, womanMember)
+                .from(match)
+                .leftJoin(manMember).on(match.manMemberId.eq(manMember.id))
+                .leftJoin(womanMember).on(match.womanMemberId.eq(womanMember.id))
+                .where(match.id.in(matchIds), match.status.ne(ActiveStatus.DELETED))
+                .fetch();
+        for(Tuple tuple : tuples){
+            entityManager.merge(tuple.get(manMember));
+            entityManager.merge(tuple.get(womanMember));
+        }
+        return tuples;
     }
 
     private BooleanExpression isCompleted() {
