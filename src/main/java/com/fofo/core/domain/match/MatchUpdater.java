@@ -84,14 +84,14 @@ public class MatchUpdater {
     }
 
     @Transactional
-    public List<Long> updateFailedMatchMembers(List<Long> matchIds) {
+    public List<Long> updateFailedMatchMembers(final List<Long> matchIds) {
         return matchFinder.findFailedMembersIn(matchIds).stream()
             .filter(this::updateFailedMatchMember)
             .map(pair -> pair.getLeft().getId())
             .toList();
     }
 
-    private boolean updateFailedMatchMember(Pair<MemberMatchEntity, Pair<MemberEntity, MemberEntity>> matchMemberPair) {
+    private boolean updateFailedMatchMember(final Pair<MemberMatchEntity, Pair<MemberEntity, MemberEntity>> matchMemberPair) {
         try {
             checkFailedMatch(matchMemberPair.getLeft());
             revertFailedMatchMember(matchMemberPair.getRight().getLeft());
@@ -103,13 +103,13 @@ public class MatchUpdater {
         }
     }
 
-    private void checkFailedMatch(MemberMatchEntity matchEntity) {
+    private void checkFailedMatch(final MemberMatchEntity matchEntity) {
         if (matchEntity.getMatchingStatus() != MatchingStatus.MATCHING_COMPLETED) {
             throw new CoreApiException(CoreErrorType.REMATCH_NOT_POSSIBLE);
         }
     }
 
-    private void revertFailedMatchMember(MemberEntity memberEntity) {
+    private void revertFailedMatchMember(final MemberEntity memberEntity) {
         if (memberEntity == null || memberEntity.getStatus() == ActiveStatus.DELETED) {
             throw new CoreApiException(MEMBER_NOT_FOUND_ERROR);
         }
