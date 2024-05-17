@@ -57,6 +57,26 @@ public class MatchCustomRepositoryImpl implements MatchCustomRepository{
         return Pair.of(matchResultTupleList, count);
     }
 
+    @Override
+    public List<MemberMatchEntity> findCompletedOrCanceledMatchList() {
+        return jpaQueryFactory
+                .select(match)
+                .from(match)
+                .where(
+                        isCompleted()
+                                .or(isCanceled())
+                )
+                .fetch();
+    }
+
+    private BooleanExpression isCompleted() {
+        return match.matchingStatus.eq(MatchingStatus.MATCHING_COMPLETED).and(match.status.ne(ActiveStatus.DELETED));
+    }
+
+    private BooleanExpression isCanceled() {
+        return match.matchingStatus.eq(MatchingStatus.MATCHING_PENDING).and(match.status.eq(ActiveStatus.DELETED));
+    }
+
     private BooleanExpression eqMatchingStatus(final MatchingStatus matchingStatus) {
         if (matchingStatus == null){
             return match.matchingStatus.eq(MatchingStatus.MATCHING_PENDING).or(match.matchingStatus.eq(MatchingStatus.MATCHING_PROGRESSING));
