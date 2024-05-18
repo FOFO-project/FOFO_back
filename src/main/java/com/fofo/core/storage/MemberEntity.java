@@ -247,6 +247,9 @@ public class MemberEntity extends BaseEntity {
 
     public void decreaseChance() {
         chance--;
+        if (chance == 0) {
+            toDepositPendingStatus();
+        }
     }
 
     public void usePassCount() {
