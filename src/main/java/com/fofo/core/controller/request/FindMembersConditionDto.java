@@ -34,7 +34,6 @@ public record FindMembersConditionDto(
         MatchableYn matchableYn,
         String sido,
         String sigungu,
-        String eupmyundong,
         MatchingStatus matchingStatus
 ) {
 
@@ -57,7 +56,6 @@ public record FindMembersConditionDto(
                 matchableYn,
                 sido,
                 sigungu,
-                eupmyundong,
                 matchingStatus);
     }
 }

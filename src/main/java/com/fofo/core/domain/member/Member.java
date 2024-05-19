@@ -2,7 +2,6 @@ package com.fofo.core.domain.member;
 
 import com.fofo.core.domain.ActiveStatus;
 import com.fofo.core.storage.MemberEntity;
-import com.fofo.core.support.util.AesUtil;
 
 import java.time.LocalDateTime;
 
@@ -17,7 +16,6 @@ public record Member(
         LocalDateTime birthday,
         int age,
         int height,
-        String phoneNumber,
         AgeRelationType filteringAgeRelation,
         String company,
         String job,
@@ -46,7 +44,6 @@ public record Member(
             final LocalDateTime birthday,
             final int age,
             final int height,
-            final String phoneNumber,
             final AgeRelationType filteringAgeRelation,
             final String company,
             final String job,
@@ -69,7 +66,6 @@ public record Member(
                 birthday,
                 age,
                 height,
-                phoneNumber,
                 filteringAgeRelation,
                 company,
                 job,
@@ -100,7 +96,6 @@ public record Member(
                 memberEntity.getBirthday(),
                 memberEntity.getAge(),
                 memberEntity.getHeight(),
-                AesUtil.decrypt(memberEntity.getPhoneNumber()),
                 memberEntity.getFilteringAgeRelation(),
                 memberEntity.getCompany(),
                 memberEntity.getJob(),
@@ -130,7 +125,6 @@ public record Member(
                 birthday,
                 age,
                 height,
-                AesUtil.encrypt(phoneNumber),
                 filteringAgeRelation,
                 company,
                 job,

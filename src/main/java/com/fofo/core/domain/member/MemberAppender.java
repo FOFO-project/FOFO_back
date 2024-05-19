@@ -31,7 +31,7 @@ public class MemberAppender {
     @Transactional
     public long append(final Member member, final Address address, final List<MultipartFile> multipartFile) throws IOException {
         MemberEntity memberEntity = member.toEntity();
-        if (memberRepository.findByKakaoId(member.kakaoId()).isPresent()) {
+        if (memberRepository.findByKakaoIdAndStatusNot(member.kakaoId(), ActiveStatus.DELETED).isPresent()) {
             throw new CoreApiException(CoreErrorType.DUPLICATE_MEMBER_ERROR);
         }
 
