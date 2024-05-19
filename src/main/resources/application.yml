@@ -42,11 +42,6 @@ spring:
 
 ---
 spring.config.activate.on-profile: dev
-server:
-  ssl:
-    key-store: ${KEY_STORE_PATH}
-    key-store-type: PKCS12
-    key-store-password: ${KEY_STORE_PASSWORD}
 spring:
   datasource:
     url: ${FOFO_DB_URL}
@@ -58,14 +53,13 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+#    properties:
+#      hibernate:
+#        show_sql: true
+#        format_sql: true
 
 ---
 spring.config.activate.on-profile: prod
-server:
-  ssl:
-    key-store: ${KEY_STORE_PATH}
-    key-store-type: PKCS12
-    key-store-password: ${KEY_STORE_PASSWORD}
 spring:
   datasource:
     url: ${FOFO_DB_URL}
