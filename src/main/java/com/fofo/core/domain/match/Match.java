@@ -1,53 +1,32 @@
 package com.fofo.core.domain.match;
 
 import com.fofo.core.domain.ActiveStatus;
-import com.fofo.core.domain.member.Member;
 import com.fofo.core.storage.MemberMatchEntity;
 
 import java.time.LocalDateTime;
 
 public record Match(
-        Long id,
-        // 이후 member + address 합쳐진 domain으로 변경 예정
-        Member man,
-        Member woman,
-        MatchAgreement manAgreement,
-        MatchAgreement womanAgreement,
-        MatchingStatus matchingStatus,
-        ActiveStatus status,
-        LocalDateTime createdTime,
-        LocalDateTime modifiedTime
-) {
-    public static Match of(
-            final Member man,
-            final Member woman,
-            final MatchAgreement manAgreement,
-            final MatchAgreement womanAgreement,
-            final MatchingStatus matchingStatus,
-            final ActiveStatus status
-    ) {
+    Long id,
+    Long manId,
+    Long womanId,
+    MatchAgreement manAgreement,
+    MatchAgreement womanAgreement,
+    MatchingStatus matchingStatus,
+    ActiveStatus status,
+    LocalDateTime createdTime,
+    LocalDateTime modifiedTime
+){
+    public static Match from(MemberMatchEntity matchEntity){
         return new Match(
-                null,
-                man,
-                woman,
-                manAgreement,
-                womanAgreement,
-                matchingStatus,
-                status,
-                null,
-                null
+                matchEntity.getId(),
+                matchEntity.getManMemberId(),
+                matchEntity.getWomanMemberId(),
+                matchEntity.getManAgreement(),
+                matchEntity.getWomanAgreement(),
+                matchEntity.getMatchingStatus(),
+                matchEntity.getStatus(),
+                matchEntity.getCreatedTime(),
+                matchEntity.getUpdatedTime()
         );
     }
-
-    public MemberMatchEntity toEntity() {
-        return MemberMatchEntity.of(
-                man.id(),
-                woman.id(),
-                manAgreement,
-                womanAgreement,
-                matchingStatus,
-                status
-        );
-    }
-
 }

@@ -24,9 +24,9 @@ public class MatchAppender {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public void appendMatches(final List<Match> matchList) {
+    public void appendMatches(final List<MatchWithMember> matchList) {
         matchRepository.saveAll(matchList.stream()
-                .map(Match::toEntity)
+                .map(MatchWithMember::toEntity)
                 .toList()
         );
         matchList.forEach(match -> {

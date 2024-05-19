@@ -12,6 +12,7 @@ import com.fofo.core.storage.MemberImageEntity;
 import com.fofo.core.storage.MemberRepository;
 import com.fofo.core.support.error.CoreApiException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,7 @@ import static com.fofo.core.support.error.CoreErrorType.MEMBER_NOT_FOUND_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.NOT_PENDING_FOR_DEPOSIT_ERROR;
 import static com.fofo.core.support.error.CoreErrorType.NOT_WAITING_FOR_APPROVE_ERROR;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class MemberUpdater {
@@ -133,7 +135,6 @@ public class MemberUpdater {
         Optional.ofNullable(updateMember.birthday()).ifPresent(findMember::setBirthday);
         Optional.ofNullable(updateMember.age()).ifPresent(findMember::setAge);
         Optional.ofNullable(updateMember.height()).ifPresent(findMember::setHeight);
-        Optional.ofNullable(updateMember.phoneNumber()).ifPresent(findMember::setPhoneNumber);
         Optional.ofNullable(updateMember.filteringAgeRelation()).ifPresent(findMember::setFilteringAgeRelation);
         Optional.ofNullable(updateMember.company()).ifPresent(findMember::setCompany);
         Optional.ofNullable(updateMember.job()).ifPresent(findMember::setJob);
@@ -151,7 +152,6 @@ public class MemberUpdater {
     private void updateAddressInfo(final AddressEntity findAddress, final UpdateAddress updateAddress) {
         Optional.ofNullable(updateAddress.sido()).ifPresent(findAddress::setSido);
         Optional.ofNullable(updateAddress.sigungu()).ifPresent(findAddress::setSigungu);
-        Optional.ofNullable(updateAddress.eupmyundong()).ifPresent(findAddress::setEupmyundong);
         findAddress.setStatus(updateAddress.status());
     }
 
@@ -163,6 +163,7 @@ public class MemberUpdater {
                         updateMatchable(memberId);
                         return false;
                     } catch (CoreApiException e) {
+                        log.error("fail to update matchableYn to Y", e);
                         return true;
                     }
                 })
@@ -172,7 +173,7 @@ public class MemberUpdater {
     private void updateMatchable(Long memberId) {
         MemberEntity findMember = memberRepository.findByIdAndStatusNot(memberId, ActiveStatus.DELETED)
                 .orElseThrow(() -> new CoreApiException(MEMBER_NOT_FOUND_ERROR));
-        if(findMember.getMatchableYn() == MatchableYn.N
+        if(findMember.getMatchableYn() == MatchableYn.Y
                 || findMember.getChance() < 1
                 || findMember.getApprovalStatus() != ApprovalStatus.APPROVED){
             throw new CoreApiException(MEMBER_CANNOT_MATCHABLE_ERROR);

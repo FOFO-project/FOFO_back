@@ -9,4 +9,6 @@ import java.util.List;
 
 public interface MatchCustomRepository {
     Pair<List<Tuple>, Long> findMatchResultList(Pageable pageable, MatchingStatus matchingStatus);
+    List<MemberMatchEntity> findCompletedOrCanceledMatchList();
+    List<Tuple> findFailedMembersIn(List<Long> matchIds);
 }

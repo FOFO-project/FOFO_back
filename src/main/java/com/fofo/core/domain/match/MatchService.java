@@ -34,7 +34,7 @@ public class MatchService {
         // 매칭 선택된 멤버리스트 불러오기
         List<Member> selectedMembers = matchManager.getSelectedMembers(memberIdList, matchPossibleMembers);
         // 자동 매치
-        List<Match> matchList = matchManager.autoMatchByFilteringCondition(selectedMembers, matchPossibleMembers);
+        List<MatchWithMember> matchList = matchManager.autoMatchByFilteringCondition(selectedMembers, matchPossibleMembers);
         matchAppender.appendMatches(matchList);
         return matchManager.findUnmatchedMemberIdList(selectedMembers, matchList);
     }
@@ -85,4 +85,7 @@ public class MatchService {
 
     }
 
+    public List<Long> failmeeting(final List<Long> matchIds) {
+        return matchUpdater.updateFailedMatchMembers(matchIds);
+    }
 }

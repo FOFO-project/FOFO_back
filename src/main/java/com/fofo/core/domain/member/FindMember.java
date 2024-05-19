@@ -23,7 +23,6 @@ public record FindMember(
         MatchableYn matchableYn,
         String sido,
         String sigungu,
-        String eupmyundong,
         MatchingStatus matchingStatus
 ) {
 
@@ -45,7 +44,6 @@ public record FindMember(
                                 final MatchableYn matchableYn,
                                 final String sido,
                                 final String sigungu,
-                                final String eupmyundong,
                                 final MatchingStatus matchingStatus
     ) {
         return new FindMember(
@@ -67,7 +65,6 @@ public record FindMember(
                 matchableYn,
                 sido,
                 sigungu,
-                eupmyundong,
                 matchingStatus);
     }
 }

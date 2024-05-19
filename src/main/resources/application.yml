@@ -18,7 +18,6 @@ springdoc:
   default-produces-media-type: application/json;charset=UTF-8
 
 file.dir: ${FILE_DIR}
-aes.key: ${AES_KEY}
 
 ---
 spring.config.activate.on-profile: local

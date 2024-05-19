@@ -43,7 +43,7 @@ import static com.fofo.core.support.constant.MemberConstants.DEFAULT_PASS_COUNT;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "member", indexes = {
-        @Index(columnList = "kakaoId", unique = true),
+        @Index(columnList = "kakaoId"),
         @Index(columnList = "addressId")
 })
 public class MemberEntity extends BaseEntity {
@@ -73,9 +73,6 @@ public class MemberEntity extends BaseEntity {
 
     @Column(nullable = false)
     private Integer height;
-
-    @Column(nullable = false, length = 50)
-    private String phoneNumber;
 
     @Column(length = 10)
     @Convert(converter = AgeRelationTypeConverter.class)
@@ -146,7 +143,6 @@ public class MemberEntity extends BaseEntity {
             final LocalDateTime birthday,
             final Integer age,
             final Integer height,
-            final String phoneNumber,
             final AgeRelationType filteringConditionAgeRelation,
             final String company,
             final String job,
@@ -172,7 +168,6 @@ public class MemberEntity extends BaseEntity {
                 birthday,
                 age,
                 height,
-                phoneNumber,
                 filteringConditionAgeRelation,
                 company,
                 job,
@@ -200,7 +195,6 @@ public class MemberEntity extends BaseEntity {
             final LocalDateTime birthday,
             final Integer age,
             final Integer height,
-            final String phoneNumber,
             final AgeRelationType filteringAgeRelation,
             final String company,
             final String job,
@@ -225,7 +219,6 @@ public class MemberEntity extends BaseEntity {
         this.birthday = birthday;
         this.age = age;
         this.height = height;
-        this.phoneNumber = phoneNumber;
         this.filteringAgeRelation = filteringAgeRelation;
         this.company = company;
         this.job = job;
@@ -266,7 +259,7 @@ public class MemberEntity extends BaseEntity {
         }
     }
 
-    private void toDepositPendingStatus() {
+    public void toDepositPendingStatus() {
         depositDate = null;
         approvalStatus = ApprovalStatus.DEPOSIT_PENDING;
         matchableYn = MatchableYn.N;
