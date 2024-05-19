@@ -1,6 +1,7 @@
 package com.fofo.core.domain.match;
 
 import com.fofo.core.domain.ActiveStatus;
+import com.fofo.core.domain.member.ApprovalStatus;
 import com.fofo.core.domain.member.MatchableYn;
 import com.fofo.core.storage.MatchRepository;
 import com.fofo.core.storage.MemberEntity;
@@ -106,6 +107,10 @@ public class MatchUpdater {
         }
 
         if (memberEntity.getMatchableYn() == MatchableYn.Y) {
+            throw new CoreApiException(CoreErrorType.REMATCH_NOT_POSSIBLE);
+        }
+
+        if (memberEntity.getMatchableYn() == MatchableYn.N && memberEntity.getApprovalStatus() != ApprovalStatus.APPROVED){
             throw new CoreApiException(CoreErrorType.REMATCH_NOT_POSSIBLE);
         }
 
