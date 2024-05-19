@@ -28,7 +28,7 @@ public class MatchService {
     }
 
     @Transactional
-    public List<Long> autoMatch(final List<Long> memberIdList){
+    public List<Long> autoMatch(final List<Long> memberIdList) {
         // 매칭 가능한 멤버리스트 입금 순으로 찾기
         List<Member> matchPossibleMembers = memberFinder.findMatchableMembers();
         // 매칭 선택된 멤버리스트 불러오기
@@ -49,15 +49,15 @@ public class MatchService {
 
     @Transactional
     public void goNextMatchStep(final List<MatchRequestDto> matchRequestDtoList) {
-        for(MatchRequestDto matchRequestDto : matchRequestDtoList){
+        for (MatchRequestDto matchRequestDto : matchRequestDtoList) {
             MatchingStatus nextMatchingStatus = matchManager.getNextMatchingStatus(matchRequestDto.matchingStatus());
 
-            if(MatchingStatus.MATCHING_PROGRESSING == nextMatchingStatus){
+            if (MatchingStatus.MATCHING_PROGRESSING == nextMatchingStatus) {
                 matchUpdater.updateMatchProgressing(
                         matchRequestDto.id(),
                         nextMatchingStatus
                 );
-            } else if(MatchingStatus.MATCHING_COMPLETED == nextMatchingStatus){
+            } else if (MatchingStatus.MATCHING_COMPLETED == nextMatchingStatus) {
                 // 남자, 여자 동의 상태를 보고 판단
                 matchUpdater.updateMatchCompleted(
                         matchRequestDto.id(),
@@ -67,10 +67,22 @@ public class MatchService {
                         matchRequestDto.womanAgreement(),
                         nextMatchingStatus
                 );
-            } else{
+            } else {
                 throw new CoreApiException(CoreErrorType.ENUM_MAPPING_ERROR);
             }
         }
+    }
+
+    @Transactional
+    public void matchTemporarySave(final List<MatchRequestDto> matchRequestDtoList) {
+        for (MatchRequestDto request : matchRequestDtoList) {
+            if (MatchingStatus.MATCHING_PROGRESSING != request.matchingStatus()) {
+                throw new CoreApiException(CoreErrorType.MATCH_CANNOT_SAVE_STATUS_ERROR);
+            }
+
+            matchUpdater.updateMatchAgreements(request.id(), request.manAgreement(), request.womanAgreement());
+        }
+
     }
 
     public List<Long> failmeeting(final List<Long> matchIds) {

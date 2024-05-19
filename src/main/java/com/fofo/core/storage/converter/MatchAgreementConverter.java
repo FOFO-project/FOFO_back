@@ -8,7 +8,7 @@ import jakarta.persistence.Converter;
 public class MatchAgreementConverter implements AttributeConverter<MatchAgreement, Boolean> {
     @Override
     public Boolean convertToDatabaseColumn(final MatchAgreement matchAgreement) {
-        return matchAgreement.isCodeValue();
+        return matchAgreement.getCodeValue();
     }
 
     @Override

@@ -111,6 +111,13 @@ public class MatchController {
         return new ResponseEntity<>(ApiResult.success(), HttpStatus.OK);
     }
 
+    @Operation(summary = "매칭 임시저장")
+    @PostMapping("/match/temporary-save")
+    public ResponseEntity<ApiResult<?>> matchTemporarySave(@Valid @RequestBody List<MatchRequestDto> matchRequestDtoList){
+        matchService.matchTemporarySave(matchRequestDtoList);
+        return new ResponseEntity<>(ApiResult.success(), HttpStatus.OK);
+    }
+
     @Operation(summary = "성사실패 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "매치완료 멤버 되돌리기 성공"),

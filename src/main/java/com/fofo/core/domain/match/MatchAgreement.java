@@ -13,10 +13,11 @@ import static com.fofo.core.support.error.CoreErrorType.ENUM_MAPPING_ERROR;
 @RequiredArgsConstructor
 public enum MatchAgreement {
     Y(true),
-    N(false)
+    N(false),
+    UNDEFINED(null)
     ;
 
-    private final boolean codeValue;
+    private final Boolean codeValue;
 
     @JsonCreator
     public static MatchAgreement enumOfName(final String name) {
@@ -26,9 +27,9 @@ public enum MatchAgreement {
                 .orElseThrow(() -> new CoreApiException(ENUM_MAPPING_ERROR));
     }
 
-    public static MatchAgreement enumOfCode(final boolean codeValue) {
+    public static MatchAgreement enumOfCode(final Boolean codeValue) {
         return Arrays.stream(MatchAgreement.values())
-                .filter(v -> v.isCodeValue() == codeValue)
+                .filter(v -> v.getCodeValue() == codeValue)
                 .findAny()
                 .orElseThrow(() -> new CoreApiException(ENUM_MAPPING_ERROR));
     }
