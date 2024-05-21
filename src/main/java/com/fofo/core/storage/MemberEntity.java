@@ -117,7 +117,7 @@ public class MemberEntity extends BaseEntity {
     private String note;
 
     @Setter
-    @Column(nullable = false, columnDefinition = "integer default 4")
+    @Column(nullable = false, columnDefinition = "integer default 3")
     private int passCount;
 
     @Setter
